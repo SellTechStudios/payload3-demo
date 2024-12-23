@@ -1,0 +1,99 @@
+Arguments: 
+  C:\Users\karol\AppData\Roaming\npm\node_modules\node\bin\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @heroicons/react
+
+PATH: 
+  C:\Program Files\PowerShell\7;C:\Python312\Scripts\;C:\Python312\;C:\Program Files\Python313\Scripts\;C:\Program Files\Python313\;C:\Program Files\Microsoft\jdk-11.0.20.8-hotspot\bin;C:\Python310\Scripts\;C:\Python310\;C:\Python38\Scripts\;C:\Python38\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\ProgramData\chocolatey\bin;C:\Program Files\Java\jdk1.8.0_211\bin;C:\Users\karol\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\Git\cmd;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\WindowsPowerShell\Scripts;C:\Program Files\dotnet\;C:\Users\karol\AppData\Roaming\npm;C:\Users\karol\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files (x86)\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\160\DTS\Binn\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\DynamicWeb\_ftp-sites\WinSCP\;C:\Program Files\GitHub CLI\;C:\Program Files (x86)\ZeroTier\One\;C:\Program Files\PowerShell\7\;C:\Program Files\nodejs\;C:\Users\karol\AppData\Local\Android\Sdk\tools;C:\Users\karol\AppData\Local\pnpm;C:\Users\karol\AppData\Local\Microsoft\WindowsApps;C:\Users\karol\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\karol\.dotnet\tools;C:\Users\karol\AppData\Local\Yarn\bin;D:\Kubernetes\bin;C:\Users\karol\Documents\WindowsPowerShell\Scripts;C:\Program Files\Azure Data Studio\bin;C:\Users\karol\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\karol\AppData\Local\Microsoft\WindowsApps;C:\Users\karol\.dotnet\tools;C:\Users\karol\.dotnet\tools;C:\nuget;C:\Users\karol\.dotnet\tools;C:\Users\karol\AppData\Local\GitHubDesktop\bin;C:\Users\karol\AppData\Roaming\npm;c:\Users\karol\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  18.20.2
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, copyfile 'C:\Users\karol\AppData\Local\Yarn\Cache\v6\npm-glob-7.2.3-b8df0fb802bbfa8e89bd1d938b4e16578ed44f2b-integrity\node_modules\glob\common.js' -> 'D:\PayloadCMS\mediapart-v3\node_modules\copyfiles\node_modules\glob\common.js'
+
+npm manifest: 
+  {
+    "name": "mediapart-v3",
+    "version": "1.0.0",
+    "description": "Website template for Payload",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+      "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+      "postbuild": "next-sitemap --config next-sitemap.config.cjs",
+      "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+      "dev:prod": "cross-env NODE_OPTIONS=--no-deprecation rm -rf .next && pnpm build && pnpm start",
+      "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+      "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+      "ii": "cross-env NODE_OPTIONS=--no-deprecation pnpm --ignore-workspace install",
+      "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
+      "lint:fix": "cross-env NODE_OPTIONS=--no-deprecation next lint --fix",
+      "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+      "reinstall": "cross-env NODE_OPTIONS=--no-deprecation rm -rf node_modules && rm pnpm-lock.yaml && pnpm --ignore-workspace install",
+      "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
+    },
+    "dependencies": {
+      "@payloadcms/db-mongodb": "3.9.0",
+      "@payloadcms/live-preview-react": "3.9.0",
+      "@payloadcms/next": "3.9.0",
+      "@payloadcms/payload-cloud": "3.9.0",
+      "@payloadcms/plugin-form-builder": "3.9.0",
+      "@payloadcms/plugin-nested-docs": "3.9.0",
+      "@payloadcms/plugin-redirects": "3.9.0",
+      "@payloadcms/plugin-search": "3.9.0",
+      "@payloadcms/plugin-seo": "3.9.0",
+      "@payloadcms/richtext-lexical": "3.9.0",
+      "@payloadcms/ui": "3.9.0",
+      "@radix-ui/react-checkbox": "^1.0.4",
+      "@radix-ui/react-label": "^2.0.2",
+      "@radix-ui/react-select": "^2.0.0",
+      "@radix-ui/react-slot": "^1.0.2",
+      "class-variance-authority": "^0.7.0",
+      "clsx": "^2.1.1",
+      "cross-env": "^7.0.3",
+      "geist": "^1.3.0",
+      "graphql": "^16.8.2",
+      "lucide-react": "^0.378.0",
+      "next": "^15.1.0",
+      "next-sitemap": "^4.2.3",
+      "payload": "3.9.0",
+      "payload-admin-bar": "^1.0.6",
+      "prism-react-renderer": "^2.3.1",
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0",
+      "react-hook-form": "7.45.4",
+      "sharp": "0.32.6",
+      "tailwind-merge": "^2.3.0",
+      "tailwindcss-animate": "^1.0.7"
+    },
+    "devDependencies": {
+      "@eslint/eslintrc": "^3.2.0",
+      "@tailwindcss/typography": "^0.5.13",
+      "@types/escape-html": "^1.0.2",
+      "@types/node": "22.5.4",
+      "@types/react": "19.0.1",
+      "@types/react-dom": "19.0.1",
+      "autoprefixer": "^10.4.19",
+      "copyfiles": "^2.4.1",
+      "eslint": "^9.16.0",
+      "eslint-config-next": "15.1.0",
+      "postcss": "^8.4.38",
+      "prettier": "^3.4.2",
+      "tailwindcss": "^3.4.3",
+      "typescript": "5.7.2"
+    },
+    "engines": {
+      "node": "^18.20.2 || >=20.9.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
