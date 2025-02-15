@@ -106,7 +106,7 @@ export const ShipmentSection = () => {
       {shipmentType === 'inpost' && (
         <div className="mt-4">
           {showInpostWidget ? (
-            <div className="h-96 [&>div]:h-96">
+            <div className="[&>div]:h-[600px]">
               <InpostGeowidget onPointAction={onShipmentLocationSelected} />
             </div>
           ) : (
