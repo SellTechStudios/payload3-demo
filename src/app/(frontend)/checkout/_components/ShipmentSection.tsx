@@ -13,12 +13,12 @@ export const ShipmentSection = () => {
   const [selectedInpost, setSelectedInpost] = useState<string | null>(null)
   const [showInpostWidget, setShowInpostWidget] = useState(true)
 
-  const onShipmentLocationSelected = (location: any) => {
+  const onShipmentLocationSelected = (location) => {
     const { name, address_details, location_description, opening_hours } = location
     const formattedAddress = address_details
       ? `${address_details.street} ${address_details.building_number}, ${address_details.city} (${address_details.post_code})`
       : ''
-    // Używamy HTML do formatowania – pamiętaj, że dangerouslySetInnerHTML wymaga ostrożności!
+
     const displayText = `<strong>${name}</strong> - ${formattedAddress}<br/>${location_description}<br/>Godziny: ${opening_hours}`
     setSelectedInpost(displayText)
     setShowInpostWidget(false)
@@ -28,7 +28,6 @@ export const ShipmentSection = () => {
     <section className="p-4 border border-gray-300 rounded-lg">
       <h4 className="text-lg font-semibold mb-4">Dostawa</h4>
 
-      {/* Wybór metody dostawy */}
       <div className="flex gap-4 mb-4">
         <button
           className={cn(
@@ -48,7 +47,6 @@ export const ShipmentSection = () => {
         </button>
       </div>
 
-      {/* Adres dostawy */}
       {shipmentType === 'address' && (
         <div className="flex flex-col gap-2">
           <div className="text-gray-600">
@@ -62,7 +60,6 @@ export const ShipmentSection = () => {
         </div>
       )}
 
-      {/* InPost - Wybór paczkomatu */}
       {shipmentType === 'inpost' && (
         <div className="mt-4">
           {showInpostWidget ? (

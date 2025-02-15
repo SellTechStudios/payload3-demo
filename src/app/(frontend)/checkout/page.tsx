@@ -1,8 +1,6 @@
 import { Container } from '@/components/Container'
 import { getMeUser } from '@/utilities/getMeUser'
-import { CartSummary } from './_components/CartSummary'
-import { PaymentSection } from './_components/PaymentSection'
-import { ShipmentSection } from './_components/ShipmentSection'
+import { CheckoutContent } from './_components/CheckoutContent'
 
 // Force this page to be dynamic so that Next.js does not cache it
 // See the note in '../[slug]/page.tsx' about this
@@ -17,13 +15,7 @@ export default async function Checkout() {
 
   return (
     <Container>
-      <div className="flex flex-row gap-8">
-        <div className="flex flex-1 flex-col gap-20">
-          <ShipmentSection />
-          <PaymentSection />
-        </div>
-        <CartSummary />
-      </div>
+      <CheckoutContent />
     </Container>
   )
 }
