@@ -337,6 +337,7 @@ export interface PostCategory {
 export interface User {
   id: string;
   name?: string | null;
+  phoneNumber?: string | null;
   roles?: ('admin' | 'customer')[] | null;
   purchases?: (string | Product)[] | null;
   favourites?: (string | Product)[] | null;
@@ -1088,6 +1089,7 @@ export interface PostCategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  phoneNumber?: T;
   roles?: T;
   purchases?: T;
   favourites?: T;

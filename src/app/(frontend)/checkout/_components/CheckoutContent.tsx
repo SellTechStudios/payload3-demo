@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { CartSummary } from './CartSummary'
 import { PaymentSection } from './PaymentSection'
 import { ShipmentSection } from './ShipmentSection'
+import { UserDataSection } from './UserDataSection'
 
 export const CheckoutContent = () => {
   const router = useRouter()
@@ -48,8 +49,12 @@ export const CheckoutContent = () => {
 
   return (
     <div className="flex flex-row gap-8">
-      <div className="flex flex-1 flex-col gap-20">
-        <ShipmentSection />
+      <div className="flex flex-1 flex-col gap-6">
+        <div>
+          <UserDataSection />
+          <ShipmentSection />
+        </div>
+
         <PaymentSection
           onSelectPaymentMethodAction={onSelectPaymentMethodAction}
           selectedPaymentMethod={selectedPaymentMethod}

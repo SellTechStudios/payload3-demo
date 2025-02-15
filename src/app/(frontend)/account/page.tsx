@@ -6,15 +6,15 @@ import { Button } from '@/payload/blocks/Form/_ui/button'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import AddressesSection from './_components/AddressSection'
-import ChangeEmailSection from './_components/ChangeEmailSection'
 import ChangePasswordSection from './_components/ChangePasswordSection'
+import ChangePhoneNumberSection from './_components/ChangePhoneNumberSection'
 import OrderHistorySection from './_components/OrderHistorySection'
 
 const AccountPage = () => {
   const { logout, user } = useAuth()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<
-    'profile' | 'password' | 'email' | 'orders' | 'addresses'
+    'profile' | 'password' | 'phone' | 'orders' | 'addresses'
   >('profile')
 
   return (
@@ -45,10 +45,10 @@ const AccountPage = () => {
           Zmień hasło
         </button>
         <button
-          onClick={() => setActiveTab('email')}
-          className={`btn ${activeTab === 'email' && 'btn-active'}`}
+          onClick={() => setActiveTab('phone')}
+          className={`btn ${activeTab === 'phone' && 'btn-active'}`}
         >
-          Zmień email
+          Zmień numer telefonu
         </button>
         <button
           onClick={() => setActiveTab('addresses')}
@@ -77,7 +77,7 @@ const AccountPage = () => {
           </div>
         )}
         {activeTab === 'password' && <ChangePasswordSection />}
-        {activeTab === 'email' && <ChangeEmailSection />}
+        {activeTab === 'phone' && <ChangePhoneNumberSection />}
         {activeTab === 'orders' && <OrderHistorySection />}
         {activeTab === 'addresses' && <AddressesSection />}
       </div>
