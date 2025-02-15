@@ -1,15 +1,15 @@
 'use client'
 
+import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useRef } from 'react'
 import { initialValues, schema } from './LoginForm.schema'
-import { useRouter, useSearchParams } from 'next/navigation'
 
 import { Button } from '@/components/FormElements/button'
 import { Input } from '@/components/FormElements/input'
-import Link from 'next/link'
 import { getRequiredFields } from '@/payload/utilities/yupUtils'
 import { useAuth } from '@/providers/Auth'
 import { useFormik } from 'formik'
+import Link from 'next/link'
 
 const LoginForm: React.FC = () => {
   const searchParams = useSearchParams()

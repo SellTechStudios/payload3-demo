@@ -343,6 +343,16 @@ export interface User {
   cart?: {
     items?: CartItems;
   };
+  addresses?:
+    | {
+        zipCode: string;
+        city: string;
+        street: string;
+        houseNumber: string;
+        apartmentNumber?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   skipSync?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -1085,6 +1095,16 @@ export interface UsersSelect<T extends boolean = true> {
     | T
     | {
         items?: T | CartItemsSelect<T>;
+      };
+  addresses?:
+    | T
+    | {
+        zipCode?: T;
+        city?: T;
+        street?: T;
+        houseNumber?: T;
+        apartmentNumber?: T;
+        id?: T;
       };
   skipSync?: T;
   updatedAt?: T;

@@ -1,7 +1,7 @@
-import LoginForm from './components/LoginForm'
-import { Metadata } from 'next'
 import { getMeUser } from '@/utilities/getMeUser'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
+import { Metadata } from 'next'
+import LoginForm from './_components/LoginForm'
 
 export default async function Login() {
   await getMeUser({

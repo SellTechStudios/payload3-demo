@@ -1,8 +1,8 @@
-import { CollectionConfig } from 'payload'
 import { admins } from '@/payload/access/admins'
 import adminsAndUser from '@/payload/access/adminsAndUser'
-import { anyone } from '../../access/anyone'
+import { anyone } from '@/payload/access/anyone'
 import { checkRole } from '@/payload/access/checkRole'
+import { CollectionConfig } from 'payload'
 import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
 import { resolveDuplicatePurchases } from './hooks/resolveDuplicatePurchases'
 
@@ -94,6 +94,43 @@ export const Users: CollectionConfig = {
               },
             },
           ],
+        },
+      ],
+    },
+    {
+      name: 'addresses',
+      label: 'Adresy',
+      type: 'array',
+      fields: [
+        {
+          name: 'zipCode',
+          label: 'Kod pocztowy',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'city',
+          label: 'Miasto',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'street',
+          label: 'Ulica',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'houseNumber',
+          label: 'Numer domu',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'apartmentNumber',
+          label: 'Numer mieszkania',
+          type: 'text',
+          required: false,
         },
       ],
     },

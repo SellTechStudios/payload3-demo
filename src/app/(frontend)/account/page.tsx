@@ -1,29 +1,10 @@
-'use client'
-
-import { Button } from '@/payload/blocks/Form/_ui/button'
 import { Container } from '@/components/Container'
-import React from 'react'
-import { useAuth } from '@/providers/Auth'
-import { useRouter } from 'next/navigation'
+import AccountPageClient from './page.client'
 
-const AccountPage: React.FC = () => {
-  const { logout } = useAuth()
-  const router = useRouter()
-
+export default function Account() {
   return (
     <Container>
-      <Button
-        className="mt-3"
-        variant="secondary"
-        onClick={() => {
-          logout()
-          router.push('/login')
-        }}
-      >
-        Logout
-      </Button>
+      <AccountPageClient />
     </Container>
   )
 }
-
-export default AccountPage

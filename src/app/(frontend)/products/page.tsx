@@ -1,4 +1,4 @@
-import { ProductsList } from '@/app/(frontend)/products/_components/product-list/Component'
+import { ProductsList } from './_components/product-list/Component'
 
 export default async function ProductListCategoryPage() {
   return (

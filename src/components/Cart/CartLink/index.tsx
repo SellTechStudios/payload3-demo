@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react'
 
-import Link from 'next/link'
-import { ShoppingCart } from 'lucide-react'
 import { useCart } from '@/providers/Cart'
+import { ShoppingCart } from 'lucide-react'
+import Link from 'next/link'
 
 export const CartLink: React.FC = () => {
   const { cart } = useCart()
@@ -23,8 +23,6 @@ export const CartLink: React.FC = () => {
           {length}
         </span>
       </div>
-
-      <span>Koszyk</span>
     </Link>
   )
 }

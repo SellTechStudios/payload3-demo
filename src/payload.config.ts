@@ -1,26 +1,26 @@
-import { Footer } from './payload/globals/Footer/config'
-import { Header } from './payload/globals/Header/config'
-import Manufacturer from './payload/collections/eCom/Manufacturer'
-import { Media } from './payload/collections/Media'
-import { Orders } from './payload/collections/eCom/Orders'
-import { Pages } from './payload/collections/Pages'
-import { PaymentMethods } from './payload/collections/eCom/PaymentMethods'
-import { PostCategories } from './payload/collections/PostCategories'
-import { Posts } from './payload/collections/Posts'
-import ProductCategory from './payload/collections/eCom/ProductCategory'
-import Products from './payload/collections/eCom/Products'
-import { Settings } from './payload/globals/Settings/Settings'
-import UOMs from './payload/collections/eCom/UOM'
-import { Users } from './payload/collections/Users'
-import Warehouse from './payload/collections/eCom/Warehouse'
-import { buildConfig } from 'payload'
 import { defaultLexical } from '@/payload/fields/defaultLexical'
-import { fileURLToPath } from 'url'
-import { getServerSideURL } from './payload/utilities/getURL'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import path from 'path'
-import { plugins } from './payload/plugins'
+import { buildConfig } from 'payload'
 import sharp from 'sharp' // sharp-import
+import { fileURLToPath } from 'url'
+import Manufacturer from './payload/collections/eCom/Manufacturer'
+import { Orders } from './payload/collections/eCom/Orders'
+import { PaymentMethods } from './payload/collections/eCom/PaymentMethods'
+import ProductCategory from './payload/collections/eCom/ProductCategory'
+import Products from './payload/collections/eCom/Products'
+import UOMs from './payload/collections/eCom/UOM'
+import Warehouse from './payload/collections/eCom/Warehouse'
+import { Media } from './payload/collections/Media'
+import { Pages } from './payload/collections/Pages'
+import { PostCategories } from './payload/collections/PostCategories'
+import { Posts } from './payload/collections/Posts'
+import { Users } from './payload/collections/Users'
+import { Footer } from './payload/globals/Footer/config'
+import { Header } from './payload/globals/Header/config'
+import { Settings } from './payload/globals/Settings/Settings'
+import { plugins } from './payload/plugins'
+import { getServerSideURL } from './payload/utilities/getURL'
 
 // storage-adapter-import-placeholder
 
@@ -61,7 +61,7 @@ export default buildConfig({
       ],
     },
   },
-  // This config helps us configure global or default features that the other editors can inherit
+  // Global editor config
   editor: defaultLexical,
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',

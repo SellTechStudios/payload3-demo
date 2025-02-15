@@ -1,4 +1,4 @@
-import { CreateAccountForm } from './components/CreateAccountForm'
+import { CreateAccountForm } from './_components/CreateAccountForm'
 
 export default async function CreateAccount() {
   return (
