@@ -13,7 +13,7 @@ const CartItem = ({ product, title, image, qty, addItemToCart }) => {
 
   return (
     <li className="grid grid-cols-[100px_3fr_1fr_1fr_1fr] py-6 gap-6 border-b border-gray-300">
-      <Link href={`/products/${product.slug}`} className="relative h-full">
+      <Link href={`/product/${product.slug}`} className="relative h-full">
         {!image && <span>Brak obrazka</span>}
         {image && typeof image == 'string' && (
           <img

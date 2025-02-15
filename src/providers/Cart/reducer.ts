@@ -1,6 +1,6 @@
 import { CartItems, User } from 'src/payload-types'
 
-export type CartItem = CartItems[0]
+export type CartItem = NonNullable<CartItems>[0]
 
 type CartType = User['cart']
 

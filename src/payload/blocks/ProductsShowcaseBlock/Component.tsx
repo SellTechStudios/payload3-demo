@@ -5,7 +5,6 @@ import type { Product, ProductsShowcaseBlock as ProductsShowcaseProps } from '@/
 import { GetMainImageUrl } from '@/payload/utilities/productUtils'
 import Link from 'next/link'
 import React from 'react'
-import { cn } from '@/payload/utilities/cn'
 import { formatCurrency } from '@/payload/utilities/formatPrice'
 
 type Props = Omit<ProductsShowcaseProps, 'id' | 'blockType' | 'blockName'> & {
