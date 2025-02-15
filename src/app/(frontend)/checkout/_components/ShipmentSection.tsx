@@ -2,7 +2,7 @@
 
 import { cn } from '@/payload/utilities/cn'
 import { useAuth } from '@/providers/Auth'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { InpostGeowidget } from './InPostGeoWidget'
 
 type Address = {
@@ -16,13 +16,12 @@ type Address = {
 export const ShipmentSection = () => {
   const [shipmentType, setShipmentType] = useState<'address' | 'inpost'>('address')
   const { user } = useAuth()
-  const addresses: Address[] = user?.addresses || []
+  const addresses: Address[] = useMemo(() => user?.addresses || [], [user?.addresses])
   const [selectedAddressIndex, setSelectedAddressIndex] = useState<number>(0)
   const [selectedInpost, setSelectedInpost] = useState<string | null>(null)
   const [showInpostWidget, setShowInpostWidget] = useState(true)
 
   useEffect(() => {
-    // Gdy zmienia się lista adresów, domyślnie wybieramy pierwszy
     if (addresses.length > 0) {
       setSelectedAddressIndex(0)
     }
@@ -42,7 +41,6 @@ export const ShipmentSection = () => {
     <section className="p-4 border border-gray-300 rounded-lg">
       <h4 className="text-lg font-semibold mb-4">Dostawa</h4>
 
-      {/* Wybór metody dostawy */}
       <div className="flex gap-4 mb-4">
         <button
           className={cn(
@@ -62,7 +60,6 @@ export const ShipmentSection = () => {
         </button>
       </div>
 
-      {/* Adres dostawy - wybór z select boxa */}
       {shipmentType === 'address' && (
         <div className="flex flex-col gap-2">
           {addresses.length > 0 ? (
@@ -106,7 +103,6 @@ export const ShipmentSection = () => {
         </div>
       )}
 
-      {/* InPost - Wybór paczkomatu */}
       {shipmentType === 'inpost' && (
         <div className="mt-4">
           {showInpostWidget ? (
