@@ -1,18 +1,13 @@
 'use client'
 
+import { User } from '@/payload-types'
 import { Button } from '@/payload/blocks/Form/_ui/button'
 import { useAuth } from '@/providers/Auth'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import AddressInput from './AddressInput'
 
-type AddressFormValues = {
-  zipCode: string
-  city: string
-  street: string
-  houseNumber: string
-  apartmentNumber?: string
-}
+type AddressFormValues = NonNullable<User['addresses']>[number]
 
 const AddAddressForm: React.FC = () => {
   const { user, updateUser } = useAuth()
