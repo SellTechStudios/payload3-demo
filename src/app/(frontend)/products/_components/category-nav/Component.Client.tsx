@@ -22,7 +22,7 @@ export const CategoryNavigationClient: React.FC<Props> = (props) => {
         return (
           <Link
             key={c.id}
-            href={`/products/category/${c.id}`}
+            href={`/products/category?categoryId=${c.id}`}
             className={cn('p-2 block hover:bg-slate-200', isActive ? 'bg-slate-100' : '')}
           >
             {c.name}

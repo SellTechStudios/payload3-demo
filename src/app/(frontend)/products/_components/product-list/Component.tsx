@@ -10,7 +10,7 @@ export type ProductsListProps =
       listType: 'all' | 'new' | 'specialOffer'
     }
   | {
-      listType: 'incategory'
+      listType: 'category'
       categoryId: string
     }
   | {
