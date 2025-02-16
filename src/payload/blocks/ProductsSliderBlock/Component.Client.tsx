@@ -3,14 +3,14 @@
 import 'swiper/css'
 import 'swiper/css/navigation'
 
-import { Autoplay, FreeMode, Navigation } from 'swiper/modules'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
+import { Autoplay, FreeMode, Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { ProductSliderElement } from './_components/ProductSliderItem'
 import { ProductSliderItem } from '@/db/products/sliderQueries'
 import { Swiper as SwiperType } from 'swiper/types'
+import { ProductSliderElement } from './_components/ProductSliderItem'
 
 const breakpoints = {
   640: {
@@ -48,6 +48,12 @@ export const ProductsSliderClient = (props: ProductsSliderClientProps) => {
   return (
     <div className="relative">
       <Swiper
+        onBeforeInit={(swiper) => {
+          if (swiper.params.navigation && typeof swiper.params.navigation !== 'boolean') {
+            swiper.params.navigation.prevEl = prevRef.current
+            swiper.params.navigation.nextEl = nextRef.current
+          }
+        }}
         onSwiper={(swiper) => {
           swiperRef.current = swiper
         }}
