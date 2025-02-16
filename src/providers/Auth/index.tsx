@@ -18,6 +18,8 @@ type Login = (args: { email: string; password: string }) => Promise<User>
 
 type Logout = () => Promise<void>
 
+type UpdateUser = (updates: Partial<User>) => Promise<void>
+
 type AuthContext = {
   user?: User | null
   token?: string | null
@@ -27,6 +29,7 @@ type AuthContext = {
   create: Create
   resetPassword: ResetPassword
   forgotPassword: ForgotPassword
+  updateUser: UpdateUser
   status: undefined | 'loggedOut' | 'loggedIn'
 }
 
@@ -194,7 +197,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('An error occurred while attempting to login.')
     }
   }, [])
+  const updateUser = useCallback<UpdateUser>(
+    async (updates) => {
+      if (!user) return
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${user.id}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updates),
+        })
 
+        if (res.ok) {
+          const data = await res.json()
+          setUser(data.doc)
+        } else {
+          throw new Error('Failed to update user')
+        }
+      } catch (error) {
+        console.error(error)
+        throw new Error('An error occurred while updating user data.')
+      }
+    },
+    [user],
+  )
   const values = useMemo(
     () => ({
       user,
@@ -202,12 +230,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       logout,
       login,
       create,
+      updateUser,
       resetPassword,
       forgotPassword,
       status,
       token,
     }),
-    [user, logout, login, create, resetPassword, forgotPassword, status, token],
+    [user, logout, login, create, updateUser, resetPassword, forgotPassword, status, token],
   )
   return <Context.Provider value={values}>{children}</Context.Provider>
 }

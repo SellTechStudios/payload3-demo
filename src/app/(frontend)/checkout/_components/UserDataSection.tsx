@@ -13,7 +13,7 @@ export const UserDataSection: React.FC = () => {
       <h4 className="text-lg font-semibold mb-2">Twoje Dane</h4>
       <div className="space-y-2">
         <div>
-          <span className="font-medium">Imię i Nazwisko:</span> {user.name || 'Brak danych'}
+          <span className="font-medium">Imię i Nazwisko:</span> {user.name} {user.surname}
         </div>
         <div>
           <span className="font-medium">Telefon:</span> {user.phoneNumber || 'Brak danych'}

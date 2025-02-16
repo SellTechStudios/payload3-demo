@@ -1,61 +1,55 @@
 'use client'
 
+import { Button } from '@/payload/blocks/Form/_ui/button'
 import { useAuth } from '@/providers/Auth'
 import React, { useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+
+type PhoneFormValues = {
+  phoneNumber: string
+}
 
 const ChangePhoneNumberSection: React.FC = () => {
-  const { user, setUser } = useAuth()
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [message, setMessage] = useState('')
+  const { user, updateUser } = useAuth()
+  const [message, setMessage] = useState<string>('')
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<PhoneFormValues>()
 
   useEffect(() => {
     if (user?.phoneNumber) {
-      setPhoneNumber(user.phoneNumber)
+      reset({ phoneNumber: user.phoneNumber })
     }
-  }, [user])
+  }, [user, reset])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!user) return
-
+  const onSubmit: SubmitHandler<PhoneFormValues> = async (data) => {
     try {
-      const res = await fetch(`/api/users/${user.id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber }),
-      })
-
-      if (res.ok) {
-        const data = await res.json()
-        setUser(data.doc)
-        setMessage('Numer telefonu został zaktualizowany.')
-      } else {
-        setMessage('Błąd przy aktualizacji numeru telefonu.')
-      }
+      await updateUser({ phoneNumber: data.phoneNumber })
+      setMessage('Zaktualizowano numer telefonu!')
+      reset({ phoneNumber: data.phoneNumber })
     } catch (error) {
       console.error(error)
-      setMessage('Błąd sieci.')
+      alert('Błąd aktualizacji numeru telefonu!')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 max-w-md">
       <h3 className="text-xl font-semibold">Zmień numer telefonu</h3>
       <div>
         <label className="block mb-1 font-medium">Numer telefonu</label>
-        <input
-          type="tel"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          required
-          className="border rounded p-2 w-full"
-        />
+        <input type="tel" {...register('phoneNumber')} className="border rounded p-2 w-full" />
+        {errors.phoneNumber && (
+          <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>
+        )}
       </div>
-      <button type="submit" className="btn btn-primary">
+      <Button type="submit" variant="default">
         Zapisz numer
-      </button>
-      {message && <p className="mt-2">{message}</p>}
+      </Button>
+      {message && <p className="mt-2 text-sm font-medium">{message}</p>}
     </form>
   )
 }

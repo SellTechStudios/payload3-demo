@@ -1,11 +1,11 @@
 'use client'
 
-import { useAuth } from '@/providers/Auth'
-
 import { Button } from '@/payload/blocks/Form/_ui/button'
+import { useAuth } from '@/providers/Auth'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import AddressesSection from './_components/AddressSection'
+import ChangeNameSection from './_components/ChangeNameSection'
 import ChangePasswordSection from './_components/ChangePasswordSection'
 import ChangePhoneNumberSection from './_components/ChangePhoneNumberSection'
 import OrderHistorySection from './_components/OrderHistorySection'
@@ -14,7 +14,7 @@ const AccountPage = () => {
   const { logout, user } = useAuth()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<
-    'profile' | 'password' | 'phone' | 'orders' | 'addresses'
+    'profile' | 'password' | 'phone' | 'orders' | 'addresses' | 'name'
   >('profile')
 
   return (
@@ -31,37 +31,58 @@ const AccountPage = () => {
         </Button>
       </div>
 
-      <div className="flex gap-4 mb-8">
-        <button
+      <div className="hidden md:flex gap-4 mb-8 md:flex-wrap">
+        <Button
           onClick={() => setActiveTab('profile')}
-          className={`btn ${activeTab === 'profile' && 'btn-active'}`}
+          variant={activeTab === 'profile' ? 'default' : 'secondary'}
         >
           Profil
-        </button>
-        <button
+        </Button>
+        <Button
+          onClick={() => setActiveTab('name')}
+          variant={activeTab === 'name' ? 'default' : 'secondary'}
+        >
+          Imię i nazwisko
+        </Button>
+        <Button
           onClick={() => setActiveTab('password')}
-          className={`btn ${activeTab === 'password' && 'btn-active'}`}
+          variant={activeTab === 'password' ? 'default' : 'secondary'}
         >
           Zmień hasło
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => setActiveTab('phone')}
-          className={`btn ${activeTab === 'phone' && 'btn-active'}`}
+          variant={activeTab === 'phone' ? 'default' : 'secondary'}
         >
           Zmień numer telefonu
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => setActiveTab('addresses')}
-          className={`btn ${activeTab === 'addresses' && 'btn-active'}`}
+          variant={activeTab === 'addresses' ? 'default' : 'secondary'}
         >
           Adresy
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => setActiveTab('orders')}
-          className={`btn ${activeTab === 'orders' && 'btn-active'}`}
+          variant={activeTab === 'orders' ? 'default' : 'secondary'}
         >
           Historia zamówień
-        </button>
+        </Button>
+      </div>
+
+      <div className="block md:hidden mb-4 md:mb-8">
+        <select
+          value={activeTab}
+          onChange={(e) => setActiveTab(e.target.value as any)}
+          className="border rounded p-2 w-full"
+        >
+          <option value="profile">Profil</option>
+          <option value="name">Imię i nazwisko</option>
+          <option value="password">Zmień hasło</option>
+          <option value="phone">Zmień numer telefonu</option>
+          <option value="addresses">Adresy</option>
+          <option value="orders">Historia zamówień</option>
+        </select>
       </div>
 
       <div className="tab-content">
@@ -74,8 +95,12 @@ const AccountPage = () => {
             <p>
               <strong>Nazwa:</strong> {user?.name}
             </p>
+            <p>
+              <strong>Nazwisko:</strong> {user?.surname}
+            </p>
           </div>
         )}
+        {activeTab === 'name' && <ChangeNameSection />}
         {activeTab === 'password' && <ChangePasswordSection />}
         {activeTab === 'phone' && <ChangePhoneNumberSection />}
         {activeTab === 'orders' && <OrderHistorySection />}

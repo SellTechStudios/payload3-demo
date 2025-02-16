@@ -1,25 +1,32 @@
 'use client'
 
-import { cn } from '@/payload/utilities/cn'
+import { User } from '@/payload-types'
+import { Button } from '@/payload/blocks/Form/_ui/button'
 import { useAuth } from '@/providers/Auth'
 import { useEffect, useMemo, useState } from 'react'
 import { InpostGeowidget } from './InPostGeoWidget'
 
-type Address = {
-  zipCode: string
-  city: string
-  street: string
-  houseNumber: string
-  apartmentNumber?: string | null
+const formatAddress = (addressDetails): string => {
+  if (!addressDetails) return ''
+  const { street, building_number, city, post_code } = addressDetails
+  return `${street} ${building_number}, ${city} (${post_code})`
+}
+
+const formatDisplayText = (location): string => {
+  const formattedAddress = formatAddress(location.address_details)
+  const description = location.location_description || ''
+  const hours = location.opening_hours ? `Godziny: ${location.opening_hours}` : ''
+  return `<strong>${location.name}</strong> - ${formattedAddress}<br/>${description}<br/>${hours}`
 }
 
 export const ShipmentSection = () => {
   const [shipmentType, setShipmentType] = useState<'address' | 'inpost'>('address')
   const { user } = useAuth()
-  const addresses: Address[] = useMemo(() => user?.addresses || [], [user?.addresses])
   const [selectedAddressIndex, setSelectedAddressIndex] = useState<number>(0)
   const [selectedInpost, setSelectedInpost] = useState<string | null>(null)
   const [showInpostWidget, setShowInpostWidget] = useState(true)
+
+  const addresses: User['addresses'] = useMemo(() => user?.addresses || [], [user?.addresses])
 
   useEffect(() => {
     if (addresses.length > 0) {
@@ -27,12 +34,8 @@ export const ShipmentSection = () => {
     }
   }, [addresses])
 
-  const onShipmentLocationSelected = (location: any) => {
-    const { name, address_details, location_description, opening_hours } = location
-    const formattedAddress = address_details
-      ? `${address_details.street} ${address_details.building_number}, ${address_details.city} (${address_details.post_code})`
-      : ''
-    const displayText = `<strong>${name}</strong> - ${formattedAddress}<br/>${location_description}<br/>Godziny: ${opening_hours}`
+  const onShipmentLocationSelected = (location) => {
+    const displayText = formatDisplayText(location)
     setSelectedInpost(displayText)
     setShowInpostWidget(false)
   }
@@ -42,22 +45,18 @@ export const ShipmentSection = () => {
       <h4 className="text-lg font-semibold mb-4">Dostawa</h4>
 
       <div className="flex gap-4 mb-4">
-        <button
-          className={cn(
-            `px-4 py-2 rounded ${shipmentType === 'address' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`,
-          )}
+        <Button
+          variant={shipmentType === 'address' ? 'default' : 'secondary'}
           onClick={() => setShipmentType('address')}
         >
           Na adres
-        </button>
-        <button
-          className={cn(
-            `px-4 py-2 rounded ${shipmentType === 'inpost' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`,
-          )}
+        </Button>
+        <Button
+          variant={shipmentType === 'inpost' ? 'default' : 'secondary'}
           onClick={() => setShipmentType('inpost')}
         >
           Na paczkomat
-        </button>
+        </Button>
       </div>
 
       {shipmentType === 'address' && (
@@ -111,20 +110,20 @@ export const ShipmentSection = () => {
             </div>
           ) : (
             <>
+              <h4 className="text-lg font-semibold mb-2">Wybrany paczkomat</h4>
               <div className="bg-green-100 p-2 rounded text-green-800 whitespace-pre-wrap">
-                Wybrany paczkomat:
-                <br />
                 <div dangerouslySetInnerHTML={{ __html: selectedInpost || '' }} />
               </div>
-              <button
-                className="mt-2 btn btn-secondary"
+              <Button
+                className="mt-4"
+                variant="default"
                 onClick={() => {
                   setShowInpostWidget(true)
                   setSelectedInpost(null)
                 }}
               >
                 Zmień paczkomat
-              </button>
+              </Button>
             </>
           )}
         </div>

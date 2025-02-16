@@ -38,7 +38,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
             className={`cursor-pointer p-4 rounded-lg border transition-all duration-200 
               ${
                 selectedPaymentMethod === m.id
-                  ? 'bg-blue-500 text-white border-transparent shadow-lg'
+                  ? 'bg-gray-200 border-transparent shadow-lg'
                   : 'bg-white hover:shadow-md'
               }`}
           >

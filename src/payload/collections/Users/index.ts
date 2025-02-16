@@ -26,6 +26,10 @@ export const Users: CollectionConfig = {
       type: 'text',
     },
     {
+      name: 'surname',
+      type: 'text',
+    },
+    {
       name: 'phoneNumber',
       label: 'Numer telefonu',
       type: 'text',

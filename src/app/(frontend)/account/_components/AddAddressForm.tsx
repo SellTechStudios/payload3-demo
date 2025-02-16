@@ -1,105 +1,94 @@
-// components/AddAddressForm.tsx
 'use client'
 
 import { Button } from '@/payload/blocks/Form/_ui/button'
 import { useAuth } from '@/providers/Auth'
-import React, { useState } from 'react'
+import React from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import AddressInput from './AddressInput'
 
+type AddressFormValues = {
+  zipCode: string
+  city: string
+  street: string
+  houseNumber: string
+  apartmentNumber?: string
+}
+
 const AddAddressForm: React.FC = () => {
-  const { user, setUser } = useAuth()
-  const [zipCode, setZipCode] = useState('')
-  const [city, setCity] = useState('')
-  const [street, setStreet] = useState('')
-  const [houseNumber, setHouseNumber] = useState('')
-  const [apartmentNumber, setApartmentNumber] = useState('')
-  const [message, setMessage] = useState('')
+  const { user, updateUser } = useAuth()
+  const [message, setMessage] = React.useState<string | null>(null)
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AddressFormValues>()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const onSubmit: SubmitHandler<AddressFormValues> = async (data) => {
     if (!user) {
-      setMessage('Nie jesteś zalogowany.')
       return
     }
 
     const addressData = {
-      zipCode,
-      city,
-      street,
-      houseNumber,
-      apartmentNumber: apartmentNumber || null,
+      ...data,
+      apartmentNumber: data.apartmentNumber?.trim() === '' ? null : data.apartmentNumber,
     }
 
     const newAddresses = [...(user.addresses || []), addressData]
 
     try {
-      const res = await fetch(`/api/users/${user.id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ addresses: newAddresses }),
-      })
-
-      if (res.ok) {
-        const data = await res.json()
-        setUser(data.doc)
-        setMessage('Adres został dodany.')
-        setZipCode('')
-        setCity('')
-        setStreet('')
-        setHouseNumber('')
-        setApartmentNumber('')
-      } else {
-        setMessage('Błąd przy dodawaniu adresu.')
-      }
+      await updateUser({ addresses: newAddresses })
+      setMessage('Dodano adres!')
+      reset()
     } catch (error) {
       console.error(error)
-      setMessage('Błąd sieci.')
+      alert('Błąd dodawania adresu!')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
-      <h3>Dodaj adres</h3>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 max-w-md">
+      <h3 className="text-xl font-semibold">Dodaj adres</h3>
+
       <AddressInput
         label="Kod pocztowy"
         placeholder="00-000"
-        value={zipCode}
-        onChange={(e) => setZipCode(e.target.value)}
-        required
+        error={errors.zipCode?.message}
+        {...register('zipCode', { required: 'Kod pocztowy jest wymagany' })}
       />
+
       <AddressInput
         label="Miasto"
         placeholder="Miasto"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-        required
+        error={errors.city?.message}
+        {...register('city', { required: 'Miasto jest wymagane' })}
       />
+
       <AddressInput
         label="Ulica"
         placeholder="Ulica"
-        value={street}
-        onChange={(e) => setStreet(e.target.value)}
-        required
+        error={errors.street?.message}
+        {...register('street', { required: 'Ulica jest wymagana' })}
       />
+
       <AddressInput
         label="Numer domu"
         placeholder="Numer domu"
-        value={houseNumber}
-        onChange={(e) => setHouseNumber(e.target.value)}
-        required
+        error={errors.houseNumber?.message}
+        {...register('houseNumber', { required: 'Numer domu jest wymagany' })}
       />
+
       <AddressInput
         label="Numer mieszkania (opcjonalnie)"
         placeholder="Numer mieszkania"
-        value={apartmentNumber}
-        onChange={(e) => setApartmentNumber(e.target.value)}
+        error={errors.apartmentNumber?.message}
+        {...register('apartmentNumber')}
       />
+
       <Button type="submit" className="btn btn-primary">
         Dodaj adres
       </Button>
-      {message && <p>{message}</p>}
+      {message && <p className="mt-2 text-sm font-medium">{message}</p>}
     </form>
   )
 }
