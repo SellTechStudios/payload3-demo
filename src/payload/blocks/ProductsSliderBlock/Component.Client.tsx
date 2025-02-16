@@ -4,12 +4,12 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Autoplay, FreeMode, Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { ProductSliderItem } from '@/db/products/sliderQueries'
-import { Swiper as SwiperType } from 'swiper/types'
+import { NavigationOptions, Swiper as SwiperType } from 'swiper/types'
 import { ProductSliderElement } from './_components/ProductSliderItem'
 
 const breakpoints = {
@@ -41,6 +41,15 @@ export const ProductsSliderClient = (props: ProductsSliderClientProps) => {
   const prevRef = useRef<HTMLButtonElement>(null)
   const nextRef = useRef<HTMLButtonElement>(null)
 
+  useEffect(() => {
+    if (swiperRef.current && prevRef.current && nextRef.current) {
+      ;(swiperRef.current.params.navigation as NavigationOptions).prevEl = prevRef.current
+      ;(swiperRef.current.params.navigation as NavigationOptions).nextEl = nextRef.current
+      swiperRef.current.navigation.init()
+      swiperRef.current.navigation.update()
+    }
+  }, [])
+
   if (!products) {
     return <p>Brak produktów do wyświetlenia.</p>
   }
@@ -48,12 +57,6 @@ export const ProductsSliderClient = (props: ProductsSliderClientProps) => {
   return (
     <div className="relative">
       <Swiper
-        onBeforeInit={(swiper) => {
-          if (swiper.params.navigation && typeof swiper.params.navigation !== 'boolean') {
-            swiper.params.navigation.prevEl = prevRef.current
-            swiper.params.navigation.nextEl = nextRef.current
-          }
-        }}
         onSwiper={(swiper) => {
           swiperRef.current = swiper
         }}
