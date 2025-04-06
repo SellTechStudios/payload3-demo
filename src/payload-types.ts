@@ -28,8 +28,6 @@ export interface Config {
     media: Media;
     postCategories: PostCategory;
     users: User;
-    uom: Uom;
-    warehouses: Warehouse;
     orders: Order;
     'payment-methods': PaymentMethod;
     products: Product;
@@ -50,8 +48,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     postCategories: PostCategoriesSelect<false> | PostCategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
-    uom: UomSelect<false> | UomSelect<true>;
-    warehouses: WarehousesSelect<false> | WarehousesSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
     'payment-methods': PaymentMethodsSelect<false> | PaymentMethodsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
@@ -72,11 +68,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     settings: Settings;
+    'product-imports': ProductImport;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
+    'product-imports': ProductImportsSelect<false> | ProductImportsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -375,16 +373,15 @@ export interface Product {
   id: string;
   title: string;
   erpId?: string | null;
+  url?: string | null;
   price: number;
   pricePrevious?: number | null;
-  vat?: number | null;
-  weight?: number | null;
   quantity?: number | null;
   quantityMin?: number | null;
   quantityStep?: number | null;
   name?: string | null;
   code?: string | null;
-  ean?: string | null;
+  color?: string | null;
   description?: string | null;
   keywords?: string | null;
   bestseller?: boolean | null;
@@ -408,7 +405,6 @@ export interface Product {
   seoImageUrl?: string | null;
   Category?: (string | null) | ProductCategory;
   manufacturer?: (string | null) | Manufacturer;
-  warehouse?: (string | null) | Warehouse;
   slug?: string | null;
   slugLock?: boolean | null;
   updatedAt: string;
@@ -431,17 +427,6 @@ export interface ProductCategory {
  * via the `definition` "manufacturer".
  */
 export interface Manufacturer {
-  id: string;
-  erpId: string;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "warehouses".
- */
-export interface Warehouse {
   id: string;
   erpId: string;
   name: string;
@@ -650,17 +635,6 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "uom".
- */
-export interface Uom {
-  id: string;
-  erpId: string;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders".
  */
 export interface Order {
@@ -782,14 +756,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
-      } | null)
-    | ({
-        relationTo: 'uom';
-        value: string | Uom;
-      } | null)
-    | ({
-        relationTo: 'warehouses';
-        value: string | Warehouse;
       } | null)
     | ({
         relationTo: 'orders';
@@ -1132,26 +1098,6 @@ export interface CartItemsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "uom_select".
- */
-export interface UomSelect<T extends boolean = true> {
-  erpId?: T;
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "warehouses_select".
- */
-export interface WarehousesSelect<T extends boolean = true> {
-  erpId?: T;
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
@@ -1185,16 +1131,15 @@ export interface PaymentMethodsSelect<T extends boolean = true> {
 export interface ProductsSelect<T extends boolean = true> {
   title?: T;
   erpId?: T;
+  url?: T;
   price?: T;
   pricePrevious?: T;
-  vat?: T;
-  weight?: T;
   quantity?: T;
   quantityMin?: T;
   quantityStep?: T;
   name?: T;
   code?: T;
-  ean?: T;
+  color?: T;
   description?: T;
   keywords?: T;
   bestseller?: T;
@@ -1218,7 +1163,6 @@ export interface ProductsSelect<T extends boolean = true> {
   seoImageUrl?: T;
   Category?: T;
   manufacturer?: T;
-  warehouse?: T;
   slug?: T;
   slugLock?: T;
   updatedAt?: T;
@@ -1547,6 +1491,16 @@ export interface Settings {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-imports".
+ */
+export interface ProductImport {
+  id: string;
+  title?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1607,6 +1561,16 @@ export interface SettingsSelect<T extends boolean = true> {
   linkedIn?: T;
   twitter?: T;
   pinterest?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-imports_select".
+ */
+export interface ProductImportsSelect<T extends boolean = true> {
+  title?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

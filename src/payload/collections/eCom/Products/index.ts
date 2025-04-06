@@ -45,20 +45,16 @@ const Products: CollectionConfig = {
               type: 'text',
             },
             {
+              name: 'url',
+              type: 'text',
+            },
+            {
               name: 'price',
               type: 'number',
               required: true,
             },
             {
               name: 'pricePrevious',
-              type: 'number',
-            },
-            {
-              name: 'vat',
-              type: 'number',
-            },
-            {
-              name: 'weight',
               type: 'number',
             },
             {
@@ -82,7 +78,7 @@ const Products: CollectionConfig = {
               type: 'text',
             },
             {
-              name: 'ean',
+              name: 'color',
               type: 'text',
             },
             {
@@ -187,15 +183,6 @@ const Products: CollectionConfig = {
       name: 'manufacturer',
       type: 'relationship',
       relationTo: 'manufacturer',
-      hasMany: false,
-      admin: {
-        position: 'sidebar',
-      },
-    },
-    {
-      name: 'warehouse',
-      type: 'relationship',
-      relationTo: 'warehouses',
       hasMany: false,
       admin: {
         position: 'sidebar',

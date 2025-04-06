@@ -1,26 +1,25 @@
-import { defaultLexical } from '@/payload/fields/defaultLexical'
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import path from 'path'
-import { buildConfig } from 'payload'
-import sharp from 'sharp' // sharp-import
-import { fileURLToPath } from 'url'
-import Manufacturer from './payload/collections/eCom/Manufacturer'
-import { Orders } from './payload/collections/eCom/Orders'
-import { PaymentMethods } from './payload/collections/eCom/PaymentMethods'
-import ProductCategory from './payload/collections/eCom/ProductCategory'
-import Products from './payload/collections/eCom/Products'
-import UOMs from './payload/collections/eCom/UOM'
-import Warehouse from './payload/collections/eCom/Warehouse'
-import { Media } from './payload/collections/Media'
-import { Pages } from './payload/collections/Pages'
-import { PostCategories } from './payload/collections/PostCategories'
-import { Posts } from './payload/collections/Posts'
-import { Users } from './payload/collections/Users'
 import { Footer } from './payload/globals/Footer/config'
 import { Header } from './payload/globals/Header/config'
+import Manufacturer from './payload/collections/eCom/Manufacturer'
+import { Media } from './payload/collections/Media'
+import { Orders } from './payload/collections/eCom/Orders'
+import { Pages } from './payload/collections/Pages'
+import { PaymentMethods } from './payload/collections/eCom/PaymentMethods'
+import { PostCategories } from './payload/collections/PostCategories'
+import { Posts } from './payload/collections/Posts'
+import ProductCategory from './payload/collections/eCom/ProductCategory'
+import { ProductImportsAdmin } from './payload/globals/ProductsImport/ProductImportsAdmin'
+import Products from './payload/collections/eCom/Products'
 import { Settings } from './payload/globals/Settings/Settings'
-import { plugins } from './payload/plugins'
+import { Users } from './payload/collections/Users'
+import { buildConfig } from 'payload'
+import { defaultLexical } from '@/payload/fields/defaultLexical'
+import { fileURLToPath } from 'url'
 import { getServerSideURL } from './payload/utilities/getURL'
+import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import path from 'path'
+import { plugins } from './payload/plugins'
+import sharp from 'sharp' // sharp-import
 
 // storage-adapter-import-placeholder
 
@@ -72,8 +71,6 @@ export default buildConfig({
     Media,
     PostCategories,
     Users,
-    UOMs,
-    Warehouse,
     Orders,
     PaymentMethods,
     Products,
@@ -81,7 +78,7 @@ export default buildConfig({
     Manufacturer,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer, Settings],
+  globals: [Header, Footer, Settings, ProductImportsAdmin],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
