@@ -1,43 +1,7 @@
 import { PipelineStage } from 'mongoose'
-import { Product } from '@/payload-types'
+import { ProductDetails } from './queries.types'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-
-export type ProductDetails = {
-  id: string
-  title: string
-  price?: number | null
-  pricePrevious?: number | null
-  vat?: number | null
-  weight?: number | null
-  quantity?: number | null
-  quantityMin?: number | null
-  quantityStep?: number | null
-  name?: string | null
-  code?: string | null
-  ean?: string | null
-  description?: string | null
-  keywords?: string | null
-  bestseller?: boolean | null
-  specialOffer?: boolean | null
-  mediaVideo?:
-    | {
-        url?: string | null
-        id?: string | null
-      }[]
-    | null
-  mediaImages?:
-    | {
-        url: string
-        isMain: boolean
-        id?: string | null
-      }[]
-    | null
-  seoTitle?: string | null
-  seoDescription?: string | null
-  seoImageUrl?: string | null
-  slug?: string | null
-}
 
 const projectToDetails = {
   $project: {
@@ -67,13 +31,6 @@ const projectToDetails = {
   },
 }
 
-const fetchAll = async (): Promise<Product[]> => {
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.db.collections['products'].find({})
-
-  return result as unknown as Product[]
-}
-
 const fetchBySlug = async (slug: string): Promise<ProductDetails> => {
   const payload = await getPayload({ config: configPromise })
   const model = payload.db.collections['products']
@@ -87,6 +44,5 @@ const fetchBySlug = async (slug: string): Promise<ProductDetails> => {
 }
 
 export const detailsQueries = {
-  fetchAll,
   fetchBySlug,
 }

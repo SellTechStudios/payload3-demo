@@ -1,7 +1,7 @@
 'use client'
 
 import { ProductCard } from './_components/ProductCard'
-import { ProductItem } from '@/db/products/searchQueries'
+import { ProductItem } from '@/db/products/queries'
 
 export type ProductListClientProps = {
   products: ProductItem[]

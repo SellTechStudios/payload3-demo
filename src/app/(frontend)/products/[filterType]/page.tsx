@@ -1,8 +1,10 @@
-import { ProductsList, ProductsListProps } from '../_components/product-list/Component'
+import { categoryQueries, productQueries } from '@/db'
 
-import { CategoryNavigation } from '@/app/(frontend)/products/_components/category-nav/Component'
 import { Container } from '@/components/Container'
-import { categoryQueries } from '@/db'
+import { LoadingShimmer } from '@/components/LoadingShimmer'
+import { ProductsListClient } from '../_components/product-list/Component.Client'
+import { SearchRequest } from '@/db/products/queries.types'
+import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 
 interface PageProps {
@@ -15,24 +17,21 @@ export default async function ProductList({ params, searchParams }: PageProps) {
   const categoryId = (await searchParams).categoryId
   const searchString = (await searchParams).searchString
 
-  let productListProps: ProductsListProps
   let title: string
+  const searchRequest: SearchRequest = {}
 
   // Validate and map the route parameters to our union type
   switch (filterType) {
     case 'all':
       title = 'Wszystkie Produkty'
-      productListProps = { listType: filterType }
       break
 
     case 'new':
       title = 'Nowości'
-      productListProps = { listType: filterType }
       break
 
     case 'specialOffer':
       title = 'Oferty Specjalne'
-      productListProps = { listType: filterType }
       break
 
     case 'category':
@@ -41,25 +40,34 @@ export default async function ProductList({ params, searchParams }: PageProps) {
       }
       const category = await categoryQueries.fetchById(categoryId)
       title = `Produkty w kategorii ${category.name}`
-      productListProps = { listType: filterType, categoryId: categoryId }
+      searchRequest.categoryId = categoryId
       break
 
     case 'quicksearch':
-      if (!searchString) {
-        return notFound()
-      }
-      title = `Wyniki wyszukiwania dla '${searchString}'`
-      productListProps = { listType: filterType, searchString: searchString }
+      title = searchString ? `Wyniki wyszukiwania dla '${searchString}'` : 'Wszystkie Produkty'
+      searchRequest.searchString = searchString
       break
 
     default:
       return notFound()
   }
 
+  const products = await productQueries.fetchProducts(searchRequest)
+  const facets = await productQueries.fetchFacets('Sample')
+  console.log('besteseller options')
+  console.log(facets.bestseller?.options)
+
+  console.log('category options')
+  console.log(facets.category?.options)
+
+  console.log('manufacturer options')
+  console.log(facets.manufacturer?.options)
+
   return (
     <Container className="grid grid-cols-12 gap-4">
       <div className="col-span-12 md:col-span-3">
-        <CategoryNavigation />
+        {/* <CategoryNavigation /> */}
+
         {/* <ManufacturerNavigation
                 groupName="Producent"
                 groupValues={facets.manufacturer}
@@ -75,7 +83,9 @@ export default async function ProductList({ params, searchParams }: PageProps) {
       </div>
       <div className="col-span-12 md:col-span-9">
         <h2 className="col-span-full text-2xl">{title}</h2>
-        <ProductsList {...productListProps} />
+        <Suspense fallback={<LoadingShimmer />}>
+          <ProductsListClient products={products} />
+        </Suspense>
       </div>
     </Container>
   )
