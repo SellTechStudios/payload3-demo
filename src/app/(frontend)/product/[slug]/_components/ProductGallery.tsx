@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { useEffect, useRef, useState } from 'react'
 
 import { Navigation } from 'swiper/modules'
-import { ProductDetails } from '@/db/products/detailsQueries'
+import { ProductDetails } from '@/db/products/queries.types'
 import { Swiper as SwiperType } from 'swiper/types'
 
 type ProductGalleryProps = {
@@ -42,9 +42,8 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }: Produ
           <img
             src={selectedImage}
             alt="Selected Product Image"
-            className="absolute top-0 left-0 w-full h-full rounded-lg"
+            className="absolute top-0 left-0 w-full rounded-lg"
             width={100}
-            height={100}
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
           />
         )}

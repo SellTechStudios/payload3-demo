@@ -1,6 +1,6 @@
 export type SearchRequest = {
   searchString?: string
-  categoryId?: string
+  type: 'all' | 'new' | 'specialOffer' | 'quicksearch'
 }
 
 export type ProductItem = {
@@ -74,8 +74,8 @@ export type FacetBucket = {
 }
 
 export type FacetedNavigation = {
-  price?: FacetBucket
-  manufacturer?: FacetBucket
+  // price?: FacetBucket
+  // manufacturer?: FacetBucket
   bestseller?: FacetBucket
-  category?: FacetBucket
+  // category?: FacetBucket
 }

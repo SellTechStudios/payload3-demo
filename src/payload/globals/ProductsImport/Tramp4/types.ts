@@ -19,6 +19,7 @@ export interface Offer {
   price: string
   category: string
   shopcategory: string
+  producer: string
   property: Property[]
   availability: string
   shipping: string

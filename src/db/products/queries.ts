@@ -61,7 +61,7 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
   const payload = await getPayload({ config: configPromise })
 
   // Define the MongoDB match stage for filtering products
-  const matchStage: any = {}
+  const matchStage: Record<string, unknown> = {}
 
   // Add search text filter if provided
   if (searchText) {
@@ -69,7 +69,6 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
       { title: { $regex: searchText, $options: 'i' } },
       { name: { $regex: searchText, $options: 'i' } },
       { description: { $regex: searchText, $options: 'i' } },
-      { keywords: { $regex: searchText, $options: 'i' } },
     ]
   }
 
@@ -119,27 +118,26 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
         manufacturerName: 1,
         bestseller: 1,
         price: 1,
-        _id: 1,
       },
     },
 
     {
       $facet: {
         // Manufacturer facets
-        manufacturerFacets: [
-          {
-            $match: { manufacturerId: { $ne: null } },
-          },
-          {
-            $group: {
-              _id: '$manufacturerId',
-              name: { $first: '$manufacturerName' },
-              count: { $sum: 1 },
-            },
-          },
-          { $sort: { count: -1 } },
-          { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
-        ],
+        // manufacturerFacets: [
+        //   {
+        //     $match: { manufacturerId: { $ne: null } },
+        //   },
+        //   {
+        //     $group: {
+        //       _id: '$manufacturerId',
+        //       name: { $first: '$manufacturerName' },
+        //       count: { $sum: 1 },
+        //     },
+        //   },
+        //   { $sort: { count: -1 } },
+        //   { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
+        // ],
 
         // Bestseller facets
         bestsellerFacets: [
@@ -166,60 +164,60 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
         ],
 
         // Category facets
-        categoryFacets: [
-          {
-            $match: { categoryId: { $ne: null } },
-          },
-          {
-            $group: {
-              _id: '$categoryId',
-              name: { $first: '$categoryName' },
-              count: { $sum: 1 },
-            },
-          },
-          { $sort: { count: -1 } },
-          { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
-        ],
+        // categoryFacets: [
+        //   {
+        //     $match: { categoryId: { $ne: null } },
+        //   },
+        //   {
+        //     $group: {
+        //       _id: '$categoryId',
+        //       name: { $first: '$categoryName' },
+        //       count: { $sum: 1 },
+        //     },
+        //   },
+        //   { $sort: { count: -1 } },
+        //   { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
+        // ],
 
         // Price facets
-        priceFacets: [
-          {
-            $bucket: {
-              groupBy: '$price',
-              boundaries: [0, 51, 101, 10001],
-              default: 'Other',
-              output: {
-                count: { $sum: 1 },
-              },
-            },
-          },
-          {
-            $project: {
-              _id: 0,
-              label: {
-                $switch: {
-                  branches: [
-                    { case: { $eq: ['$_id', 0] }, then: '0-50' },
-                    { case: { $eq: ['$_id', 51] }, then: '51-100' },
-                    { case: { $eq: ['$_id', 101] }, then: '101-10000' },
-                  ],
-                  default: 'Other',
-                },
-              },
-              count: 1,
-              value: {
-                $switch: {
-                  branches: [
-                    { case: { $eq: ['$_id', 0] }, then: '0-50' },
-                    { case: { $eq: ['$_id', 51] }, then: '51-100' },
-                    { case: { $eq: ['$_id', 101] }, then: '101-10000' },
-                  ],
-                  default: 'other',
-                },
-              },
-            },
-          },
-        ],
+        // priceFacets: [
+        //   {
+        //     $bucket: {
+        //       groupBy: '$price',
+        //       boundaries: [0, 51, 101, 10001],
+        //       default: 'Other',
+        //       output: {
+        //         count: { $sum: 1 },
+        //       },
+        //     },
+        //   },
+        //   {
+        //     $project: {
+        //       _id: 0,
+        //       label: {
+        //         $switch: {
+        //           branches: [
+        //             { case: { $eq: ['$_id', 0] }, then: '0-50' },
+        //             { case: { $eq: ['$_id', 51] }, then: '51-100' },
+        //             { case: { $eq: ['$_id', 101] }, then: '101-10000' },
+        //           ],
+        //           default: 'Other',
+        //         },
+        //       },
+        //       count: 1,
+        //       value: {
+        //         $switch: {
+        //           branches: [
+        //             { case: { $eq: ['$_id', 0] }, then: '0-50' },
+        //             { case: { $eq: ['$_id', 51] }, then: '51-100' },
+        //             { case: { $eq: ['$_id', 101] }, then: '101-10000' },
+        //           ],
+        //           default: 'other',
+        //         },
+        //       },
+        //     },
+        //   },
+        // ],
       },
     },
   ]
@@ -233,31 +231,30 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
 
   // Format the response
   const facets: FacetedNavigation = {
-    // price: result.priceFacets || [],
-    manufacturer: {
-      code: 'MANUFACTURER',
-      label: 'Manufacturer',
-      type: 'checkboxes',
-      options: result.manufacturerFacets || [],
-    },
+    // manufacturer: {
+    //   code: 'MANUFACTURER',
+    //   label: 'Manufacturer',
+    //   type: 'checkboxes',
+    //   options: result.manufacturerFacets || [],
+    // },
     bestseller: {
       code: 'BESTSELLER',
       label: 'Bestselling Products',
       type: 'checkboxes',
       options: result.bestsellerFacets || [],
     },
-    category: {
-      code: 'CATEGORY',
-      label: 'Categories',
-      type: 'checkboxes',
-      options: result.categoryFacets || [],
-    },
-    price: {
-      code: 'PRICE',
-      label: 'Price',
-      type: 'checkboxes',
-      options: result.priceFacets || [],
-    },
+    // category: {
+    //   code: 'CATEGORY',
+    //   label: 'Categories',
+    //   type: 'checkboxes',
+    //   options: result.categoryFacets || [],
+    // },
+    // price: {
+    //   code: 'PRICE',
+    //   label: 'Price',
+    //   type: 'checkboxes',
+    //   options: result.priceFacets || [],
+    // },
   }
 
   return facets

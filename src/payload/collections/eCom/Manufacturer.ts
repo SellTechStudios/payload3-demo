@@ -7,12 +7,12 @@ const Manufacturer: CollectionConfig = {
   },
   fields: [
     {
-      name: 'erpId',
+      name: 'name',
       type: 'text',
       required: true,
     },
     {
-      name: 'name',
+      name: 'code',
       type: 'text',
       required: true,
     },

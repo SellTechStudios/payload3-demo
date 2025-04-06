@@ -4,7 +4,7 @@ import { AddToCartButton } from '@/components/Cart/AddToCartButton'
 import { CollectionMeta } from '@/payload/collections/eCom/_interfaces/collection-meta'
 import { Container } from '@/components/Container'
 import { Metadata } from 'next'
-import { ProductDetails } from '@/db/products/detailsQueries'
+import { ProductDetails } from '@/db/products/queries.types'
 import { ProductGallery } from './_components/ProductGallery'
 import { ProductQuantitySelector } from '@/components/ProductQuantitySelector'
 import { RemoveFromCartButton } from '@/components/Cart/RemoveFromCartButton'
@@ -24,7 +24,7 @@ export default async function Product({ params }: { params: Promise<{ slug: stri
 
   return (
     <Container>
-      <section className="md:gap-4 md:grid md:grid-cols-2">
+      <section className="md:gap-16 md:grid md:grid-cols-2">
         <ProductGallery product={product} />
         <div>
           <h1 className="text-3xl mt-4 md:mt-0">{product.name}</h1>

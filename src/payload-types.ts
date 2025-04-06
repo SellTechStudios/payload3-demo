@@ -379,19 +379,11 @@ export interface Product {
   quantity?: number | null;
   quantityMin?: number | null;
   quantityStep?: number | null;
-  name?: string | null;
-  code?: string | null;
   color?: string | null;
   description?: string | null;
   keywords?: string | null;
   bestseller?: boolean | null;
   specialOffer?: boolean | null;
-  mediaVideo?:
-    | {
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   mediaImages?:
     | {
         url: string;
@@ -409,7 +401,6 @@ export interface Product {
   slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -428,8 +419,8 @@ export interface ProductCategory {
  */
 export interface Manufacturer {
   id: string;
-  erpId: string;
   name: string;
+  code: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1137,19 +1128,11 @@ export interface ProductsSelect<T extends boolean = true> {
   quantity?: T;
   quantityMin?: T;
   quantityStep?: T;
-  name?: T;
-  code?: T;
   color?: T;
   description?: T;
   keywords?: T;
   bestseller?: T;
   specialOffer?: T;
-  mediaVideo?:
-    | T
-    | {
-        url?: T;
-        id?: T;
-      };
   mediaImages?:
     | T
     | {
@@ -1167,7 +1150,6 @@ export interface ProductsSelect<T extends boolean = true> {
   slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1184,8 +1166,8 @@ export interface ProductCategorySelect<T extends boolean = true> {
  * via the `definition` "manufacturer_select".
  */
 export interface ManufacturerSelect<T extends boolean = true> {
-  erpId?: T;
   name?: T;
+  code?: T;
   updatedAt?: T;
   createdAt?: T;
 }

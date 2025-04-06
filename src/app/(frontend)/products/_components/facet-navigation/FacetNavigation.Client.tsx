@@ -17,18 +17,18 @@ export const FacetNavigationClient: React.FC<Props> = (props) => {
 
   return (
     <nav className="prose">
-      <FacetBucketClient
+      {/* <FacetBucketClient
         bucket={facets.category}
         onOptionClick={(option) => handleOptionClick('category', option)}
-      />
-      <FacetBucketClient
+      /> */}
+      {/* <FacetBucketClient
         bucket={facets.price}
         onOptionClick={(option) => handleOptionClick('price', option)}
-      />
-      <FacetBucketClient
+      /> */}
+      {/* <FacetBucketClient
         bucket={facets.manufacturer}
         onOptionClick={(option) => handleOptionClick('manufacturer', option)}
-      />
+      /> */}
       <FacetBucketClient
         bucket={facets.bestseller}
         onOptionClick={(option) => handleOptionClick('bestseller', option)}

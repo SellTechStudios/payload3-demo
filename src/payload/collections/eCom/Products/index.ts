@@ -19,9 +19,9 @@ const Products: CollectionConfig = {
     afterChange: [revalidateProduct],
     afterDelete: [deleteProductFromCarts],
   },
-  versions: {
-    drafts: true,
-  },
+  // versions: {
+  //   drafts: false,
+  // },
   access: {
     read: () => true,
     create: admins,
@@ -70,14 +70,6 @@ const Products: CollectionConfig = {
               type: 'number',
             },
             {
-              name: 'name',
-              type: 'text',
-            },
-            {
-              name: 'code',
-              type: 'text',
-            },
-            {
               name: 'color',
               type: 'text',
             },
@@ -97,17 +89,6 @@ const Products: CollectionConfig = {
               name: 'specialOffer',
               label: 'Special Offer',
               type: 'checkbox',
-            },
-            {
-              name: 'mediaVideo',
-              label: 'Videos',
-              type: 'array',
-              fields: [
-                {
-                  name: 'url',
-                  type: 'text',
-                },
-              ],
             },
             {
               name: 'mediaImages',
