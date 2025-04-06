@@ -72,13 +72,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
       <div className="flex flex-row align-middle justify-center bg-gray-800 py-4 text-gray-100 mt-4 not-prose relative left-1/2 w-dvw max-w-none -translate-x-1/2">
         <nav className="flex flex-row gap-8 uppercase">
-          <Link prefetch={false} href="/products">
+          <Link prefetch={false} href="/products/all">
             Wszystkie
           </Link>
           <Link prefetch={false} href="/products/new">
             Nowości
           </Link>
-          <Link prefetch={false} href="/products/special-offer">
+          <Link prefetch={false} href="/products/specialOffer">
             Oferty Specjalne
           </Link>
           <Link prefetch={false} href="/about-us">

@@ -1,6 +1,6 @@
 export const quickSearch = (searchString: string) => ({
   $search: {
-    index: 'facets',
+    index: 'quick-search-index',
     text: {
       query: searchString,
       path: 'name',

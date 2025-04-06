@@ -2,11 +2,11 @@
 
 import { CircleCheckBig, ShoppingCart } from 'lucide-react'
 
-import { Button } from '../../../../../../components/FormElements/button'
+import { Button } from '../../../../../components/FormElements/button'
 import { GetMainImageUrl } from '@/payload/utilities/productUtils'
 import Link from 'next/link'
 import { Product } from '@/payload-types'
-import { ProductItem } from '@/db/products/searchQueries'
+import { ProductItem } from '@/db/products/queries.types'
 import { formatCurrency } from '@/utilities/formatPrice'
 import { useCart } from '@/providers/Cart'
 
