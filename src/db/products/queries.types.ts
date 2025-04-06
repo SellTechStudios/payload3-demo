@@ -63,6 +63,7 @@ export type ProductDetails = {
 export type FacetOption = {
   value: string | number | boolean
   count: number
+  label: string
 }
 
 export type FacetBucket = {

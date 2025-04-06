@@ -1,6 +1,7 @@
 import { categoryQueries, productQueries } from '@/db'
 
 import { Container } from '@/components/Container'
+import { FacetNavigationClient } from '../_components/facet-navigation/FacetNavigation.Client'
 import { LoadingShimmer } from '@/components/LoadingShimmer'
 import { ProductsListClient } from '../_components/product-list/Component.Client'
 import { SearchRequest } from '@/db/products/queries.types'
@@ -54,35 +55,13 @@ export default async function ProductList({ params, searchParams }: PageProps) {
 
   const products = await productQueries.fetchProducts(searchRequest)
   const facets = await productQueries.fetchFacets('Sample')
-  console.log('besteseller options')
-  console.log(facets.bestseller?.options)
-
-  console.log('category options')
-  console.log(facets.category?.options)
-
-  console.log('manufacturer options')
-  console.log(facets.manufacturer?.options)
-
-  console.log('price options')
-  console.log(facets.price?.options)
 
   return (
     <Container className="grid grid-cols-12 gap-4">
       <div className="col-span-12 md:col-span-3">
-        {/* <CategoryNavigation /> */}
-
-        {/* <ManufacturerNavigation
-                groupName="Producent"
-                groupValues={facets.manufacturer}
-                selectedValues={manufacturerFilter.manufacturerId}
-                onChange={(e) => onManufacturerChange('manufacturerId', e)}
-              />
-              <PriceNavigation
-                selectedRanges={priceFilter.price}
-                groupName="Cena"
-                groupValues={facets.price}
-                onChange={(e) => onPriceRangesChange('price', e)}
-              /> */}
+        <Suspense fallback={<LoadingShimmer />}>
+          <FacetNavigationClient facets={facets} />
+        </Suspense>
       </div>
       <div className="col-span-12 md:col-span-9">
         <h2 className="col-span-full text-2xl">{title}</h2>
