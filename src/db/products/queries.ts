@@ -73,15 +73,6 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
     ]
   }
 
-  // Define price ranges for faceting
-  const priceRanges = [
-    { $lte: ['$price', 10], range: '0-10' },
-    { $and: [{ $gt: ['$price', 10] }, { $lte: ['$price', 50] }], range: '11-50' },
-    { $and: [{ $gt: ['$price', 50] }, { $lte: ['$price', 100] }], range: '51-100' },
-    { $and: [{ $gt: ['$price', 100] }, { $lte: ['$price', 500] }], range: '101-500' },
-    { $gt: ['$price', 500], range: '501+' },
-  ]
-
   // Use MongoDB's aggregation framework to generate facets
   const aggregationPipeline: PipelineStage[] = [
     { $match: matchStage },
@@ -244,21 +235,25 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
   const facets: FacetedNavigation = {
     // price: result.priceFacets || [],
     manufacturer: {
+      code: 'MANUFACTURER',
       label: 'Manufacturer',
       type: 'checkboxes',
       options: result.manufacturerFacets || [],
     },
     bestseller: {
+      code: 'BESTSELLER',
       label: 'Bestselling Products',
       type: 'checkboxes',
       options: result.bestsellerFacets || [],
     },
     category: {
+      code: 'CATEGORY',
       label: 'Categories',
       type: 'checkboxes',
       options: result.categoryFacets || [],
     },
     price: {
+      code: 'PRICE',
       label: 'Price',
       type: 'checkboxes',
       options: result.priceFacets || [],

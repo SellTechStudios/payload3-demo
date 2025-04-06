@@ -57,7 +57,7 @@ export default async function ProductList({ params, searchParams }: PageProps) {
   const facets = await productQueries.fetchFacets('Sample')
 
   return (
-    <Container className="grid grid-cols-12 gap-4">
+    <Container className="grid grid-cols-12 gap-16">
       <div className="col-span-12 md:col-span-3">
         <Suspense fallback={<LoadingShimmer />}>
           <FacetNavigationClient facets={facets} />
