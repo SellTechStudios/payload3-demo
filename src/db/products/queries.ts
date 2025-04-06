@@ -120,23 +120,18 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
       },
     },
 
-    // Fixed project stage - using only inclusion (not mixing with exclusion)
     {
       $project: {
-        // Include only the fields we want to keep
         categoryId: 1,
         categoryName: 1,
         manufacturerId: 1,
         manufacturerName: 1,
         bestseller: 1,
-        // Include any other original fields you need to keep
-        // For example: name: 1, price: 1, description: 1, etc.
+        price: 1,
         _id: 1,
-        // No exclusions (0) in this projection
       },
     },
 
-    // Facet stage remains similar but with cleaner structure
     {
       $facet: {
         // Manufacturer facets
@@ -194,6 +189,46 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
           { $sort: { count: -1 } },
           { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
         ],
+
+        // Price facets
+        priceFacets: [
+          {
+            $bucket: {
+              groupBy: '$price',
+              boundaries: [0, 51, 101, 10001],
+              default: 'Other',
+              output: {
+                count: { $sum: 1 },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              label: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ['$_id', 0] }, then: '0-50' },
+                    { case: { $eq: ['$_id', 51] }, then: '51-100' },
+                    { case: { $eq: ['$_id', 101] }, then: '101-10000' },
+                  ],
+                  default: 'Other',
+                },
+              },
+              count: 1,
+              value: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ['$_id', 0] }, then: '0-50' },
+                    { case: { $eq: ['$_id', 51] }, then: '51-100' },
+                    { case: { $eq: ['$_id', 101] }, then: '101-10000' },
+                  ],
+                  default: 'other',
+                },
+              },
+            },
+          },
+        ],
       },
     },
   ]
@@ -222,6 +257,11 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
       label: 'Categories',
       type: 'checkboxes',
       options: result.categoryFacets || [],
+    },
+    price: {
+      label: 'Price',
+      type: 'checkboxes',
+      options: result.priceFacets || [],
     },
   }
 
