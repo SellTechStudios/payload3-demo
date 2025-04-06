@@ -67,6 +67,7 @@ export type FacetOption = {
 
 export type FacetBucket = {
   label: string
+  type: 'checkboxes'
   options: FacetOption[]
 }
 

@@ -85,6 +85,8 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
   // Use MongoDB's aggregation framework to generate facets
   const aggregationPipeline: PipelineStage[] = [
     { $match: matchStage },
+
+    // Combined lookup for categories with direct field mapping
     {
       $lookup: {
         from: 'product-categories',
@@ -93,21 +95,8 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
         as: 'categoryDetails',
       },
     },
-    {
-      $unwind: {
-        path: '$categoryDetails',
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $addFields: {
-        categoryId: {
-          $toString: '$categoryDetails._id',
-        },
-        categoryName: '$categoryDetails.name',
-      },
-    },
 
+    // Combined lookup for manufacturers with direct field mapping
     {
       $lookup: {
         from: 'manufacturers',
@@ -116,34 +105,45 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
         as: 'manufacturerDetails',
       },
     },
-    {
-      $unwind: {
-        path: '$manufacturerDetails',
-        preserveNullAndEmptyArrays: true,
-      },
-    },
+
+    // Single addFields stage to add all derived fields
     {
       $addFields: {
-        manufacturerId: {
-          $toString: '$manufacturerDetails._id',
+        categoryId: {
+          $toString: { $arrayElemAt: ['$categoryDetails._id', 0] },
         },
-        manufacturerName: '$manufacturerDetails.name',
+        categoryName: { $arrayElemAt: ['$categoryDetails.name', 0] },
+        manufacturerId: {
+          $toString: { $arrayElemAt: ['$manufacturerDetails._id', 0] },
+        },
+        manufacturerName: { $arrayElemAt: ['$manufacturerDetails.name', 0] },
       },
     },
 
+    // Fixed project stage - using only inclusion (not mixing with exclusion)
     {
       $project: {
-        Category: 0,
-        categoryDetails: 0,
-        manufacturer: 0,
-        manufacturerDetails: 0,
+        // Include only the fields we want to keep
+        categoryId: 1,
+        categoryName: 1,
+        manufacturerId: 1,
+        manufacturerName: 1,
+        bestseller: 1,
+        // Include any other original fields you need to keep
+        // For example: name: 1, price: 1, description: 1, etc.
+        _id: 1,
+        // No exclusions (0) in this projection
       },
     },
 
+    // Facet stage remains similar but with cleaner structure
     {
       $facet: {
         // Manufacturer facets
         manufacturerFacets: [
+          {
+            $match: { manufacturerId: { $ne: null } },
+          },
           {
             $group: {
               _id: '$manufacturerId',
@@ -151,7 +151,6 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
               count: { $sum: 1 },
             },
           },
-          { $match: { _id: { $ne: null } } },
           { $sort: { count: -1 } },
           { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
         ],
@@ -160,33 +159,38 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
         bestsellerFacets: [
           {
             $group: {
-              _id: {
-                value: '$bestseller',
-              },
+              _id: '$bestseller',
               count: { $sum: 1 },
             },
           },
-
           {
             $project: {
               _id: 0,
               label: {
                 $cond: {
-                  if: { $eq: ['$_id.value', true] },
+                  if: { $eq: ['$_id', true] },
                   then: 'Bestseller',
                   else: 'Inne',
                 },
               },
               count: 1,
-              value: '$_id.value',
+              value: '$_id',
             },
           },
         ],
 
         // Category facets
         categoryFacets: [
-          { $group: { _id: '$categoryId', name: { $first: '$categoryName' }, count: { $sum: 1 } } },
-          { $match: { _id: { $ne: null } } },
+          {
+            $match: { categoryId: { $ne: null } },
+          },
+          {
+            $group: {
+              _id: '$categoryId',
+              name: { $first: '$categoryName' },
+              count: { $sum: 1 },
+            },
+          },
           { $sort: { count: -1 } },
           { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
         ],
@@ -206,14 +210,17 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
     // price: result.priceFacets || [],
     manufacturer: {
       label: 'Manufacturer',
+      type: 'checkboxes',
       options: result.manufacturerFacets || [],
     },
     bestseller: {
       label: 'Bestselling Products',
+      type: 'checkboxes',
       options: result.bestsellerFacets || [],
     },
     category: {
       label: 'Categories',
+      type: 'checkboxes',
       options: result.categoryFacets || [],
     },
   }
