@@ -4,7 +4,6 @@ import { CircleCheckBig, ShoppingCart } from 'lucide-react'
 
 import { Button } from '../../../../../components/FormElements/button'
 import { GetMainImageUrl } from '@/payload/utilities/productUtils'
-import Link from 'next/link'
 import { Product } from '@/payload-types'
 import { ProductItem } from '@/db/products/queries.types'
 import { formatCurrency } from '@/utilities/formatPrice'
@@ -18,32 +17,60 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
   const { addItemToCart, isProductInCart } = useCart()
   const isInCart = isProductInCart(product.id)
   const imageUrl = GetMainImageUrl(product as unknown as Product)
+  const percentageOff = product.pricePrevious
+    ? Math.round(((product.pricePrevious - product.price) / product.pricePrevious) * 100)
+    : null
 
   return (
-    <div className="flex flex-col h-full">
-      <Link href={`/product/${product.slug}`} className="relative group">
-        <div className="relative">
-          {imageUrl ? (
-            <img
-              src={GetMainImageUrl(product as unknown as Product)}
-              sizes="100vw"
-              className="w-full h-auto mb-2 rounded-lg p-4"
-              alt="Product Image"
-            />
-          ) : (
-            <img
-              alt="Missing produt image"
-              src="data:image/jpeg;base64,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"
-            />
-          )}
-          <div className="absolute bottom-0 left-0 w-full h-32 rounded-b-lg"></div>
-          <p className="absolute bottom-2 right-2 text-black font-sans text-lg">
-            {formatCurrency(product.price)}
+    <div className="relative flex  flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+      <a
+        className="relative mx-3 mt-3 flex overflow-hidden rounded-xl group"
+        href={`/product/${product.slug}`}
+      >
+        <img
+          src={imageUrl}
+          className="object-scale-down w-full h-60 transition-transform duration-300 group-hover:scale-105"
+          alt={product.title}
+        />
+
+        {percentageOff && (
+          <span className="absolute top-0 left-0 m-2 rounded-full bg-black px-2 text-center text-sm font-medium text-white">
+            {percentageOff}% OFF
+          </span>
+        )}
+      </a>
+      <div className="mt-8 px-5 pb-5">
+        <a href={`/product/${product.slug}`} className="h-16 overflow-hidden flex items-start">
+          <h5 className="text-lg tracking-tight line-clamp-2">{product.title}</h5>
+        </a>
+        <div className="mt-4 mb-5 flex items-center justify-between">
+          <p>
+            <span className="text-3xl font-bold text-slate-900">
+              {formatCurrency(product.price)}
+            </span>
+            <span className="text-sm text-slate-900 line-through ml-4">
+              {formatCurrency(product.pricePrevious)}
+            </span>
           </p>
+          {/* <div className="flex items-center">
+        <svg aria-hidden="true" className="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+        </svg>
+        <svg aria-hidden="true" className="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+        </svg>
+        <svg aria-hidden="true" className="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+        </svg>
+        <svg aria-hidden="true" className="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+        </svg>
+        <svg aria-hidden="true" className="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+        </svg>
+        <span className="mr-2 ml-3 rounded bg-yellow-200 px-2.5 py-0.5 text-xs font-semibold">5.0</span>
+      </div> */}
         </div>
-      </Link>
-      <p className="text-sm leading-4 font-semibold">{product.id}</p>
-      <div className="flex justify-center mt-auto">
         <Button
           onClick={
             !isInCart
