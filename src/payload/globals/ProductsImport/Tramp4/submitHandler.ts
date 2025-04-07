@@ -16,7 +16,7 @@ type ProductCategoryUpsert = Omit<ProductCategory, 'createdAt' | 'updatedAt' | '
 export async function submitData() {
   const payload = await getPayload({ config })
 
-  const xmlData = (await parseFile('Tramp4.small')) as unknown as Tramp4Import
+  const xmlData = (await parseFile('Tramp4')) as unknown as Tramp4Import
   const products = xmlData.nokaut.offers.offer
 
   const dataToUpsert = await Promise.all(

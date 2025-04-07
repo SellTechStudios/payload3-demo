@@ -74,8 +74,8 @@ export type FacetBucket = {
 }
 
 export type FacetedNavigation = {
-  // price?: FacetBucket
-  // manufacturer?: FacetBucket
+  price?: FacetBucket
+  manufacturer?: FacetBucket
   bestseller?: FacetBucket
-  // category?: FacetBucket
+  category?: FacetBucket
 }
