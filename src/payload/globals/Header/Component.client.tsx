@@ -78,8 +78,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           <Link prefetch={false} href="/products/new">
             Nowości
           </Link>
-          <Link prefetch={false} href="/products/specialOffer">
-            Oferty Specjalne
+          <Link prefetch={false} href="/products/bestseller">
+            Bestsellery
           </Link>
           <Link prefetch={false} href="/about-us">
             O Nas

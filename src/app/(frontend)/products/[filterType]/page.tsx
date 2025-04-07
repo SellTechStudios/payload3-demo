@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
 import { productQueries } from '@/db'
 
 interface PageProps {
-  params: Promise<{ filterType: 'all' | 'new' | 'specialOffer' | 'quicksearch' }>
+  params: Promise<{ filterType: 'all' | 'new' | 'bestseller' | 'quicksearch' }>
   searchParams: Promise<{ [key: string]: string | undefined }>
 }
 
@@ -31,8 +31,8 @@ export default async function ProductList({ params, searchParams }: PageProps) {
       title = 'Nowości'
       break
 
-    case 'specialOffer':
-      title = 'Oferty Specjalne'
+    case 'bestseller':
+      title = 'Najlepiej sprzedające się'
       break
 
     case 'quicksearch':
@@ -45,8 +45,8 @@ export default async function ProductList({ params, searchParams }: PageProps) {
   }
 
   const products = await productQueries.fetchProducts(searchRequest)
-  const facets = await productQueries.fetchFacets('Sample')
-  console.log(facets)
+  const facets = await productQueries.fetchFacets(searchRequest)
+
   return (
     <Container className="grid grid-cols-12 gap-16">
       <div className="col-span-12 md:col-span-3">

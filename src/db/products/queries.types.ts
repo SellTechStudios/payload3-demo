@@ -1,28 +1,14 @@
+import { Product } from '@/payload-types'
+
 export type SearchRequest = {
   searchString?: string
-  type: 'all' | 'new' | 'specialOffer' | 'quicksearch'
+  type: 'all' | 'new' | 'bestseller' | 'quicksearch'
 }
 
-export type ProductItem = {
-  id: string
-  isPromoted: boolean
-  name: string
-  price: number
-  pricePrevious: number
-  ean: string
-  mediaImages: MediaImage[]
-  slug: string
-  manufacturer: string
-}
-
-export type QueryType = {
-  limit: number
-  page: number
-  depth: number
-  where: {
-    or?: Array<{ [key: string]: { contains: string } }>
-  }
-}
+export type ProductItem = Pick<
+  Product,
+  'id' | 'bestseller' | 'title' | 'price' | 'pricePrevious' | 'mediaImages' | 'slug'
+>
 
 export type ProductDetails = {
   id: string

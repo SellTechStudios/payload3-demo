@@ -1,4 +1,4 @@
-import { FacetedNavigation, ProductItem, QueryType, SearchRequest } from './queries.types'
+import { FacetedNavigation, ProductItem, SearchRequest } from './queries.types'
 
 import { PipelineStage } from 'mongoose'
 import configPromise from '@payload-config'
@@ -19,56 +19,73 @@ const fetchAllSlugs = async (): Promise<string[]> => {
 
 const fetchProducts = async (params: SearchRequest) => {
   const payload = await getPayload({ config: configPromise })
-
-  const query: QueryType = {
-    limit: 10,
-    page: 1,
-    depth: 0, // Don't populate relationships for performance
-    where: {},
-  }
-
-  // Add search text filter if provided
-  if (params.searchString) {
-    query.where = {
-      or: [
-        { title: { contains: params.searchString } },
-        { name: { contains: params.searchString } },
-        { description: { contains: params.searchString } },
-      ],
-    }
-  }
-
-  const productsResponse = await payload.find({
-    collection: 'products',
-    ...query,
-    select: {
-      _id: true,
-      isPromoted: true,
-      name: true,
-      price: true,
-      pricePrevious: true,
-      ean: true,
-      mediaImages: true,
-      slug: true,
-      manufacturer: true,
-    },
-  })
-
-  return productsResponse.docs as unknown as ProductItem[]
-}
-
-const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> => {
-  const payload = await getPayload({ config: configPromise })
+  const { searchString } = params
 
   // Define the MongoDB match stage for filtering products
   const matchStage: Record<string, unknown> = {}
 
   // Add search text filter if provided
-  if (searchText) {
+  if (searchString) {
     matchStage.$or = [
-      { title: { $regex: searchText, $options: 'i' } },
-      { name: { $regex: searchText, $options: 'i' } },
-      { description: { $regex: searchText, $options: 'i' } },
+      { title: { $regex: searchString, $options: 'i' } },
+      { name: { $regex: searchString, $options: 'i' } },
+      { description: { $regex: searchString, $options: 'i' } },
+    ]
+  }
+
+  // Use MongoDB's aggregation framework to generate facets
+  const aggregationPipeline: PipelineStage[] = []
+
+  switch (params.type) {
+    case 'all':
+      aggregationPipeline.push({ $match: matchStage })
+      aggregationPipeline.push({ $sort: { title: 1 } })
+      break
+    case 'new':
+      aggregationPipeline.push({ $sort: { createdAt: 1 } })
+      break
+    case 'bestseller':
+      aggregationPipeline.push({ $sort: { bestseller: 1 } })
+      break
+    case 'quicksearch':
+      break
+  }
+
+  aggregationPipeline.push({ $limit: 10 })
+  aggregationPipeline.push({
+    $project: {
+      _id: 0,
+      id: {
+        $toString: '$_id',
+      },
+      bestseller: 1,
+      title: 1,
+      price: 1,
+      pricePrevious: 1,
+      mediaImages: 1,
+      slug: 1,
+    },
+  })
+
+  const model = payload.db.collections['products']
+  const aggregationResult = await model.aggregate(aggregationPipeline)
+
+  return aggregationResult as ProductItem[]
+}
+
+const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> => {
+  const payload = await getPayload({ config: configPromise })
+  const { searchString } = params
+
+  // Define the MongoDB match stage for filtering products
+  const matchStage: Record<string, unknown> = {}
+
+  // Add search text filter if provided
+  if (searchString) {
+    matchStage.$or = [
+      { title: { $regex: searchString, $options: 'i' } },
+      { name: { $regex: searchString, $options: 'i' } },
+      { description: { $regex: searchString, $options: 'i' } },
     ]
   }
 
@@ -184,7 +201,7 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
           {
             $bucket: {
               groupBy: '$price',
-              boundaries: [0, 51, 101, 10001],
+              boundaries: [0, 50, 100, 500, 1000],
               default: 'Other',
               output: {
                 count: { $sum: 1 },
@@ -198,8 +215,8 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
                 $switch: {
                   branches: [
                     { case: { $eq: ['$_id', 0] }, then: '0-50' },
-                    { case: { $eq: ['$_id', 51] }, then: '51-100' },
-                    { case: { $eq: ['$_id', 101] }, then: '101-10000' },
+                    { case: { $eq: ['$_id', 50] }, then: '50-100' },
+                    { case: { $eq: ['$_id', 100] }, then: '100-500' },
                   ],
                   default: 'Other',
                 },
@@ -209,10 +226,10 @@ const fetchFacets = async (searchText: string = ''): Promise<FacetedNavigation> 
                 $switch: {
                   branches: [
                     { case: { $eq: ['$_id', 0] }, then: '0-50' },
-                    { case: { $eq: ['$_id', 51] }, then: '51-100' },
-                    { case: { $eq: ['$_id', 101] }, then: '101-10000' },
+                    { case: { $eq: ['$_id', 50] }, then: '50-100' },
+                    { case: { $eq: ['$_id', 100] }, then: '100-500' },
                   ],
-                  default: 'other',
+                  default: 'Other',
                 },
               },
             },

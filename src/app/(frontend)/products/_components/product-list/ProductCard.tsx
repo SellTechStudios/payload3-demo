@@ -42,7 +42,7 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
           </p>
         </div>
       </Link>
-      <p className="text-sm leading-4 font-semibold">{product.name}</p>
+      <p className="text-sm leading-4 font-semibold">{product.id}</p>
       <div className="flex justify-center mt-auto">
         <Button
           onClick={
