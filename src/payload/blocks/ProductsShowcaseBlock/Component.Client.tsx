@@ -1,6 +1,6 @@
 import type { Product, ProductsShowcaseBlock as ProductsShowcaseProps } from '@/payload-types'
 
-import { ProductCard } from '@/components/Product/ProductCard'
+import { ProductRow } from '@/components/Product/ProductRow'
 import React from 'react'
 
 type Props = Omit<ProductsShowcaseProps, 'id' | 'blockType' | 'blockName'> & {
@@ -16,11 +16,11 @@ export const ProductsShowcaseBlock: React.FC<Props> = (props: Props) => {
         <h3>{title}</h3>
       </div>
 
-      <div className="divide-y divide-gray-200">
+      <div className="flex flex-col gap-4 divide-y divide-gray-200">
         {Array.isArray(products) &&
           products
             .filter((p) => typeof p === 'object')
-            .map((p: Product) => <ProductCard key={p.id} product={p} />)}
+            .map((p: Product) => <ProductRow key={p.id} product={p} />)}
       </div>
     </div>
   )
