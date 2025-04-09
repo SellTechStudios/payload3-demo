@@ -1,6 +1,6 @@
 'use client'
 
-import { ProductCard } from './ProductCard'
+import { ProductCard } from '../../../../../components/Product/ProductCard'
 import { ProductItem } from '@/db/products/queries.types'
 
 export type ProductListClientProps = {
@@ -11,7 +11,7 @@ export const ProductsListClient = (props: ProductListClientProps) => {
   const { products } = props
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="gap-4 grid grid-cols-2 lg:grid-cols-3">
       {products.map((p, index) => (
         <div key={index} className="flex flex-col justify-between">
           <ProductCard product={p} />

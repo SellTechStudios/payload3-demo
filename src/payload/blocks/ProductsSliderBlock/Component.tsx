@@ -2,10 +2,10 @@ import React, { Suspense } from 'react'
 
 import { Container } from '@/components/Container'
 import { Page } from 'src/payload-types'
-import { ProductSliderItem } from '@/db/products/sliderQueries'
+import { ProductItem } from '@/db/products/queries.types'
 import { ProductsSliderClient } from './Component.Client'
 import { ProductsSliderSkeleton } from './Component.Loading'
-import { sliderQueries } from '@/db'
+import { productQueries } from '@/db'
 
 type Props = Extract<Page['layout'][0], { blockType: 'productsSlider' }>
 
@@ -23,13 +23,13 @@ export const ProductsSliderBlock: React.FC<Props> = async (props) => {
 
   const ProductsSliderServerWrapper = async ({ count, listType }) => {
     await new Promise((res) => setTimeout(res, 1000))
-    let products: ProductSliderItem[] | undefined
+    let products: ProductItem[] | undefined
 
     switch (listType) {
       case 'Bestsellers':
-        products = await sliderQueries.fetchBestsellers(count)
+        products = await productQueries.fetchBestsellers(count)
       case 'Recent':
-        products = await sliderQueries.fetchLatest(count)
+        products = await productQueries.fetchLatest(count)
     }
 
     return <ProductsSliderClient products={products} />
@@ -37,9 +37,9 @@ export const ProductsSliderBlock: React.FC<Props> = async (props) => {
 
   return (
     <Container>
-      <div className="prose text-center mb-16 max-w-full">
+      <div className="mb-16 max-w-full text-center prose">
         <h1>{getHeader()}</h1>
-        {Description && <p className="text-small text-gray-400 tracking-wide">{Description}</p>}
+        {Description && <p className="text-gray-400 text-small tracking-wide">{Description}</p>}
       </div>
 
       <Suspense fallback={<ProductsSliderSkeleton />}>

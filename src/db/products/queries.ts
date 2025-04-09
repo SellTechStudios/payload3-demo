@@ -4,6 +4,21 @@ import { PipelineStage } from 'mongoose'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
+const projectToProductItem = {
+  $project: {
+    _id: 0,
+    id: {
+      $toString: '$_id',
+    },
+    bestseller: 1,
+    title: 1,
+    price: 1,
+    pricePrevious: 1,
+    mediaImages: 1,
+    slug: 1,
+  },
+}
+
 const fetchAllSlugs = async (): Promise<string[]> => {
   const payload = await getPayload({ config: configPromise })
   const productsResponse = await payload.find({
@@ -52,20 +67,7 @@ const fetchProducts = async (params: SearchRequest) => {
   }
 
   aggregationPipeline.push({ $limit: 10 })
-  aggregationPipeline.push({
-    $project: {
-      _id: 0,
-      id: {
-        $toString: '$_id',
-      },
-      bestseller: 1,
-      title: 1,
-      price: 1,
-      pricePrevious: 1,
-      mediaImages: 1,
-      slug: 1,
-    },
-  })
+  aggregationPipeline.push(projectToProductItem)
 
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(aggregationPipeline)
@@ -277,8 +279,36 @@ const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> =>
   return facets
 }
 
+const fetchLatest = async (count: number): Promise<ProductItem[]> => {
+  const payload = await getPayload({ config: configPromise })
+  const model = payload.db.collections['products']
+
+  const result = await model.aggregate([
+    { $sort: { createdAt: 1 } } as PipelineStage,
+    { $limit: count } as PipelineStage,
+    projectToProductItem,
+  ])
+
+  return result as unknown as ProductItem[]
+}
+
+const fetchBestsellers = async (count: number): Promise<ProductItem[]> => {
+  const payload = await getPayload({ config: configPromise })
+  const model = payload.db.collections['products']
+
+  const result = await model.aggregate([
+    { $sort: { bestseller: 1 } } as PipelineStage,
+    { $limit: count } as PipelineStage,
+    projectToProductItem,
+  ])
+
+  return result as unknown as ProductItem[]
+}
+
 export const productQueries = {
   fetchAllSlugs,
   fetchProducts,
   fetchFacets,
+  fetchBestsellers,
+  fetchLatest,
 }
