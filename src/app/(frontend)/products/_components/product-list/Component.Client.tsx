@@ -1,6 +1,6 @@
 'use client'
 
-import { ProductCard } from '../../../../../components/Product/ProductCard'
+import { ProductCard } from '@/components/Product/Card/ProductCard'
 import { ProductItem } from '@/db/products/queries.types'
 
 export type ProductListClientProps = {

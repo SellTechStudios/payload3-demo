@@ -13,7 +13,10 @@ export const FacetNavigationClient: React.FC<Props> = (props) => {
   function handleOptionClick(
     bucket: string,
     option: { bucketCode: string; optionValue: string | number | boolean; isChecked: boolean },
-  ): void {}
+  ): void {
+    console.log('Facet option clicked:', bucket, option)
+    // Implement the logic to handle the option click here
+  }
 
   return (
     <nav className="prose">

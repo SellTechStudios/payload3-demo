@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import type { CheckboxField, TextField } from 'payload'
 
 import { formatSlugHook } from './formatSlug'

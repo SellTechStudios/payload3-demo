@@ -1,7 +1,8 @@
 'use client'
 
-import { useAuth } from '@/providers/Auth'
 import React, { useState } from 'react'
+
+import { useAuth } from '@/providers/Auth'
 
 const ChangePasswordSection = () => {
   const { resetPassword, token } = useAuth()
@@ -20,7 +21,7 @@ const ChangePasswordSection = () => {
         setPasswordConfirm('')
         setMessage('Hasło zostało zmienione.')
       })
-      .catch((error) => {
+      .catch(() => {
         setMessage('Błąd przy zmianie hasła.')
       })
   }
@@ -35,7 +36,7 @@ const ChangePasswordSection = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="border rounded p-2 w-full"
+          className="p-2 border rounded w-full"
         />
       </div>
       <div>
@@ -45,7 +46,7 @@ const ChangePasswordSection = () => {
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
           required
-          className="border rounded p-2 w-full"
+          className="p-2 border rounded w-full"
         />
       </div>
       <button type="submit" className="btn btn-primary">

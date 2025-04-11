@@ -3,7 +3,8 @@
 
 import { CircleCheckBig, ShoppingCart } from 'lucide-react'
 
-import { Button } from '../FormElements/button'
+import { Button } from '@/components/FormElements/button'
+import { CartItem } from '@/providers/Cart/reducer'
 import { GetMainImageUrl } from '@/payload/utilities/productUtils'
 import { Product } from '@/payload-types'
 import { ProductItem } from '@/db/products/queries.types'
@@ -75,7 +76,8 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
         <Button
           onClick={
             !isInCart
-              ? () => addItemToCart({ product: product as unknown as Product, quantity: 1 })
+              ? () =>
+                  addItemToCart({ product: product as unknown as Product, quantity: 1 } as CartItem)
               : undefined
           }
           href={isInCart ? '/cart' : undefined}

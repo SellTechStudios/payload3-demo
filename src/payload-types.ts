@@ -410,6 +410,15 @@ export interface ProductCategory {
   id: string;
   name: string;
   description?: string | null;
+  parent?: (string | null) | ProductCategory;
+  breadcrumbs?:
+    | {
+        doc?: (string | null) | ProductCategory;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1158,6 +1167,15 @@ export interface ProductsSelect<T extends boolean = true> {
 export interface ProductCategorySelect<T extends boolean = true> {
   name?: T;
   description?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

@@ -19,23 +19,23 @@ export default async function Page() {
     <Container>
       <h2 className="col-span-full text-4xl">Ulubione Produkty</h2>
 
-      <div className="grid grid-cols-3 gap-8 container">
+      <div className="gap-8 grid grid-cols-3 container">
         {user.favourites
           ?.filter((p): p is Product => typeof p !== 'string')
           .map((p) => (
             <a
               key={p.id}
-              className="flex flex-start py-8 hover:bg-gray-50 no-underline"
+              className="flex flex-start hover:bg-gray-50 py-8 no-underline"
               href={`/product/${p.slug}`}
             >
               <img
                 src={p.mediaImages?.find((i) => i.isMain)?.url ?? ''}
-                alt={p.name ?? ''}
-                className="h-16 w-16 rounded object-cover"
+                alt={p.title ?? ''}
+                className="rounded w-16 h-16 object-cover"
               />
-              <div className="ml-4 flex flex-col gap-2 align-start">
-                <div className="text-gray-800">{p.name}</div>
-                <div className="text-sm text-red-500">{formatCurrency(p.price ?? 0)}</div>
+              <div className="flex flex-col gap-2 ml-4 align-start">
+                <div className="text-gray-800">{p.title}</div>
+                <div className="text-red-500 text-sm">{formatCurrency(p.price ?? 0)}</div>
               </div>
             </a>
           ))}

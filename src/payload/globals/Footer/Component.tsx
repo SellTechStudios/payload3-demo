@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import React from 'react'
 import type { Footer, Settings } from '@/payload-types'
@@ -17,8 +18,8 @@ export async function Footer() {
   const settings: Settings = await getCachedGlobal('settings', 1)()
 
   return (
-    <footer className="py-24 bg-gray-100 text-gray-800 text-opacity-75 font-light">
-      <Container className="flex flex-col gap-24 ">
+    <footer className="bg-gray-100 py-24 font-light text-gray-800 text-opacity-75">
+      <Container className="flex flex-col gap-24">
         {/* delivery info */}
         <div className="flex flex-row justify-center gap-40">
           <div className="flex flex-col items-center prose">
@@ -42,9 +43,9 @@ export async function Footer() {
         </div>
 
         {/* footer */}
-        <nav className="container flex flex-row items-start justify-between mx-auto align-top">
+        <nav className="flex flex-row justify-between items-start mx-auto align-top container">
           {/* contact info */}
-          <div className="flex flex-col gap-6  text-sm">
+          <div className="flex flex-col gap-6 text-sm">
             <img src="/logo.png" width={140} height={60} alt="Mediapart Logo" />
             <div className="flex flex-row items-center gap-2">
               <MapPinIcon className="size-4" />
@@ -78,41 +79,41 @@ export async function Footer() {
 
           <nav className="flex flex-col prose">
             <h5 className="mb-4 text-gray-900 uppercase">Informacje</h5>
-            <div className="flex flex-col text-sm gap-6">
+            <div className="flex flex-col gap-6 text-sm">
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="#"
               >
                 Polityka Prywatności
               </Link>
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="#"
               >
                 Regulamin
               </Link>
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="#"
               >
                 Dostawy
               </Link>
-              <Link className="no-underline font-light hover:text-orange-700" href="#">
+              <Link className="font-light hover:text-orange-700 no-underline" href="#">
                 Płatności
               </Link>
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="#"
               >
                 Zwroty i reklamacje
               </Link>
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="#"
               >
                 Odstąpienie od umowy
@@ -122,31 +123,31 @@ export async function Footer() {
 
           <nav className="flex flex-col prose">
             <h5 className="mb-4 text-gray-900 uppercase">Przydatne linki</h5>
-            <div className="flex flex-col text-sm gap-6">
+            <div className="flex flex-col gap-6 text-sm">
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="login"
               >
                 Logowanie
               </Link>
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="#"
               >
                 Blog
               </Link>
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="#"
               >
                 Status Zamówienia
               </Link>
               <Link
                 prefetch={false}
-                className="no-underline font-light hover:text-orange-700"
+                className="font-light hover:text-orange-700 no-underline"
                 href="#"
               >
                 Mapa Strony
@@ -156,12 +157,12 @@ export async function Footer() {
 
           <nav className="flex flex-col prose">
             <h5 className="mb-4 text-gray-900 uppercase">Zobacz więcej</h5>
-            <div className="flex flex-col text-sm gap-6">
+            <div className="flex flex-col gap-6 text-sm">
               <div className="flex flex-row items-center gap-2">
                 <PhoneIcon className="size-4" />
                 <Link
                   prefetch={false}
-                  className="no-underline font-light hover:text-orange-700"
+                  className="font-light hover:text-orange-700 no-underline"
                   href="https://www.facebook.com"
                   target="_blank"
                 >
@@ -172,7 +173,7 @@ export async function Footer() {
                 <FaSquareInstagram />
                 <Link
                   prefetch={false}
-                  className="no-underline font-light hover:text-orange-700"
+                  className="font-light hover:text-orange-700 no-underline"
                   href="https://www.facebook.com"
                   target="_blank"
                 >
@@ -183,7 +184,7 @@ export async function Footer() {
                 <FaLinkedin />
                 <Link
                   prefetch={false}
-                  className="no-underline font-light hover:text-orange-700"
+                  className="font-light hover:text-orange-700 no-underline"
                   href="https://www.linkedin.com"
                   target="_blank"
                 >
@@ -194,7 +195,7 @@ export async function Footer() {
                 <BsTwitterX />
                 <Link
                   prefetch={false}
-                  className="no-underline font-light hover:text-orange-700"
+                  className="font-light hover:text-orange-700 no-underline"
                   href="https://www.x.com"
                   target="_blank"
                 >
@@ -205,7 +206,7 @@ export async function Footer() {
                 <FaPinterest />
                 <Link
                   prefetch={false}
-                  className="no-underline font-light hover:text-orange-700"
+                  className="font-light hover:text-orange-700 no-underline"
                   href="https://www.x.com"
                   target="_blank"
                 >

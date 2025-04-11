@@ -4,15 +4,14 @@ import { CircleCheckBig, ShoppingCart } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 import { Button } from '@/payload/blocks/Form/_ui/button'
-import { ProductDetails } from '@/db/products/detailsQueries'
+import { Product } from '@/payload-types'
 import { cn } from '@/utilities/cn'
 import { useCart } from '@/providers/Cart'
 
 export const AddToCartButton: React.FC<{
-  product: ProductDetails
-  quantity?: number
+  product: Product
 }> = (props) => {
-  const { product, quantity = 1 } = props
+  const { product } = props
 
   const { cart, addItemToCart, isProductInCart, hasInitializedCart } = useCart()
 
@@ -32,10 +31,7 @@ export const AddToCartButton: React.FC<{
       onClick={
         !isInCart
           ? () => {
-              addItemToCart({
-                product,
-                quantity,
-              })
+              addItemToCart(product)
             }
           : undefined
       }

@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/payload/blocks/Form/_ui/button'
-import { ProductDetails } from '@/db/products/detailsQueries'
+import { Product } from '@/payload-types'
 import React from 'react'
 import { Trash2 } from 'lucide-react'
 import { cn } from '@/utilities/cn'
@@ -9,7 +9,7 @@ import { useCart } from '@/providers/Cart'
 
 export const RemoveFromCartButton: React.FC<{
   className?: string
-  product: ProductDetails
+  product: Product
 }> = (props) => {
   const { className, product } = props
 
