@@ -2,7 +2,6 @@
 import type { Metadata } from 'next'
 
 import { RelatedPosts } from '@/app/(frontend)/blog/[slug]/components/RelatedPosts'
-import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
@@ -14,6 +13,7 @@ import type { Post } from '@/payload-types'
 import { generateMeta } from '@/payload/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import NotFound from '../../not-found'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -44,10 +44,9 @@ type Args = {
 export default async function Post({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug = '' } = await paramsPromise
-  const url = '/posts/' + slug
   const post = await queryPostBySlug({ slug })
 
-  if (!post) return <PayloadRedirects url={url} />
+  if (!post) return <NotFound />
 
   const imageUrl = typeof post.heroImage === 'string' ? post.heroImage : post.heroImage?.url
   const date = new Date(post.createdAt).toLocaleDateString()
@@ -58,9 +57,6 @@ export default async function Post({ params: paramsPromise }: Args) {
   return (
     <article className="-mt-8 pb-16">
       <PageClient />
-
-      {/* Allows redirects for valid pages too */}
-      <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 

@@ -1,15 +1,18 @@
 'use client'
 /* eslint-disable @next/next/no-img-element */
 
-import { CircleCheckBig, ShoppingCart } from 'lucide-react'
+import { CircleCheckBig, Heart, ShoppingCart } from 'lucide-react'
 
 import { Button } from '@/components/FormElements/button'
 import { CartItem } from '@/providers/Cart/reducer'
 import { GetMainImageUrl } from '@/payload/utilities/productUtils'
 import { Product } from '@/payload-types'
 import { ProductItem } from '@/db/products/queries.types'
+import { cn } from '@/payload/utilities/cn'
 import { formatCurrency } from '@/utilities/formatPrice'
+import { useAuth } from '@/providers/Auth'
 import { useCart } from '@/providers/Cart'
+import { useState } from 'react'
 
 type ProductProps = {
   product: ProductItem
@@ -17,14 +20,23 @@ type ProductProps = {
 
 export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) => {
   const { addItemToCart, isProductInCart } = useCart()
+  const { hasFavoriteProduct, toggleFavoriteProduct } = useAuth()
+
   const isInCart = isProductInCart(product.id)
   const imageUrl = GetMainImageUrl(product as unknown as Product)
-  const percentageOff = product.pricePrevious
-    ? Math.round(((product.pricePrevious - product.price) / product.pricePrevious) * 100)
-    : null
+  const percentageOff =
+    product.pricePrevious && product.pricePrevious > product.price
+      ? Math.round(((product.pricePrevious - product.price) / product.pricePrevious) * 100)
+      : null
+
+  const isFavorite = hasFavoriteProduct(product.id)
+
+  const onFavoriteClick = async () => {
+    await toggleFavoriteProduct(product)
+  }
 
   return (
-    <div className="relative flex flex-col bg-white shadow-md border border-gray-100 rounded-lg overflow-hidden">
+    <div className="relative flex flex-col bg-white shadow-md border border-gray-100 rounded-lg">
       <a
         className="group relative flex mx-3 mt-3 rounded-xl overflow-hidden"
         href={`/product/${product.slug}`}
@@ -42,6 +54,18 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
         )}
       </a>
       <div className="mt-8 px-5 pb-5">
+        <div
+          onClick={onFavoriteClick}
+          className="absolute -top-4 -right-3 p-2 rounded-full border border-slate-200 bg-white shadow-md cursor-pointer hover:bg-slate-200"
+        >
+          <Heart
+            className={cn(
+              isFavorite ? 'fill-gray-800' : 'fill-white',
+              'hover:scale-110 text-slate-900 transition-transform duration-200',
+            )}
+            size={20}
+          />
+        </div>
         <a href={`/product/${product.slug}`} className="flex items-start h-16 overflow-hidden">
           <h5 className="text-lg line-clamp-2 tracking-tight">{product.title}</h5>
         </a>
@@ -54,24 +78,6 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
               {formatCurrency(product.pricePrevious)}
             </span>
           </p>
-          {/* <div className="flex items-center">
-        <svg aria-hidden="true" className="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-        </svg>
-        <svg aria-hidden="true" className="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-        </svg>
-        <svg aria-hidden="true" className="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-        </svg>
-        <svg aria-hidden="true" className="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-        </svg>
-        <svg aria-hidden="true" className="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-        </svg>
-        <span className="bg-yellow-200 mr-2 ml-3 px-2.5 py-0.5 rounded font-semibold text-xs">5.0</span>
-      </div> */}
         </div>
         <Button
           onClick={

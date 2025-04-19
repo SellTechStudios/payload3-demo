@@ -51,7 +51,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           {user && (
             <Link href="/favourites" className="flex items-center gap-1">
               <HeartIcon className="size-5" />
-              Ulubione
+              Ulubione ({user.favourites?.length})
             </Link>
           )}
 

@@ -2,9 +2,9 @@ import React, { cache } from 'react'
 
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Metadata } from 'next'
+import NotFound from '../not-found'
 import PageClient from './page.client'
 import type { Page as PageType } from '@/payload-types'
-import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { RenderBlocks } from '@/payload/blocks/RenderBlocks'
 import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
@@ -44,23 +44,17 @@ type Args = {
 export default async function Page({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug = 'home' } = await paramsPromise
-  const url = '/' + slug
-
   const page: PageType | null = await queryPageBySlug({
     slug,
   })
 
-  if (!page) {
-    return <PayloadRedirects url={url} />
-  }
+  if (!page) return <NotFound />
 
   const { layout } = page
 
   return (
     <article>
       <PageClient />
-      {/* Allows redirects for valid pages too */}
-      <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 

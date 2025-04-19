@@ -34,12 +34,6 @@ export async function Footer() {
             <div>Orlen Paczka: 8.50 zł</div>
             <div>Paczkomaty InPost: 13.00 zł</div>
           </div>
-
-          <div className="flex flex-col items-center prose">
-            <TruckIcon className="size-16" />
-            <h3 className="text-gray-900">Darmowa Dostawa</h3>
-            <div>dla zamówień powyżej 200 zł</div>
-          </div>
         </div>
 
         {/* footer */}

@@ -1,8 +1,8 @@
+import { CollectionConfig } from 'payload'
 import { admins } from '@/payload/access/admins'
 import adminsAndUser from '@/payload/access/adminsAndUser'
 import { anyone } from '@/payload/access/anyone'
 import { checkRole } from '@/payload/access/checkRole'
-import { CollectionConfig } from 'payload'
 import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
 import { resolveDuplicatePurchases } from './hooks/resolveDuplicatePurchases'
 
