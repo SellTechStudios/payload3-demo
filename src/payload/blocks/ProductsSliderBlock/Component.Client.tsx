@@ -3,14 +3,14 @@
 import 'swiper/css'
 import 'swiper/css/navigation'
 
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useEffect, useRef } from 'react'
 import { Autoplay, FreeMode, Navigation } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
-
-import { ProductSliderItem } from '@/db/products/sliderQueries'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { NavigationOptions, Swiper as SwiperType } from 'swiper/types'
-import { ProductSliderElement } from './_components/ProductSliderItem'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { useEffect, useRef } from 'react'
+
+import { ProductCard } from '@/components/Product/Card/ProductCard'
+import { ProductItem } from '@/db/products/queries.types'
 
 const breakpoints = {
   640: {
@@ -32,7 +32,7 @@ const breakpoints = {
 }
 
 type ProductsSliderClientProps = {
-  products: ProductSliderItem[] | undefined
+  products: ProductItem[] | undefined
 }
 
 export const ProductsSliderClient = (props: ProductsSliderClientProps) => {
@@ -73,25 +73,21 @@ export const ProductsSliderClient = (props: ProductsSliderClientProps) => {
       >
         {products.map((p) => (
           <SwiperSlide key={p.id} className="!h-auto">
-            <ProductSliderElement product={p} />
+            <ProductCard product={p} />
           </SwiperSlide>
         ))}
       </Swiper>
 
       <button
         ref={prevRef}
-        className="absolute top-1/2 -left-5 transform -translate-y-1/2 z-10
-          w-10 h-10 rounded-full bg-black bg-opacity-50 flex items-center justify-center
-          text-white transition-opacity duration-200 hover:bg-opacity-100"
+        className="top-1/2 -left-5 z-10 absolute flex justify-center items-center bg-black bg-opacity-50 hover:bg-opacity-100 rounded-full w-10 h-10 text-white transition-opacity -translate-y-1/2 duration-200 transform"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
 
       <button
         ref={nextRef}
-        className="absolute top-1/2 -right-5 transform -translate-y-1/2 z-10
-          w-10 h-10 rounded-full bg-black bg-opacity-50 flex items-center justify-center
-          text-white transition-opacity duration-200 hover:bg-opacity-100"
+        className="top-1/2 -right-5 z-10 absolute flex justify-center items-center bg-black bg-opacity-50 hover:bg-opacity-100 rounded-full w-10 h-10 text-white transition-opacity -translate-y-1/2 duration-200 transform"
       >
         <ChevronRight className="w-6 h-6" />
       </button>

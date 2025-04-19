@@ -30,6 +30,9 @@ const paymnetMethodsHandler: PayloadHandler = async (req): Promise<Response> => 
 const initTransactionHandler: PayloadHandler = async (req): Promise<Response> => {
   const { payload } = req
   const body = req.json ? ((await req.json()) as unknown as RegisterPaymentRequest) : null
+
+  if (!body) throw new Error('Request body is null')
+
   const sessionId = crypto.randomBytes(20).toString('hex')
   const amount = 100
   const userEmail = 'karol.barkowski@gmail.com'

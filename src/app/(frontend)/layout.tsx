@@ -1,7 +1,5 @@
 import './globals.css'
 
-import { Poppins, Work_Sans } from 'next/font/google'
-
 import { AdminBar } from '@/components/AdminBar'
 import { Container } from '@/components/Container'
 import { Footer } from '@/payload/globals/Footer/Component'
@@ -12,15 +10,11 @@ import { InitTheme } from '@/providers/Theme/InitTheme'
 import type { Metadata } from 'next'
 import { Providers } from '@/providers'
 import React from 'react'
+import { Work_Sans } from 'next/font/google'
 import { cn } from '@/payload/utilities/cn'
 import { draftMode } from 'next/headers'
 import { getServerSideURL } from '@/payload/utilities/getURL'
 import { mergeOpenGraph } from '@/payload/utilities/mergeOpenGraph'
-
-const poppins = Poppins({
-  weight: ['300', '400', '600', '700'],
-  subsets: ['latin'],
-})
 
 const work_sans = Work_Sans({
   weight: ['400', '600', '700'],
@@ -46,7 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
 
           <Header />
-          <main className="main py-4">
+          <main className="py-4 main">
             <Container>{children}</Container>
           </main>
           <Footer />

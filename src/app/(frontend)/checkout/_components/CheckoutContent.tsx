@@ -1,12 +1,12 @@
 // CheckoutContent.tsx
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { CartSummary } from './CartSummary'
 import { PaymentSection } from './PaymentSection'
 import { ShipmentSection } from './ShipmentSection'
 import { UserDataSection } from './UserDataSection'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export const CheckoutContent = () => {
   const router = useRouter()
@@ -38,18 +38,18 @@ export const CheckoutContent = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          token,
+          paymentToken,
           blikCode: '777123',
         }),
       })
     } else {
-      router.push(`https://sandbox.przelewy24.pl/trnRequest/${token}`)
+      router.push(`https://sandbox.przelewy24.pl/trnRequest/${paymentToken}`)
     }
   }
 
   return (
     <div className="flex flex-row gap-8">
-      <div className="flex flex-1 flex-col gap-6">
+      <div className="flex flex-col flex-1 gap-6">
         <div>
           <UserDataSection />
           <ShipmentSection />

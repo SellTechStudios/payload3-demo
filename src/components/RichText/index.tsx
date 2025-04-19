@@ -9,7 +9,7 @@ import type {
 } from '@/payload-types'
 
 import { MediaBlock } from '@/payload/blocks/MediaBlock/Component'
-import { ProductsShowcaseBlock } from '@/payload/blocks/ProductsShowcaseBlock/Component'
+import { ProductsShowcaseBlock } from '@/payload/blocks/ProductsShowcaseBlock/Component.Client'
 import { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { cn } from '@/payload/utilities/cn'
 
@@ -20,7 +20,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
   blocks: {
     mediaBlock: ({ node }) => (
       <MediaBlock
-        className="col-start-1 col-span-3"
+        className="col-span-3 col-start-1"
         imgClassName="m-0"
         {...node.fields}
         captionClassName="mx-auto max-w-[48rem]"
@@ -29,7 +29,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       />
     ),
     productsShowcaseBlock: ({ node }) => (
-      <ProductsShowcaseBlock className="col-start-1 col-span-3" {...node.fields} />
+      <ProductsShowcaseBlock className="col-span-3 col-start-1" {...node.fields} />
     ),
   },
 })

@@ -4,7 +4,7 @@ import { ContentBlock } from '@/payload/blocks/Content/Component'
 import { FormBlock } from '@/payload/blocks/Form/Component'
 import { MediaBlock } from '@/payload/blocks/MediaBlock/Component'
 import type { Page } from '@/payload-types'
-import { ProductsShowcaseBlock } from './ProductsShowcaseBlock/Component'
+import { ProductsShowcaseBlock } from './ProductsShowcaseBlock/Component.Client'
 import { ProductsSliderBlock } from './ProductsSliderBlock/Component'
 
 const blockComponents = {

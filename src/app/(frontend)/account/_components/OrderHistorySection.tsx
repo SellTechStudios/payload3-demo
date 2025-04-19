@@ -21,7 +21,7 @@ const OrderHistorySection: React.FC = () => {
         })
         const data = await res.json()
         setOrders(data.orders || [])
-      } catch (error) {
+      } catch {
         console.error('Błąd przy pobieraniu historii zamówień')
       } finally {
         setLoading(false)

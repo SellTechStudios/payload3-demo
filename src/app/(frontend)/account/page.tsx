@@ -1,14 +1,14 @@
 'use client'
 
-import { Button } from '@/payload/blocks/Form/_ui/button'
-import { useAuth } from '@/providers/Auth'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import AddressesSection from './_components/AddressSection'
+import { Button } from '@/payload/blocks/Form/_ui/button'
 import ChangeNameSection from './_components/ChangeNameSection'
 import ChangePasswordSection from './_components/ChangePasswordSection'
 import ChangePhoneNumberSection from './_components/ChangePhoneNumberSection'
 import OrderHistorySection from './_components/OrderHistorySection'
+import { useAuth } from '@/providers/Auth'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const AccountPage = () => {
   const { logout, user } = useAuth()
@@ -31,7 +31,7 @@ const AccountPage = () => {
         </Button>
       </div>
 
-      <div className="hidden md:flex gap-4 mb-8 md:flex-wrap">
+      <div className="hidden md:flex md:flex-wrap gap-4 mb-8">
         <Button
           onClick={() => setActiveTab('profile')}
           variant={activeTab === 'profile' ? 'default' : 'secondary'}
@@ -70,11 +70,15 @@ const AccountPage = () => {
         </Button>
       </div>
 
-      <div className="block md:hidden mb-4 md:mb-8">
+      <div className="md:hidden block mb-4 md:mb-8">
         <select
           value={activeTab}
-          onChange={(e) => setActiveTab(e.target.value as any)}
-          className="border rounded p-2 w-full"
+          onChange={(e) =>
+            setActiveTab(
+              e.target.value as 'profile' | 'password' | 'phone' | 'orders' | 'addresses' | 'name',
+            )
+          }
+          className="p-2 border rounded w-full"
         >
           <option value="profile">Profil</option>
           <option value="name">Imię i nazwisko</option>

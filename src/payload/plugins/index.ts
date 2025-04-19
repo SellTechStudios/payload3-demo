@@ -51,6 +51,7 @@ export const plugins: Plugin[] = [
   // }),
   nestedDocsPlugin({
     collections: ['product-category'],
+    collections: ['product-category'],
   }),
   seoPlugin({
     generateTitle,

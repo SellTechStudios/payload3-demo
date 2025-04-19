@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
@@ -9,11 +10,11 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { useEffect, useRef, useState } from 'react'
 
 import { Navigation } from 'swiper/modules'
-import { ProductDetails } from '@/db/products/queries.types'
+import { Product } from '@/payload-types'
 import { Swiper as SwiperType } from 'swiper/types'
 
 type ProductGalleryProps = {
-  product: ProductDetails
+  product: Product
 }
 
 export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }: ProductGalleryProps) => {
@@ -37,12 +38,12 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }: Produ
 
   return (
     <div>
-      <div className="relative w-full pb-[100%]">
+      <div className="relative pb-[100%] w-full">
         {selectedImage && (
           <img
             src={selectedImage}
             alt="Selected Product Image"
-            className="absolute top-0 left-0 w-full rounded-lg"
+            className="top-0 left-0 absolute rounded-lg w-full"
             width={100}
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
           />
@@ -64,10 +65,10 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }: Produ
         >
           {product.mediaImages?.map((img, i) => (
             <SwiperSlide key={i}>
-              <div className="relative w-full h-0 pb-[100%]">
+              <div className="relative pb-[100%] w-full h-0">
                 <img
                   onClick={() => img.url && setSelectedImage(img.url)}
-                  className="absolute top-0 left-0 object-cover w-full h-full rounded-lg cursor-pointer"
+                  className="top-0 left-0 absolute rounded-lg w-full h-full object-cover cursor-pointer"
                   src={img.url}
                   alt={`Product Image ${i + 1}`}
                   width={100}
@@ -80,18 +81,14 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }: Produ
         </Swiper>
         <button
           ref={prevRef}
-          className="absolute top-1/2 -left-3 transform -translate-y-1/2 z-10
-          w-8 h-8 rounded-full bg-black bg-opacity-50 flex items-center justify-center
-          text-white transition-opacity duration-200 hover:bg-opacity-100"
+          className="top-1/2 -left-3 z-10 absolute flex justify-center items-center bg-black bg-opacity-50 hover:bg-opacity-100 rounded-full w-8 h-8 text-white transition-opacity -translate-y-1/2 duration-200 transform"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
 
         <button
           ref={nextRef}
-          className="absolute top-1/2 -right-3 transform -translate-y-1/2 z-10
-          w-8 h-8 rounded-full bg-black bg-opacity-50 flex items-center justify-center
-          text-white transition-opacity duration-200 hover:bg-opacity-100"
+          className="top-1/2 -right-3 z-10 absolute flex justify-center items-center bg-black bg-opacity-50 hover:bg-opacity-100 rounded-full w-8 h-8 text-white transition-opacity -translate-y-1/2 duration-200 transform"
         >
           <ChevronRight className="w-6 h-6" />
         </button>

@@ -1,7 +1,6 @@
 'use client'
 
 import { CartItem, cartReducer } from './reducer'
-import { Product, User } from 'src/payload-types'
 import {
   createContext,
   useCallback,
@@ -12,6 +11,7 @@ import {
   useState,
 } from 'react'
 
+import { User } from 'src/payload-types'
 import { formatCurrency } from '@/payload/utilities/formatPrice'
 import { useAuth } from '../Auth'
 
@@ -174,7 +174,7 @@ export const CartProvider = (props) => {
         }
 
         syncCartToPayload()
-      } catch (e) {
+      } catch {
         console.error('Error while syncing cart to Payload.')
       }
     } else {
@@ -182,7 +182,7 @@ export const CartProvider = (props) => {
     }
 
     setHasInitialized(true)
-  }, [user, cart])
+  }, [user, cart, hasInitializedCart])
 
   const isProductInCart = useCallback(
     (incomingProductId: string): boolean => {
