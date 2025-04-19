@@ -56,7 +56,7 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
       <div className="mt-8 px-5 pb-5">
         <div
           onClick={onFavoriteClick}
-          className="absolute -top-4 -right-3 p-2 rounded-full border border-slate-200 bg-white shadow-md cursor-pointer hover:bg-slate-200"
+          className="absolute -top-4 -right-3 p-2 rounded-full border border-slate-100 bg-white shadow-md cursor-pointer hover:bg-slate-200"
         >
           <Heart
             className={cn(
