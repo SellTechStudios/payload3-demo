@@ -4,7 +4,6 @@ import Manufacturer from './payload/collections/eCom/Manufacturer'
 import { Media } from './payload/collections/Media'
 import { Orders } from './payload/collections/eCom/Orders'
 import { Pages } from './payload/collections/Pages'
-import { PaymentMethods } from './payload/collections/eCom/PaymentMethods'
 import { PostCategories } from './payload/collections/PostCategories'
 import { Posts } from './payload/collections/Posts'
 import ProductCategory from './payload/collections/eCom/ProductCategory'
@@ -35,7 +34,6 @@ export default buildConfig({
     autoLogin: {
       email: 'karol.barkowski@gmail.com',
       password: 'MKB1983!!',
-      prefillOnly: true,
     },
     livePreview: {
       breakpoints: [
@@ -72,7 +70,6 @@ export default buildConfig({
     PostCategories,
     Users,
     Orders,
-    PaymentMethods,
     Products,
     ProductCategory,
     Manufacturer,

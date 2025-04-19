@@ -74,6 +74,10 @@ const Products: CollectionConfig = {
               type: 'text',
             },
             {
+              name: 'material',
+              type: 'text',
+            },
+            {
               name: 'description',
               type: 'textarea',
             },
@@ -149,6 +153,14 @@ const Products: CollectionConfig = {
           ],
         },
       ],
+    },
+    {
+      name: 'shopName',
+      type: 'text',
+      required: true,
+      admin: {
+        position: 'sidebar',
+      },
     },
     {
       label: 'Category',

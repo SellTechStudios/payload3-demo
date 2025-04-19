@@ -13,7 +13,7 @@ type ProductUpsert = Omit<Product, 'createdAt' | 'updatedAt' | 'id' | 'slug'>
 type ManufacturerUpsert = Omit<Manufacturer, 'createdAt' | 'updatedAt' | 'id' | 'slug'>
 type ProductCategoryUpsert = Omit<ProductCategory, 'createdAt' | 'updatedAt' | 'id' | 'slug'>
 
-const xmlFileName = 'Tramp4'
+const xmlFileName = 'Centersport'
 
 export async function submitData() {
   const payload = await getPayload({ config })
@@ -25,7 +25,7 @@ export async function submitData() {
     products.map(async (p) => {
       const pricePreviousProp = p.property.find((prop) => prop.name === 'PreviousPrice')
       const urlProp = p.property.find((prop) => prop.name === 'ProductUrl')
-      const colorProp = p.property.find((prop) => prop.name === 'Kolor')
+      const materialProp = p.property.find((prop) => prop.name === 'Material')
 
       const manufacturerProp = p.property.find((prop) => prop.name === 'Producent')
       let manufacturerId: string | null = null
@@ -87,7 +87,7 @@ export async function submitData() {
             bestseller: false,
             specialOffer: false,
             url: urlProp ? urlProp['#text'] : null,
-            color: colorProp ? colorProp['#text'] : null,
+            material: materialProp ? materialProp['#text'] : null,
             pricePrevious: pricePreviousProp ? parseFloat(pricePreviousProp['#text']) : null,
             price: parseFloat(p.price),
             manufacturer: manufacturerId ? ObjectID(manufacturerId) : null,

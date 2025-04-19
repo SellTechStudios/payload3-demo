@@ -29,14 +29,11 @@ export interface Config {
     postCategories: PostCategory;
     users: User;
     orders: Order;
-    'payment-methods': PaymentMethod;
     products: Product;
     'product-category': ProductCategory;
     manufacturer: Manufacturer;
-    redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
-    search: Search;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -49,14 +46,11 @@ export interface Config {
     postCategories: PostCategoriesSelect<false> | PostCategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
-    'payment-methods': PaymentMethodsSelect<false> | PaymentMethodsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     'product-category': ProductCategorySelect<false> | ProductCategorySelect<true>;
     manufacturer: ManufacturerSelect<false> | ManufacturerSelect<true>;
-    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
-    search: SearchSelect<false> | SearchSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -380,6 +374,7 @@ export interface Product {
   quantityMin?: number | null;
   quantityStep?: number | null;
   color?: string | null;
+  material?: string | null;
   description?: string | null;
   keywords?: string | null;
   bestseller?: boolean | null;
@@ -395,6 +390,7 @@ export interface Product {
   seoTitle?: string | null;
   seoDescription?: string | null;
   seoImageUrl?: string | null;
+  shopName: string;
   Category?: (string | null) | ProductCategory;
   manufacturer?: (string | null) | Manufacturer;
   slug?: string | null;
@@ -410,6 +406,15 @@ export interface ProductCategory {
   id: string;
   name: string;
   description?: string | null;
+  parent?: (string | null) | ProductCategory;
+  breadcrumbs?:
+    | {
+        doc?: (string | null) | ProductCategory;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -645,39 +650,6 @@ export interface Order {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payment-methods".
- */
-export interface PaymentMethod {
-  name: string;
-  id: number;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects".
- */
-export interface Redirect {
-  id: string;
-  from: string;
-  to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'pages';
-          value: string | Page;
-        } | null)
-      | ({
-          relationTo: 'posts';
-          value: string | Post;
-        } | null);
-    url?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -688,34 +660,6 @@ export interface FormSubmission {
         field: string;
         value: string;
         id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "search".
- */
-export interface Search {
-  id: string;
-  title?: string | null;
-  priority?: number | null;
-  doc: {
-    relationTo: 'posts';
-    value: string | Post;
-  };
-  slug?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: (string | null) | Media;
-  };
-  categories?:
-    | {
-        relationTo?: string | null;
-        id?: string | null;
-        title?: string | null;
       }[]
     | null;
   updatedAt: string;
@@ -753,10 +697,6 @@ export interface PayloadLockedDocument {
         value: string | Order;
       } | null)
     | ({
-        relationTo: 'payment-methods';
-        value: number | PaymentMethod;
-      } | null)
-    | ({
         relationTo: 'products';
         value: string | Product;
       } | null)
@@ -769,20 +709,12 @@ export interface PayloadLockedDocument {
         value: string | Manufacturer;
       } | null)
     | ({
-        relationTo: 'redirects';
-        value: string | Redirect;
-      } | null)
-    | ({
         relationTo: 'forms';
         value: string | Form;
       } | null)
     | ({
         relationTo: 'form-submissions';
         value: string | FormSubmission;
-      } | null)
-    | ({
-        relationTo: 'search';
-        value: string | Search;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1107,16 +1039,6 @@ export interface OrdersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payment-methods_select".
- */
-export interface PaymentMethodsSelect<T extends boolean = true> {
-  name?: T;
-  id?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products_select".
  */
 export interface ProductsSelect<T extends boolean = true> {
@@ -1129,6 +1051,7 @@ export interface ProductsSelect<T extends boolean = true> {
   quantityMin?: T;
   quantityStep?: T;
   color?: T;
+  material?: T;
   description?: T;
   keywords?: T;
   bestseller?: T;
@@ -1144,6 +1067,7 @@ export interface ProductsSelect<T extends boolean = true> {
   seoTitle?: T;
   seoDescription?: T;
   seoImageUrl?: T;
+  shopName?: T;
   Category?: T;
   manufacturer?: T;
   slug?: T;
@@ -1158,6 +1082,15 @@ export interface ProductsSelect<T extends boolean = true> {
 export interface ProductCategorySelect<T extends boolean = true> {
   name?: T;
   description?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1168,22 +1101,6 @@ export interface ProductCategorySelect<T extends boolean = true> {
 export interface ManufacturerSelect<T extends boolean = true> {
   name?: T;
   code?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects_select".
- */
-export interface RedirectsSelect<T extends boolean = true> {
-  from?: T;
-  to?:
-    | T
-    | {
-        type?: T;
-        reference?: T;
-        url?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1331,32 +1248,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         field?: T;
         value?: T;
         id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "search_select".
- */
-export interface SearchSelect<T extends boolean = true> {
-  title?: T;
-  priority?: T;
-  doc?: T;
-  slug?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  categories?:
-    | T
-    | {
-        relationTo?: T;
-        id?: T;
-        title?: T;
       };
   updatedAt?: T;
   createdAt?: T;
