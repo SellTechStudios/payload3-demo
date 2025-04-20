@@ -28,13 +28,15 @@ export const ProductsSliderBlock: React.FC<Props> = async (props) => {
       case 'Bestsellers':
         response = await productQueries.fetchProducts({
           type: 'bestseller',
-          count,
+          pageSize: count,
+          page: 1,
         })
         break
       case 'Recent':
         response = await productQueries.fetchProducts({
           type: 'new',
-          count,
+          pageSize: count,
+          page: 1,
         })
         break
 

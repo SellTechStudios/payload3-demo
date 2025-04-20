@@ -63,6 +63,7 @@ const fetchProducts = async (params: SearchRequest) => {
           {
             $project: {
               _id: 0,
+              id: { $toString: '$_id' },
               bestseller: 1,
               title: 1,
               price: 1,
@@ -85,6 +86,8 @@ const fetchProducts = async (params: SearchRequest) => {
 
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(pipeline)
+
+  console.dir(pipeline, { depth: 10 })
 
   const response: ProductSearchResponse = {
     products: aggregationResult[0].products,

@@ -3,9 +3,8 @@ import { Product } from '@/payload-types'
 export type SearchRequest = {
   searchString?: string
   type: 'all' | 'new' | 'bestseller' | 'quicksearch'
-  count?: number
-  pageSize?: number
-  page?: number
+  pageSize: number
+  page: number
 }
 
 export type ProductSearchResponse = {
