@@ -32,10 +32,6 @@ export const FacetNavigationClient: React.FC<Props> = (props) => {
         bucket={facets.manufacturer}
         onOptionClick={(option) => handleOptionClick('manufacturer', option)}
       />
-      <FacetBucketClient
-        bucket={facets.bestseller}
-        onOptionClick={(option) => handleOptionClick('bestseller', option)}
-      />
     </nav>
   )
 }

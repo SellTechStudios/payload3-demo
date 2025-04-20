@@ -69,152 +69,124 @@ const fetchProducts = async (params: SearchRequest) => {
 const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> => {
   const payload = await getPayload({ config: configPromise })
 
-  const pipeline = buildProductsQueryPipeline(params)
-
-  // Combined lookup for categories with direct field mapping
-  pipeline.push({
-    $lookup: {
-      from: 'product-categories',
-      localField: 'Category',
-      foreignField: '_id',
-      as: 'categoryDetails',
-    },
-  })
-
-  // Combined lookup for manufacturers with direct field mapping
-  pipeline.push({
-    $lookup: {
-      from: 'manufacturers',
-      localField: 'manufacturer',
-      foreignField: '_id',
-      as: 'manufacturerDetails',
-    },
-  })
-
-  // Single addFields stage to add all derived fields
-  pipeline.push({
-    $addFields: {
-      categoryId: {
-        $toString: { $arrayElemAt: ['$categoryDetails._id', 0] },
+  const pipeline: PipelineStage[] = [
+    // lookup for categories
+    {
+      $lookup: {
+        from: 'product-categories',
+        localField: 'Category',
+        foreignField: '_id',
+        as: 'categoryDetails',
       },
-      categoryName: { $arrayElemAt: ['$categoryDetails.name', 0] },
-      manufacturerId: {
-        $toString: { $arrayElemAt: ['$manufacturerDetails._id', 0] },
+    },
+    {
+      $unwind: {
+        path: '$categoryDetails',
+        preserveNullAndEmptyArrays: true,
       },
-      manufacturerName: { $arrayElemAt: ['$manufacturerDetails.name', 0] },
     },
-  })
-
-  pipeline.push({
-    $project: {
-      categoryId: 1,
-      categoryName: 1,
-      manufacturerId: 1,
-      manufacturerName: 1,
-      bestseller: 1,
-      price: 1,
+    // lookup for manufacturers
+    {
+      $lookup: {
+        from: 'manufacturers',
+        localField: 'manufacturer',
+        foreignField: '_id',
+        as: 'manufacturerDetails',
+      },
     },
-  })
-
-  pipeline.push({
-    $facet: {
-      // Manufacturer facets
-      manufacturerFacets: [
-        {
-          $match: { manufacturerId: { $ne: null } },
-        },
-        {
-          $group: {
-            _id: '$manufacturerId',
-            name: { $first: '$manufacturerName' },
-            count: { $sum: 1 },
+    {
+      $unwind: {
+        path: '$manufacturerDetails',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    ...buildProductsQueryPipeline(params),
+    {
+      $project: {
+        categoryId: '$categoryDetails._id',
+        categoryName: '$categoryDetails.name',
+        manufacturerId: '$manufacturerDetails._id',
+        manufacturerName: '$manufacturerDetails.name',
+        bestseller: 1,
+        price: 1,
+      },
+    },
+    {
+      $facet: {
+        // Manufacturer facets
+        manufacturerFacets: [
+          {
+            $match: { manufacturerId: { $ne: null } },
           },
-        },
-        { $sort: { count: -1 } },
-        { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
-      ],
-
-      // Bestseller facets
-      bestsellerFacets: [
-        {
-          $group: {
-            _id: '$bestseller',
-            count: { $sum: 1 },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            label: {
-              $cond: {
-                if: { $eq: ['$_id', true] },
-                then: 'Bestseller',
-                else: 'Inne',
-              },
-            },
-            count: 1,
-            value: '$_id',
-          },
-        },
-      ],
-
-      // Category facets
-      categoryFacets: [
-        {
-          $match: { categoryId: { $ne: null } },
-        },
-        {
-          $group: {
-            _id: '$categoryId',
-            name: { $first: '$categoryName' },
-            count: { $sum: 1 },
-          },
-        },
-        { $sort: { count: -1 } },
-        { $project: { _id: 0, label: '$name', count: 1, value: '$_id' } },
-      ],
-
-      // Price facets
-      priceFacets: [
-        {
-          $bucket: {
-            groupBy: '$price',
-            boundaries: [0, 50, 100, 500, 1000],
-            default: 'Other',
-            output: {
+          {
+            $group: {
+              _id: '$manufacturerId',
+              name: { $first: '$manufacturerName' },
               count: { $sum: 1 },
             },
           },
-        },
-        {
-          $project: {
-            _id: 0,
-            label: {
-              $switch: {
-                branches: [
-                  { case: { $eq: ['$_id', 0] }, then: '0-50' },
-                  { case: { $eq: ['$_id', 50] }, then: '50-100' },
-                  { case: { $eq: ['$_id', 100] }, then: '100-500' },
-                ],
-                default: 'Other',
-              },
+          { $sort: { count: -1, name: 1 } },
+          { $project: { _id: 0, label: '$name', count: 1, value: { $toString: '$_id' } } },
+        ],
+
+        // Category facets
+        categoryFacets: [
+          {
+            $match: { categoryId: { $ne: null } },
+          },
+          {
+            $group: {
+              _id: '$categoryId',
+              name: { $first: '$categoryName' },
+              count: { $sum: 1 },
             },
-            count: 1,
-            value: {
-              $switch: {
-                branches: [
-                  { case: { $eq: ['$_id', 0] }, then: '0-50' },
-                  { case: { $eq: ['$_id', 50] }, then: '50-100' },
-                  { case: { $eq: ['$_id', 100] }, then: '100-500' },
-                ],
-                default: 'Other',
+          },
+          { $sort: { count: -1, name: 1 } },
+          { $project: { _id: 0, label: '$name', count: 1, value: { $toString: '$_id' } } },
+        ],
+
+        // Price facets
+        priceFacets: [
+          {
+            $bucket: {
+              groupBy: '$price',
+              boundaries: [0, 50, 100, 500, 1000],
+              default: 'Other',
+              output: {
+                count: { $sum: 1 },
               },
             },
           },
-        },
-      ],
+          {
+            $project: {
+              _id: 0,
+              label: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ['$_id', 0] }, then: '0-50' },
+                    { case: { $eq: ['$_id', 50] }, then: '50-100' },
+                    { case: { $eq: ['$_id', 100] }, then: '100-500' },
+                  ],
+                  default: 'Other',
+                },
+              },
+              count: 1,
+              value: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ['$_id', 0] }, then: '0-50' },
+                    { case: { $eq: ['$_id', 50] }, then: '50-100' },
+                    { case: { $eq: ['$_id', 100] }, then: '100-500' },
+                  ],
+                  default: 'Other',
+                },
+              },
+            },
+          },
+        ],
+      },
     },
-  })
+  ]
 
   console.dir(pipeline, { depth: null })
   // Execute the aggregation pipeline directly on MongoDB
@@ -231,12 +203,6 @@ const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> =>
       label: 'Manufacturer',
       type: 'checkboxes',
       options: result.manufacturerFacets || [],
-    },
-    bestseller: {
-      code: 'BESTSELLER',
-      label: 'Bestselling Products',
-      type: 'checkboxes',
-      options: result.bestsellerFacets || [],
     },
     category: {
       code: 'CATEGORY',
