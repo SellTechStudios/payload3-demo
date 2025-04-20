@@ -16,7 +16,8 @@ export const ProductsListClient = (props: ProductListClientProps) => {
 
   return (
     <>
-      <Pagination page={1} totalPages={10} className="mb-4" />
+      <Pagination page={currentPage} totalItems={total} pageSize={pageSize} className="mb-4" />
+
       <div className="gap-4 grid grid-cols-2 lg:grid-cols-3">
         {products.map((p, index) => (
           <div key={index} className="flex flex-col justify-between">
@@ -24,6 +25,8 @@ export const ProductsListClient = (props: ProductListClientProps) => {
           </div>
         ))}
       </div>
+
+      <Pagination page={currentPage} totalItems={total} pageSize={pageSize} className="my-4" />
     </>
   )
 }

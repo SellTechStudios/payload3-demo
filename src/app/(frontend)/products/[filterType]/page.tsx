@@ -16,11 +16,13 @@ export default async function ProductList({ params, searchParams }: PageProps) {
   const filterType = (await params).filterType
   const searchString = (await searchParams).searchString
   const pageSize = parseInt((await searchParams).pageSize || '9') || 9
-  const currentPage = parseInt((await searchParams).page || '1') || 1
+  const page = parseInt((await searchParams).page || '1') || 1
 
   let title: string
   const searchRequest: SearchRequest = {
     type: filterType,
+    pageSize,
+    page,
   }
 
   // Validate and map the route parameters to our union type
@@ -62,7 +64,7 @@ export default async function ProductList({ params, searchParams }: PageProps) {
           <ProductsListClient
             products={queryResponse.products}
             total={queryResponse.total}
-            currentPage={currentPage}
+            currentPage={page}
             pageSize={pageSize}
           />
         </Suspense>
