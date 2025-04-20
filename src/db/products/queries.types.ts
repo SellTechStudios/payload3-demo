@@ -4,6 +4,15 @@ export type SearchRequest = {
   searchString?: string
   type: 'all' | 'new' | 'bestseller' | 'quicksearch'
   count?: number
+  pageSize?: number
+  page?: number
+}
+
+export type ProductSearchResponse = {
+  products: ProductItem[]
+  paging: {
+    total: number
+  }
 }
 
 export type ProductItem = Pick<

@@ -15,6 +15,8 @@ interface PageProps {
 export default async function ProductList({ params, searchParams }: PageProps) {
   const filterType = (await params).filterType
   const searchString = (await searchParams).searchString
+  const pageSize = parseInt((await searchParams).pageSize || '9') || 9
+  const currentPage = parseInt((await searchParams).page || '1') || 1
 
   let title: string
   const searchRequest: SearchRequest = {
@@ -44,7 +46,7 @@ export default async function ProductList({ params, searchParams }: PageProps) {
       return notFound()
   }
 
-  const products = await productQueries.fetchProducts(searchRequest)
+  const queryResponse = await productQueries.fetchProducts(searchRequest)
   const facets = await productQueries.fetchFacets(searchRequest)
 
   return (
@@ -57,7 +59,12 @@ export default async function ProductList({ params, searchParams }: PageProps) {
       <div className="col-span-12 md:col-span-9">
         <h2 className="col-span-full text-2xl mb-8">{title}</h2>
         <Suspense fallback={<LoadingShimmer />}>
-          <ProductsListClient products={products} />
+          <ProductsListClient
+            products={queryResponse.products}
+            total={queryResponse.paging.total}
+            currentPage={currentPage}
+            pageSize={pageSize}
+          />
         </Suspense>
       </div>
     </Container>

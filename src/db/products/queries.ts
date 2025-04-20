@@ -1,43 +1,45 @@
-import { FacetedNavigation, ProductItem, SearchRequest } from './queries.types'
+import {
+  FacetedNavigation,
+  ProductItem,
+  ProductSearchResponse,
+  SearchRequest,
+} from './queries.types'
 
 import { PipelineStage } from 'mongoose'
-import { ProjectToProductItem } from './queries.projections'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
-const buildProductsQueryPipeline = (params: SearchRequest) => {
-  const { searchString } = params
+const getSortStage = (params: SearchRequest): PipelineStage.Sort => {
+  switch (params.type) {
+    case 'new':
+      return { $sort: { createdAt: 1 } }
+    default:
+      return { $sort: { title: 1 } }
+  }
+}
 
-  const aggregationPipeline: PipelineStage[] = []
+const getMatchStage = (params: SearchRequest): PipelineStage.Match => {
+  const { searchString } = params
 
   switch (params.type) {
     case 'all':
-      aggregationPipeline.push({ $sort: { title: 1 } })
-      break
     case 'new':
-      aggregationPipeline.push({ $sort: { createdAt: 1 } })
-      break
+      return { $match: {} }
     case 'bestseller':
-      aggregationPipeline.push({ $match: { bestseller: true } })
-      aggregationPipeline.push({ $sort: { title: 1 } })
-      break
+      return { $match: { bestseller: true } }
     case 'quicksearch':
-      if (searchString) {
-        aggregationPipeline.push({
-          $match: {
-            $or: [
-              { title: { $regex: searchString, $options: 'i' } },
-              { name: { $regex: searchString, $options: 'i' } },
-              { description: { $regex: searchString, $options: 'i' } },
-            ],
-          },
-        })
-      }
-      aggregationPipeline.push({ $sort: { title: 1 } })
-      break
+      return searchString
+        ? {
+            $match: {
+              $or: [
+                { title: { $regex: searchString, $options: 'i' } },
+                { name: { $regex: searchString, $options: 'i' } },
+                { description: { $regex: searchString, $options: 'i' } },
+              ],
+            },
+          }
+        : { $match: {} }
   }
-
-  return aggregationPipeline
 }
 
 const fetchAllSlugs = async (): Promise<string[]> => {
@@ -55,21 +57,58 @@ const fetchAllSlugs = async (): Promise<string[]> => {
 
 const fetchProducts = async (params: SearchRequest) => {
   const payload = await getPayload({ config: configPromise })
-  const pipeline = buildProductsQueryPipeline(params)
 
-  pipeline.push({ $limit: params.count || 9 })
-  pipeline.push(ProjectToProductItem)
+  const pipeline: PipelineStage[] = [
+    {
+      $facet: {
+        products: [
+          getMatchStage(params),
+          getSortStage(params),
+          { $limit: params.pageSize || 9 },
+          {
+            $project: {
+              _id: 0,
+              id: 1,
+              bestseller: 1,
+              title: 1,
+              price: 1,
+              pricePrevious: 1,
+              mediaImages: 1,
+              slug: 1,
+            },
+          },
+        ],
+        paging: [{ $count: 'total' }],
+      },
+    },
+    {
+      $project: {
+        products: 1,
+        paging: { $arrayElemAt: ['$paging', 0] },
+      },
+    },
+  ]
 
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(pipeline)
 
-  return aggregationResult as ProductItem[]
+  const response: ProductSearchResponse = {
+    products: aggregationResult[0].products,
+    paging: {
+      total: aggregationResult[0].paging?.total || 0,
+    },
+  }
+  console.dir(aggregationResult)
+
+  return response
 }
 
 const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> => {
   const payload = await getPayload({ config: configPromise })
 
   const pipeline: PipelineStage[] = [
+    getMatchStage(params),
+
     // lookup for categories
     {
       $lookup: {
@@ -100,7 +139,6 @@ const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> =>
         preserveNullAndEmptyArrays: true,
       },
     },
-    ...buildProductsQueryPipeline(params),
     {
       $project: {
         categoryId: '$categoryDetails._id',
@@ -190,7 +228,6 @@ const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> =>
     },
   ]
 
-  console.dir(pipeline, { depth: null })
   // Execute the aggregation pipeline directly on MongoDB
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(pipeline)

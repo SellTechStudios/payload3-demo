@@ -5,13 +5,21 @@ import { ProductItem } from '@/db/products/queries.types'
 
 export type ProductListClientProps = {
   products: ProductItem[]
+  total: number
+  pageSize: number
+  currentPage: number
 }
 
 export const ProductsListClient = (props: ProductListClientProps) => {
-  const { products } = props
+  const { products, total, currentPage, pageSize } = props
 
   return (
     <>
+      <div>
+        <div>current page: {currentPage}</div>
+        <div>pageSize: {pageSize}</div>
+        <h2>total items: {total}</h2>
+      </div>
       <div className="gap-4 grid grid-cols-2 lg:grid-cols-3">
         {products.map((p, index) => (
           <div key={index} className="flex flex-col justify-between">
