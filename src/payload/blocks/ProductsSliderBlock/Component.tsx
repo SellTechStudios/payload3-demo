@@ -15,21 +15,28 @@ export const ProductsSliderBlock: React.FC<Props> = async (props) => {
   const getHeader = () => {
     switch (ListType) {
       case 'Bestsellers':
-        return 'Bestsellers'
+        return 'Bestsellery'
       case 'Recent':
         return 'Niedawno dodane'
     }
   }
 
   const ProductsSliderServerWrapper = async ({ count, listType }) => {
-    await new Promise((res) => setTimeout(res, 1000))
     let products: ProductItem[] | undefined
 
     switch (listType) {
       case 'Bestsellers':
-        products = await productQueries.fetchBestsellers(count)
+        products = await productQueries.fetchProducts({
+          type: 'bestseller',
+          count,
+        })
+        break
       case 'Recent':
-        products = await productQueries.fetchLatest(count)
+        products = await productQueries.fetchProducts({
+          type: 'new',
+          count,
+        })
+        break
     }
 
     return <ProductsSliderClient products={products} />

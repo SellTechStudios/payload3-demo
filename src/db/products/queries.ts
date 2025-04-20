@@ -66,11 +66,13 @@ const fetchProducts = async (params: SearchRequest) => {
       break
   }
 
-  aggregationPipeline.push({ $limit: 9 })
+  aggregationPipeline.push({ $limit: params.count || 9 })
   aggregationPipeline.push(projectToProductItem)
 
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(aggregationPipeline)
+
+  console.log(aggregationPipeline)
 
   return aggregationResult as ProductItem[]
 }
@@ -279,36 +281,8 @@ const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> =>
   return facets
 }
 
-const fetchLatest = async (count: number): Promise<ProductItem[]> => {
-  const payload = await getPayload({ config: configPromise })
-  const model = payload.db.collections['products']
-
-  const result = await model.aggregate([
-    { $sort: { createdAt: 1 } } as PipelineStage,
-    { $limit: count } as PipelineStage,
-    projectToProductItem,
-  ])
-
-  return result as unknown as ProductItem[]
-}
-
-const fetchBestsellers = async (count: number): Promise<ProductItem[]> => {
-  const payload = await getPayload({ config: configPromise })
-  const model = payload.db.collections['products']
-
-  const result = await model.aggregate([
-    { $sort: { bestseller: 1 } } as PipelineStage,
-    { $limit: count } as PipelineStage,
-    projectToProductItem,
-  ])
-
-  return result as unknown as ProductItem[]
-}
-
 export const productQueries = {
   fetchAllSlugs,
   fetchProducts,
   fetchFacets,
-  fetchBestsellers,
-  fetchLatest,
 }

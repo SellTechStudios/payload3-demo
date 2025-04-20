@@ -3,6 +3,7 @@ import { Product } from '@/payload-types'
 export type SearchRequest = {
   searchString?: string
   type: 'all' | 'new' | 'bestseller' | 'quicksearch'
+  count?: number
 }
 
 export type ProductItem = Pick<
