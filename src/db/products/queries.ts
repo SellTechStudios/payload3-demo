@@ -37,23 +37,14 @@ const fetchProducts = async (params: SearchRequest) => {
   const { searchString } = params
 
   // Define the MongoDB match stage for filtering products
-  const matchStage: Record<string, unknown> = {}
 
   // Add search text filter if provided
-  if (searchString) {
-    matchStage.$or = [
-      { title: { $regex: searchString, $options: 'i' } },
-      { name: { $regex: searchString, $options: 'i' } },
-      { description: { $regex: searchString, $options: 'i' } },
-    ]
-  }
 
   // Use MongoDB's aggregation framework to generate facets
   const aggregationPipeline: PipelineStage[] = []
 
   switch (params.type) {
     case 'all':
-      aggregationPipeline.push({ $match: matchStage })
       aggregationPipeline.push({ $sort: { title: 1 } })
       break
     case 'new':
@@ -61,8 +52,21 @@ const fetchProducts = async (params: SearchRequest) => {
       break
     case 'bestseller':
       aggregationPipeline.push({ $match: { bestseller: true } })
+      aggregationPipeline.push({ $sort: { title: 1 } })
       break
     case 'quicksearch':
+      if (searchString) {
+        aggregationPipeline.push({
+          $match: {
+            $or: [
+              { title: { $regex: searchString, $options: 'i' } },
+              { name: { $regex: searchString, $options: 'i' } },
+              { description: { $regex: searchString, $options: 'i' } },
+            ],
+          },
+        })
+      }
+      aggregationPipeline.push({ $sort: { title: 1 } })
       break
   }
 
@@ -71,8 +75,6 @@ const fetchProducts = async (params: SearchRequest) => {
 
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(aggregationPipeline)
-
-  console.log(aggregationPipeline)
 
   return aggregationResult as ProductItem[]
 }
