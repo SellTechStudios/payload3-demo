@@ -55,7 +55,7 @@ export default async function ProductList({ params, searchParams }: PageProps) {
         </Suspense>
       </div>
       <div className="col-span-12 md:col-span-9">
-        <h2 className="col-span-full text-2xl">{title}</h2>
+        <h2 className="col-span-full text-2xl mb-8">{title}</h2>
         <Suspense fallback={<LoadingShimmer />}>
           <ProductsListClient products={products} />
         </Suspense>

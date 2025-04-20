@@ -9,6 +9,7 @@ import { CartLink } from '@/components/Cart/CartLink'
 import { Container } from '@/components/Container'
 import type { Header } from '@/payload-types'
 import Link from 'next/link'
+import { SearchIcon } from 'lucide-react'
 import { useAuth } from '@/providers/Auth'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { usePathname } from 'next/navigation'
@@ -40,6 +41,18 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
         <Link prefetch={false} href="/">
           <img src="/logo.png" alt="Mediapart Logo" width={200} height={100} />
         </Link>
+
+        <form action={'/products/quicksearch'} className="relative max-w-[300px] w-full">
+          <input
+            type="text"
+            name="searchString"
+            placeholder="Search..."
+            className="border w-full border-gray-300 rounded-full py-2 px-4 pr-10 text-sm focus:outline-none"
+          />
+          <button type="submit" className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <SearchIcon className="w-5 text-gray-500" />
+          </button>
+        </form>
 
         <div className="flex flex-row gap-6 uppercase text-sm">
           {navItems.map(({ link }, i) => {

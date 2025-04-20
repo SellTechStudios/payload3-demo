@@ -66,7 +66,7 @@ const fetchProducts = async (params: SearchRequest) => {
       break
   }
 
-  aggregationPipeline.push({ $limit: 10 })
+  aggregationPipeline.push({ $limit: 9 })
   aggregationPipeline.push(projectToProductItem)
 
   const model = payload.db.collections['products']
