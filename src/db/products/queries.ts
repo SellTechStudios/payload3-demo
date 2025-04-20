@@ -60,7 +60,7 @@ const fetchProducts = async (params: SearchRequest) => {
       aggregationPipeline.push({ $sort: { createdAt: 1 } })
       break
     case 'bestseller':
-      aggregationPipeline.push({ $sort: { bestseller: 1 } })
+      aggregationPipeline.push({ $match: { bestseller: true } })
       break
     case 'quicksearch':
       break
