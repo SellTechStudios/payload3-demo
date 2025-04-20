@@ -376,6 +376,7 @@ export interface Product {
   color?: string | null;
   material?: string | null;
   description?: string | null;
+  rating?: ('1' | '2' | '3' | '4' | '5') | null;
   keywords?: string | null;
   bestseller?: boolean | null;
   specialOffer?: boolean | null;
@@ -1053,6 +1054,7 @@ export interface ProductsSelect<T extends boolean = true> {
   color?: T;
   material?: T;
   description?: T;
+  rating?: T;
   keywords?: T;
   bestseller?: T;
   specialOffer?: T;

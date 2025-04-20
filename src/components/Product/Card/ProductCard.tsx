@@ -8,11 +8,11 @@ import { CartItem } from '@/providers/Cart/reducer'
 import { GetMainImageUrl } from '@/payload/utilities/productUtils'
 import { Product } from '@/payload-types'
 import { ProductItem } from '@/db/products/queries.types'
+import ReviewStars from '../ReviewStars/ReviewStars'
 import { cn } from '@/payload/utilities/cn'
 import { formatCurrency } from '@/utilities/formatPrice'
 import { useAuth } from '@/providers/Auth'
 import { useCart } from '@/providers/Cart'
-import { useState } from 'react'
 
 type ProductProps = {
   product: ProductItem
@@ -43,7 +43,7 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
       >
         <img
           src={imageUrl}
-          className="w-full h-60 object-scale-down group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-60 object-scale-down group-hover:scale-105 transition-transform duration-100 ease-linear"
           alt={product.title}
         />
 
@@ -56,12 +56,12 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
       <div className="mt-8 px-5 pb-5">
         <div
           onClick={onFavoriteClick}
-          className="absolute -top-4 -right-3 p-2 rounded-full border border-slate-100 bg-white shadow-md cursor-pointer hover:bg-slate-200"
+          className="absolute top-2 right-2 p-2 rounded-full  bg-white cursor-pointer hover:bg-slate-200"
         >
           <Heart
             className={cn(
               isFavorite ? 'fill-gray-800' : 'fill-white',
-              'hover:scale-110 text-slate-900 transition-transform duration-200',
+              'hover:scale-110 text-slate-900 transition-transform duration-100 ease-linea',
             )}
             size={20}
           />
@@ -78,6 +78,9 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
               {formatCurrency(product.pricePrevious)}
             </span>
           </p>
+        </div>
+        <div className="mb-4">
+          <ReviewStars rating={product.rating} />
         </div>
         <Button
           onClick={

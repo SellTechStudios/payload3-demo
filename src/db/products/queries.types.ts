@@ -7,7 +7,7 @@ export type SearchRequest = {
 
 export type ProductItem = Pick<
   Product,
-  'id' | 'bestseller' | 'title' | 'price' | 'pricePrevious' | 'mediaImages' | 'slug'
+  'id' | 'bestseller' | 'title' | 'price' | 'pricePrevious' | 'mediaImages' | 'slug' | 'rating'
 >
 
 export type FacetOption = {

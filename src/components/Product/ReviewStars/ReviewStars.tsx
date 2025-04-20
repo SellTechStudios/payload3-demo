@@ -1,31 +1,27 @@
 import React from 'react'
+import { Star } from 'lucide-react'
 
-interface ReviewStarsProps {
-  review: number // Review score ranging from 0 to 5
+export type ReviewStarsProps = {
+  rating: ('1' | '2' | '3' | '4' | '5') | null | undefined
 }
 
-const ReviewStars: React.FC<ReviewStarsProps> = ({ review }) => {
-  const stars = Array.from({ length: 5 }, (_, index) => index + 1)
-
+const ReviewStars: React.FC<ReviewStarsProps> = (props: ReviewStarsProps) => {
   return (
-    <div className="flex space-x-1">
-      {stars.map((star) => (
-        <svg
-          key={star}
-          xmlns="http://www.w3.org/2000/svg"
-          fill={star <= review ? 'yellow' : 'gray'}
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 17.27l5.18 3.73-1.64-6.81L20.9 9.27l-6.9-.59L12 2.5 9.99 8.68l-6.9.59 5.36 4.92-1.64 6.81L12 17.27z"
+    <div className="flex flex-row gap-1 justify-start flex-1">
+      {Array.from({ length: 5 }, (_, index) => {
+        const star = index + 1
+        return (
+          <Star
+            className={
+              star <= (props.rating ? parseInt(props.rating) : 0)
+                ? 'fill-yellow-500 stroke-yellow-500'
+                : 'fill-white stroke-gray-300 stroke-2'
+            }
+            key={star}
+            size={20}
           />
-        </svg>
-      ))}
+        )
+      })}
     </div>
   )
 }
