@@ -70,6 +70,7 @@ const fetchProducts = async (params: SearchRequest) => {
               pricePrevious: 1,
               mediaImages: 1,
               slug: 1,
+              rating: 1,
             },
           },
         ],
@@ -86,8 +87,6 @@ const fetchProducts = async (params: SearchRequest) => {
 
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(pipeline)
-
-  console.dir(pipeline, { depth: 10 })
 
   const response: ProductSearchResponse = {
     products: aggregationResult[0].products,
