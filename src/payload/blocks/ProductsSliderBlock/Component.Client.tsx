@@ -72,7 +72,7 @@ export const ProductsSliderClient = (props: ProductsSliderClientProps) => {
         breakpoints={breakpoints}
       >
         {products.map((p) => (
-          <SwiperSlide key={p.id} className="!h-auto">
+          <SwiperSlide key={p.slug} className="!h-auto">
             <ProductCard product={p} />
           </SwiperSlide>
         ))}

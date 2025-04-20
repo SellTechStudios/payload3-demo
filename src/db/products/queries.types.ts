@@ -15,7 +15,7 @@ export type ProductSearchResponse = {
 
 export type ProductItem = Pick<
   Product,
-  'id' | 'bestseller' | 'title' | 'price' | 'pricePrevious' | 'mediaImages' | 'slug' | 'rating'
+  'bestseller' | 'title' | 'price' | 'pricePrevious' | 'mediaImages' | 'slug' | 'rating'
 >
 
 export type FacetOption = {

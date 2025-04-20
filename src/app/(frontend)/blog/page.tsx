@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+
 import type { Metadata } from 'next/types'
 import PageClient from './page.client'
 import { PageRange } from '@/components/PageRange'
@@ -60,11 +61,11 @@ export default async function Page() {
         ))}
       </div>
 
-      <div className="container">
+      {/* <div className="container">
         {posts.totalPages > 1 && posts.page && (
           <Pagination page={posts.page} totalPages={posts.totalPages} />
         )}
-      </div>
+      </div> */}
     </div>
   )
 }

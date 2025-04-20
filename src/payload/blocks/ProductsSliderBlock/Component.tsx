@@ -1,8 +1,8 @@
+import { ProductItem, ProductSearchResponse } from '@/db/products/queries.types'
 import React, { Suspense } from 'react'
 
 import { Container } from '@/components/Container'
 import { Page } from 'src/payload-types'
-import { ProductItem } from '@/db/products/queries.types'
 import { ProductsSliderClient } from './Component.Client'
 import { ProductsSliderSkeleton } from './Component.Loading'
 import { productQueries } from '@/db'
@@ -22,24 +22,27 @@ export const ProductsSliderBlock: React.FC<Props> = async (props) => {
   }
 
   const ProductsSliderServerWrapper = async ({ count, listType }) => {
-    let products: ProductItem[] | undefined
+    let response: ProductSearchResponse
 
     switch (listType) {
       case 'Bestsellers':
-        products = await productQueries.fetchProducts({
+        response = await productQueries.fetchProducts({
           type: 'bestseller',
           count,
         })
         break
       case 'Recent':
-        products = await productQueries.fetchProducts({
+        response = await productQueries.fetchProducts({
           type: 'new',
           count,
         })
         break
+
+      default:
+        throw new Error('Invalid list type')
     }
 
-    return <ProductsSliderClient products={products} />
+    return <ProductsSliderClient products={response.products} />
   }
 
   return (

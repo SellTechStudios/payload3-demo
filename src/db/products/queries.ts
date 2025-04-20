@@ -63,7 +63,6 @@ const fetchProducts = async (params: SearchRequest) => {
           {
             $project: {
               _id: 0,
-              id: 1,
               bestseller: 1,
               title: 1,
               price: 1,
