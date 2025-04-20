@@ -54,10 +54,10 @@ const fetchProducts = async (params: SearchRequest) => {
   const payload = await getPayload({ config: configPromise })
 
   const pipeline: PipelineStage[] = [
+    getMatchStage(params),
     {
       $facet: {
         products: [
-          getMatchStage(params),
           getSortStage(params),
           { $limit: params.pageSize || 9 },
           {

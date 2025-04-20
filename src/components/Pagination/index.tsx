@@ -10,8 +10,8 @@ import {
   PaginationPrevious,
 } from '@/payload/blocks/Form/_ui/pagination'
 
-import { ChevronLeft } from 'lucide-react'
 import React from 'react'
+import canUseDOM from '@/payload/utilities/canUseDOM'
 import { useRouter } from 'next/navigation'
 
 export const Pagination: React.FC<{
@@ -31,7 +31,7 @@ export const Pagination: React.FC<{
   const hasExtraPrevPages = page - 1 > 1
   const hasExtraNextPages = page + 1 < totalPages
 
-  const url = window.location.origin + window.location.pathname
+  const url = canUseDOM ? window.location.origin + window.location.pathname : ''
 
   return (
     <div className={className}>

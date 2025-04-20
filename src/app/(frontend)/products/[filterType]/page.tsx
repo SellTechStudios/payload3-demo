@@ -18,7 +18,6 @@ export default async function ProductList({ params, searchParams }: PageProps) {
   const pageSize = parseInt((await searchParams).pageSize || '9') || 9
   const page = parseInt((await searchParams).page || '1') || 1
 
-  let title: string
   const searchRequest: SearchRequest = {
     type: filterType,
     pageSize,
@@ -28,19 +27,11 @@ export default async function ProductList({ params, searchParams }: PageProps) {
   // Validate and map the route parameters to our union type
   switch (filterType) {
     case 'all':
-      title = 'Wszystkie Produkty'
-      break
-
     case 'new':
-      title = 'Nowości'
-      break
-
     case 'bestseller':
-      title = 'Najlepiej sprzedające się'
       break
 
     case 'quicksearch':
-      title = searchString ? `Wyniki wyszukiwania dla '${searchString}'` : 'Wszystkie Produkty'
       searchRequest.searchString = searchString
       break
 
@@ -59,7 +50,6 @@ export default async function ProductList({ params, searchParams }: PageProps) {
         </Suspense>
       </div>
       <div className="col-span-12 md:col-span-9">
-        <h2 className="col-span-full text-2xl mb-8">{title}</h2>
         <Suspense fallback={<LoadingShimmer />}>
           <ProductsListClient
             products={queryResponse.products}
