@@ -150,11 +150,9 @@ const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> =>
           {
             $bucket: {
               groupBy: '$price',
-              boundaries: [0, 50, 100, 500, 1000],
-              default: 'Other',
-              output: {
-                count: { $sum: 1 },
-              },
+              boundaries: [0, 50, 100, 200, 300, 500],
+              default: '500+',
+              output: { count: { $sum: 1 } },
             },
           },
           {
@@ -165,9 +163,11 @@ const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> =>
                   branches: [
                     { case: { $eq: ['$_id', 0] }, then: '0-50' },
                     { case: { $eq: ['$_id', 50] }, then: '50-100' },
-                    { case: { $eq: ['$_id', 100] }, then: '100-500' },
+                    { case: { $eq: ['$_id', 100] }, then: '100-200' },
+                    { case: { $eq: ['$_id', 200] }, then: '200-300' },
+                    { case: { $eq: ['$_id', 300] }, then: '300-500' },
                   ],
-                  default: 'Other',
+                  default: '500+',
                 },
               },
               count: 1,
@@ -176,9 +176,11 @@ const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> =>
                   branches: [
                     { case: { $eq: ['$_id', 0] }, then: '0-50' },
                     { case: { $eq: ['$_id', 50] }, then: '50-100' },
-                    { case: { $eq: ['$_id', 100] }, then: '100-500' },
+                    { case: { $eq: ['$_id', 100] }, then: '100-200' },
+                    { case: { $eq: ['$_id', 200] }, then: '200-300' },
+                    { case: { $eq: ['$_id', 300] }, then: '300-500' },
                   ],
-                  default: 'Other',
+                  default: '500+',
                 },
               },
             },
