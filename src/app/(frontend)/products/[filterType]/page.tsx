@@ -61,7 +61,7 @@ export default async function ProductList({ params, searchParams }: PageProps) {
         <Suspense fallback={<LoadingShimmer />}>
           <ProductsListClient
             products={queryResponse.products}
-            total={queryResponse.paging.total}
+            total={queryResponse.total}
             currentPage={currentPage}
             pageSize={pageSize}
           />

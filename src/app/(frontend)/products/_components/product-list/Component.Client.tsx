@@ -1,5 +1,6 @@
 'use client'
 
+import { Pagination } from '@/components/Pagination'
 import { ProductCard } from '@/components/Product/Card/ProductCard'
 import { ProductItem } from '@/db/products/queries.types'
 
@@ -15,11 +16,7 @@ export const ProductsListClient = (props: ProductListClientProps) => {
 
   return (
     <>
-      <div>
-        <div>current page: {currentPage}</div>
-        <div>pageSize: {pageSize}</div>
-        <h2>total items: {total}</h2>
-      </div>
+      <Pagination page={1} totalPages={10} className="mb-4" />
       <div className="gap-4 grid grid-cols-2 lg:grid-cols-3">
         {products.map((p, index) => (
           <div key={index} className="flex flex-col justify-between">

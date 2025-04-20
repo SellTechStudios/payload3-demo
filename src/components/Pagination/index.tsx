@@ -11,7 +11,6 @@ import {
 } from '@/payload/blocks/Form/_ui/pagination'
 
 import React from 'react'
-import { cn } from '@/utilities/cn'
 import { useRouter } from 'next/navigation'
 
 export const Pagination: React.FC<{
@@ -29,7 +28,7 @@ export const Pagination: React.FC<{
   const hasExtraNextPages = page + 1 < totalPages
 
   return (
-    <div className={cn('my-12', className)}>
+    <div className={className}>
       <PaginationComponent>
         <PaginationContent>
           <PaginationItem>

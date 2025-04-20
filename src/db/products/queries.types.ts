@@ -10,9 +10,7 @@ export type SearchRequest = {
 
 export type ProductSearchResponse = {
   products: ProductItem[]
-  paging: {
-    total: number
-  }
+  total: number
 }
 
 export type ProductItem = Pick<

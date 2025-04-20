@@ -1,9 +1,4 @@
-import {
-  FacetedNavigation,
-  ProductItem,
-  ProductSearchResponse,
-  SearchRequest,
-} from './queries.types'
+import { FacetedNavigation, ProductSearchResponse, SearchRequest } from './queries.types'
 
 import { PipelineStage } from 'mongoose'
 import configPromise from '@payload-config'
@@ -94,11 +89,8 @@ const fetchProducts = async (params: SearchRequest) => {
 
   const response: ProductSearchResponse = {
     products: aggregationResult[0].products,
-    paging: {
-      total: aggregationResult[0].paging?.total || 0,
-    },
+    total: aggregationResult[0].paging?.total || 0,
   }
-  console.dir(aggregationResult)
 
   return response
 }
