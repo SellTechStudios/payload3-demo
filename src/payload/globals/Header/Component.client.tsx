@@ -10,6 +10,7 @@ import { Container } from '@/components/Container'
 import type { Header } from '@/payload-types'
 import Link from 'next/link'
 import { SearchIcon } from 'lucide-react'
+import { cn } from '@/payload/utilities/cn'
 import { useAuth } from '@/providers/Auth'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { usePathname } from 'next/navigation'
@@ -17,6 +18,15 @@ import { usePathname } from 'next/navigation'
 interface HeaderClientProps {
   data: Header
 }
+
+const mainNavItems = [
+  { label: 'Wszystkie', path: '/products/all' },
+  { label: 'Nowości', path: '/products/new' },
+  { label: 'Bestsellery', path: '/products/bestseller' },
+  { label: 'Blog', path: '/blog' },
+  { label: 'Kontakt', path: '/contact' },
+  { label: 'Wyszukaj AI', path: '/ai-search' },
+]
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const { user } = useAuth()
@@ -39,7 +49,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     <header className="py-4">
       <Container className="flex flex-row items-center justify-between">
         <Link prefetch={false} href="/">
-          <img src="/logo.png" alt="Mediapart Logo" width={200} height={100} />
+          <img src="/logo.png" alt="Company Logo" width={200} height={100} />
         </Link>
 
         <form action={'/products/quicksearch'} className="relative max-w-[300px] w-full">
@@ -83,29 +93,21 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
         </div>
       </Container>
 
-      <div className="flex flex-row align-middle justify-center bg-gray-800 py-4 text-gray-100 mt-4 not-prose relative left-1/2 w-dvw max-w-none -translate-x-1/2">
-        <nav className="flex flex-row gap-8 uppercase">
-          <Link prefetch={false} href="/products/all">
-            Wszystkie
-          </Link>
-          <Link prefetch={false} href="/products/new">
-            Nowości
-          </Link>
-          <Link prefetch={false} href="/products/bestseller">
-            Bestsellery
-          </Link>
-          <Link prefetch={false} href="/about-us">
-            O Nas
-          </Link>
-          <Link prefetch={false} href="/blog">
-            Blog
-          </Link>
-          <Link prefetch={false} href="/contact">
-            Kontakt
-          </Link>
-          <Link prefetch={false} href="/ai-search">
-            Wyszukaj AI
-          </Link>
+      <div className="flex flex-row justify-center bg-gray-800 text-gray-100 mt-4 relative left-1/2 w-dvw max-w-none -translate-x-1/2">
+        <nav className="flex flex-row justify-center items-center uppercase h-full">
+          {mainNavItems.map((nav) => (
+            <Link
+              key={nav.path}
+              href={nav.path}
+              prefetch={false}
+              className={cn(
+                pathname === nav.path ? 'bg-gray-700' : '',
+                'px-6 py-4 hover:bg-gray-700',
+              )}
+            >
+              {nav.label}
+            </Link>
+          ))}
         </nav>
       </div>
     </header>
