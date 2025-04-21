@@ -178,6 +178,17 @@ const Products: CollectionConfig = {
             },
           ],
         },
+        {
+          label: 'AI',
+          fields: [
+            {
+              name: 'embedding',
+              type: 'number',
+              hasMany: true,
+              admin: { readOnly: true },
+            },
+          ],
+        },
       ],
     },
     {

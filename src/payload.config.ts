@@ -1,3 +1,4 @@
+import { EmbeddingsAdmin } from './payload/globals/ProductsVectorEmbeddings/Admin'
 import { Footer } from './payload/globals/Footer/config'
 import { Header } from './payload/globals/Header/config'
 import Manufacturer from './payload/collections/eCom/Manufacturer'
@@ -75,7 +76,7 @@ export default buildConfig({
     Manufacturer,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer, Settings, ProductImportsAdmin],
+  globals: [Header, Footer, Settings, ProductImportsAdmin, EmbeddingsAdmin],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder

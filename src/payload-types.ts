@@ -63,12 +63,14 @@ export interface Config {
     footer: Footer;
     settings: Settings;
     'product-imports': ProductImport;
+    'product-vetor-embeddings': ProductVetorEmbedding;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
     'product-imports': ProductImportsSelect<false> | ProductImportsSelect<true>;
+    'product-vetor-embeddings': ProductVetorEmbeddingsSelect<false> | ProductVetorEmbeddingsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -391,6 +393,7 @@ export interface Product {
   seoTitle?: string | null;
   seoDescription?: string | null;
   seoImageUrl?: string | null;
+  embedding?: number[] | null;
   shopName: string;
   Category?: (string | null) | ProductCategory;
   manufacturer?: (string | null) | Manufacturer;
@@ -1069,6 +1072,7 @@ export interface ProductsSelect<T extends boolean = true> {
   seoTitle?: T;
   seoDescription?: T;
   seoImageUrl?: T;
+  embedding?: T;
   shopName?: T;
   Category?: T;
   manufacturer?: T;
@@ -1376,6 +1380,16 @@ export interface ProductImport {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-vetor-embeddings".
+ */
+export interface ProductVetorEmbedding {
+  id: string;
+  title?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1445,6 +1459,16 @@ export interface SettingsSelect<T extends boolean = true> {
  * via the `definition` "product-imports_select".
  */
 export interface ProductImportsSelect<T extends boolean = true> {
+  title?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-vetor-embeddings_select".
+ */
+export interface ProductVetorEmbeddingsSelect<T extends boolean = true> {
   title?: T;
   updatedAt?: T;
   createdAt?: T;
