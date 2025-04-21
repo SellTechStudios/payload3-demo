@@ -7,6 +7,10 @@ export type SearchRequest = {
   page: number
 }
 
+export type VectorSearchRequest = {
+  searchString: string
+}
+
 export type ProductSearchResponse = {
   products: ProductItem[]
   total: number

@@ -103,6 +103,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           <Link prefetch={false} href="/contact">
             Kontakt
           </Link>
+          <Link prefetch={false} href="/ai-search">
+            Wyszukaj AI
+          </Link>
         </nav>
       </div>
     </header>

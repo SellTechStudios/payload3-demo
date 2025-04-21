@@ -13,7 +13,14 @@ export async function submitData() {
   })
 
   for (const product of products.docs) {
-    const text = [product.title, product.description].filter(Boolean).join(' — ')
+    const text = `
+      Nazwa: ${product.title},
+      Opis: ${product.description},
+      Kolor: ${product.color},
+      Materiał: ${product.material},
+      Cena: ${product.price},
+    `
+
     const resp = await ollama.embed({
       model: 'nomic-embed-text',
       input: text,
