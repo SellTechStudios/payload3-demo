@@ -72,7 +72,7 @@ export interface Config {
     'product-imports': ProductImportsSelect<false> | ProductImportsSelect<true>;
     'product-vetor-embeddings': ProductVetorEmbeddingsSelect<false> | ProductVetorEmbeddingsSelect<true>;
   };
-  locale: null;
+  locale: 'en' | 'pl';
   user: User & {
     collection: 'users';
   };
@@ -185,6 +185,8 @@ export interface ContentBlock {
 export interface Post {
   id: string;
   title: string;
+  description?: string | null;
+  isTrending?: boolean | null;
   heroImage?: (string | null) | Media;
   content: {
     root: {
@@ -201,8 +203,13 @@ export interface Post {
     };
     [k: string]: unknown;
   };
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   relatedPosts?: (string | Post)[] | null;
-  categories?: (string | PostCategory)[] | null;
   meta?: {
     title?: string | null;
     image?: (string | null) | Media;
@@ -313,16 +320,6 @@ export interface Media {
       filename?: string | null;
     };
   };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "postCategories".
- */
-export interface PostCategory {
-  id: string;
-  title: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -635,6 +632,16 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "postCategories".
+ */
+export interface PostCategory {
+  id: string;
+  title: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders".
  */
 export interface Order {
@@ -850,10 +857,17 @@ export interface FormBlockSelect<T extends boolean = true> {
  */
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
+  description?: T;
+  isTrending?: T;
   heroImage?: T;
   content?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
   relatedPosts?: T;
-  categories?: T;
   meta?:
     | T
     | {
@@ -1484,6 +1498,17 @@ export interface ProductsShowcaseBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'productsShowcaseBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CodeBlock".
+ */
+export interface CodeBlock {
+  language?: ('typescript' | 'javascript' | 'css') | null;
+  code: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

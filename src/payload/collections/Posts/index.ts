@@ -1,9 +1,15 @@
 import {
+  AlignFeature,
+  BlockquoteFeature,
   BlocksFeature,
+  ChecklistFeature,
   FixedToolbarFeature,
   HeadingFeature,
   HorizontalRuleFeature,
+  IndentFeature,
   InlineToolbarFeature,
+  SubscriptFeature,
+  SuperscriptFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import {
@@ -15,11 +21,12 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
 
+import { Code } from '../../blocks/Code/config'
 import type { CollectionConfig } from 'payload'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { authenticated } from '../../access/authenticated'
-import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { generatePreviewPath } from '../../utilities/generatePreviewPath'
+import { anyone } from '@/payload/access/anyone'
+import { authenticated } from '@/payload/access/authenticated'
+import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { slugField } from '@/payload/fields/slug'
 
@@ -28,7 +35,7 @@ export const Posts: CollectionConfig<'posts'> = {
   access: {
     create: authenticated,
     delete: authenticated,
-    read: authenticatedOrPublished,
+    read: anyone,
     update: authenticated,
   },
   // This config controls what's populated by default when a post is referenced
@@ -37,7 +44,6 @@ export const Posts: CollectionConfig<'posts'> = {
   defaultPopulate: {
     title: true,
     slug: true,
-    categories: true,
     meta: {
       image: true,
       description: true,
@@ -66,29 +72,49 @@ export const Posts: CollectionConfig<'posts'> = {
   },
   fields: [
     {
+      localized: true,
       name: 'title',
       type: 'text',
       required: true,
     },
     {
+      localized: true,
+      name: 'description',
+      type: 'textarea',
+      required: false,
+    },
+    {
       type: 'tabs',
       tabs: [
         {
+          label: 'Content',
           fields: [
+            {
+              name: 'isTrending',
+              type: 'checkbox',
+            },
             {
               name: 'heroImage',
               type: 'upload',
               relationTo: 'media',
             },
             {
+              localized: true,
               name: 'content',
               type: 'richText',
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => {
                   return [
                     ...rootFeatures,
+                    AlignFeature(),
+                    IndentFeature(),
+                    ChecklistFeature(),
+                    BlockquoteFeature(),
+                    SubscriptFeature(),
+                    SuperscriptFeature(),
+                    // OrderedListFeature(),    <-- that thing throws error in admin editor
                     HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-                    BlocksFeature({ blocks: [MediaBlock] }),
+                    BlocksFeature({ blocks: [Code, MediaBlock] }),
                     FixedToolbarFeature(),
                     InlineToolbarFeature(),
                     HorizontalRuleFeature(),
@@ -98,10 +124,25 @@ export const Posts: CollectionConfig<'posts'> = {
               label: false,
               required: true,
             },
+            {
+              name: 'tags',
+              type: 'array',
+              fields: [
+                {
+                  name: 'tag',
+                  type: 'text',
+                },
+              ],
+              admin: {
+                components: {
+                  Field: '/payload/fields/tagsArray/tagsArrayComponent',
+                },
+              },
+            },
           ],
-          label: 'Content',
         },
         {
+          label: 'Meta',
           fields: [
             {
               name: 'relatedPosts',
@@ -119,21 +160,11 @@ export const Posts: CollectionConfig<'posts'> = {
               hasMany: true,
               relationTo: 'posts',
             },
-            {
-              name: 'categories',
-              type: 'relationship',
-              admin: {
-                position: 'sidebar',
-              },
-              hasMany: true,
-              relationTo: 'postCategories',
-            },
           ],
-          label: 'Meta',
         },
         {
-          name: 'meta',
           label: 'SEO',
+          name: 'meta',
           fields: [
             OverviewField({
               titlePath: 'meta.title',

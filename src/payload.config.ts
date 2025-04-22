@@ -14,10 +14,12 @@ import { Settings } from './payload/globals/Settings/Settings'
 import { Users } from './payload/collections/Users'
 import { buildConfig } from 'payload'
 import { defaultLexical } from '@/payload/fields/defaultLexical'
+import { en } from '@payloadcms/translations/languages/en'
 import { fileURLToPath } from 'url'
 import { getServerSideURL } from './payload/utilities/getURL'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import path from 'path'
+import { pl } from '@payloadcms/translations/languages/pl'
 import { plugins } from './payload/plugins'
 import sharp from 'sharp' // sharp-import
 
@@ -27,6 +29,17 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  i18n: {
+    fallbackLanguage: 'en',
+    supportedLanguages: {
+      en,
+      pl,
+    },
+  },
+  localization: {
+    locales: ['en', 'pl'],
+    defaultLocale: 'en',
+  },
   admin: {
     importMap: {
       baseDir: path.resolve(dirname),
