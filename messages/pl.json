@@ -1,0 +1,15 @@
+{
+  "Header": {
+    "posts": "Posty"
+  },
+  "LocaleSwitcher": {
+    "polish": "Polski",
+    "english": "English",
+    "label": "Język"
+  },
+  "HomePage": {
+    "heroTitleHighlight": "Wzmocnij",
+    "heroTitleRest": "swój biznes dzięki nowoczesnym technologiom",
+    "heroDescription": "Specjalizujemy się w tworzeniu aplikacji internetowych, rozwiązań e-commerce i doradztwie programistycznym, aby pomóc Twojej firmie prosperować w erze cyfrowej."
+  }
+}

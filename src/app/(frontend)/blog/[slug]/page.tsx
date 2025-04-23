@@ -1,19 +1,17 @@
-/* eslint-disable @next/next/no-img-element */
-import type { Metadata } from 'next'
-
-import { RelatedPosts } from '@/app/(frontend)/blog/[slug]/components/RelatedPosts'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
-import React, { cache } from 'react'
-import RichText from '@/components/RichText'
-
-import type { Post } from '@/payload-types'
-
-import { generateMeta } from '@/payload/utilities/generateMeta'
-import PageClient from './page.client'
+import Image from 'next/image'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { Locale } from '@/i18n/config'
+import type { Metadata } from 'next'
 import NotFound from '../../not-found'
+import { RelatedPosts } from '../_components/RelatedPosts'
+import RichText from '@/components/RichText'
+import Section from '@/components/Section/Section'
+import { cache } from 'react'
+import configPromise from '@payload-config'
+import { draftMode } from 'next/headers'
+import { generateMeta } from '@/utilities/generateMeta'
+import { getPayload } from 'payload'
+import { getUserLocale } from '@/services/locale'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -26,11 +24,12 @@ export async function generateStaticParams() {
     select: {
       slug: true,
     },
+    locale: 'all',
   })
 
-  const params = posts.docs.map(({ slug }) => {
-    return { slug }
-  })
+  const params = posts.docs.map(({ slug }) => ({
+    slug,
+  }))
 
   return params
 }
@@ -41,41 +40,44 @@ type Args = {
   }>
 }
 
-export default async function Post({ params: paramsPromise }: Args) {
+export default async function Post(props: Args) {
   const { isEnabled: draft } = await draftMode()
-  const { slug = '' } = await paramsPromise
-  const post = await queryPostBySlug({ slug })
+  const { slug = '' } = await props.params
+  const locale = (await getUserLocale()) as Locale
+  const post = await queryPostBySlug({ slug, locale })
 
-  if (!post) return <NotFound />
+  if (!post) {
+    return <NotFound />
+  }
 
-  const imageUrl = typeof post.heroImage === 'string' ? post.heroImage : post.heroImage?.url
-  const date = new Date(post.createdAt).toLocaleDateString()
-  const authors =
-    post.authors?.map((author) => (typeof author === 'object' ? author.name : author)).join(', ') ||
-    ''
+  const imgUrl = typeof post.heroImage === 'string' ? post.heroImage : post.heroImage?.url
 
   return (
-    <article className="-mt-8 pb-16">
-      <PageClient />
-
+    <article className="pb-16">
       {draft && <LivePreviewListener />}
 
-      <div className="flex flex-col items-center gap-4">
-        {imageUrl && <img src={imageUrl} alt="hero" className="w-full h-96 object-cover" />}
-
-        <div className="container prose -mt-16 bg-white rounded-md shadow-sm py-4">
-          <h1 className="mb-4">{post.title}</h1>
-          <div className="text-gray-600 italic mb-8 text-sm">
-            <div>Created: {date}</div>
-            <div>By: {authors}</div>
-          </div>
-
-          <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
-
-          {post.relatedPosts && (
-            <RelatedPosts docs={post.relatedPosts.filter((post) => typeof post === 'object')} />
-          )}
+      {imgUrl && (
+        <div className="relative w-full h-[300px] sm:h-[400px] md:h-[600px] mb-8">
+          <Image src={imgUrl} alt={post.title} className="object-cover" fill sizes="100vw" />
         </div>
+      )}
+      <div>
+        <h1 className="mb-8 text-header1">{post.title}</h1>
+        <RichText className="" data={post.content} enableGutter={false} enableProse={false} />
+
+        {post.relatedPosts && post.relatedPosts.length > 0 && (
+          <Section className="mt-16">
+            <Section.Header>
+              <h5 className="text-header5 ">Related posts</h5>
+            </Section.Header>
+            <Section.Content>
+              <RelatedPosts
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-subgrid grid-rows-[2fr] col-span-3 col-start-1 mt-12"
+                docs={post.relatedPosts.filter((post) => typeof post === 'object')}
+              />
+            </Section.Content>
+          </Section>
+        )}
       </div>
     </article>
   )
@@ -83,12 +85,13 @@ export default async function Post({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug = '' } = await paramsPromise
-  const post = await queryPostBySlug({ slug })
+  const locale = (await getUserLocale()) as Locale
+  const post = await queryPostBySlug({ slug, locale })
 
   return generateMeta({ doc: post })
 }
 
-const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
+const queryPostBySlug = cache(async ({ slug, locale }: { slug: string; locale: Locale }) => {
   const { isEnabled: draft } = await draftMode()
 
   const payload = await getPayload({ config: configPromise })
@@ -97,9 +100,9 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
     collection: 'posts',
     draft,
     limit: 1,
-    depth: 2,
     overrideAccess: draft,
     pagination: false,
+    locale: locale,
     where: {
       slug: {
         equals: slug,

@@ -1,0 +1,15 @@
+{
+  "Header": {
+    "posts": "Posts"
+  },
+  "LocaleSwitcher": {
+    "polish": "Polski",
+    "english": "English",
+    "label": "Language"
+  },
+  "HomePage": {
+    "heroTitleHighlight": "Empower",
+    "heroTitleRest": "Your Business with Cutting-Edge Web Solutions",
+    "heroDescription": "We specialize in custom web applications, e-commerce solutions, and software consulting to help your business thrive in the digital era."
+  }
+}
