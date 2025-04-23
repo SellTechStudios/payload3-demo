@@ -45,10 +45,6 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
-    autoLogin: {
-      email: 'karol.barkowski@gmail.com',
-      password: 'MKB1983!!',
-    },
     livePreview: {
       breakpoints: [
         {
