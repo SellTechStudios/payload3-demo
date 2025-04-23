@@ -1,7 +1,7 @@
 'use client'
 
+import { Button, TextInput, useField, useForm, useFormFields } from '@payloadcms/ui'
 import React, { memo, useCallback, useMemo } from 'react'
-import { useField, useForm, useFormFields } from '@payloadcms/ui'
 
 import type { ArrayFieldClientComponent } from 'payload'
 
@@ -25,30 +25,18 @@ interface TagProps {
  */
 const Tag = memo(({ id, value, onRemove, index }: TagProps) => (
   <div
+    onClick={() => onRemove(index)}
     style={{
-      backgroundColor: '#e0e0e0',
-      padding: '8px 12px',
-      borderRadius: '8px',
+      backgroundColor: '#292929',
+      padding: '4px 12px',
+      borderRadius: '4px',
       display: 'flex',
       alignItems: 'center',
       gap: '4px',
+      cursor: 'pointer',
     }}
   >
-    <span style={{ fontSize: '14px', fontWeight: 'bold', cursor: 'default' }}>{value}</span>
-    <button
-      onClick={() => onRemove(index)}
-      type="button"
-      style={{
-        border: 'none',
-        background: 'none',
-        padding: '0 4px',
-        cursor: 'pointer',
-        fontSize: '14px',
-        fontWeight: 'bold',
-      }}
-    >
-      X
-    </button>
+    {value}
   </div>
 ))
 
@@ -146,27 +134,20 @@ const TagsArrayComponent: ArrayFieldClientComponent = ({ path, field, ...props }
   return (
     <div>
       <h4>Tags</h4>
-      <div style={{ marginTop: '18px' }}>{tagList}</div>
-      <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
-        <input
-          className="inputFieldClass"
-          type="text"
-          value={newTagValue}
+
+      <div style={{ marginTop: '12px', display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <TextInput
+          path={`${path}.newTag`}
           onChange={(e) => setNewTagValue(e.target.value)}
-          onKeyDown={handleKeyPress}
           placeholder="Enter tag name"
-          style={{
-            padding: '4px 8px',
-            borderRadius: '4px',
-            border: '1px solid #ccc',
-            fontSize: '14px',
-            width: '260px',
-          }}
+          onKeyDown={handleKeyPress}
+          value={newTagValue}
         />
-        <button onClick={handleAddRow} type="button" disabled={!newTagValue.trim()}>
+        <Button onClick={handleAddRow} disabled={!newTagValue.trim()}>
           Add Tag
-        </button>
+        </Button>
       </div>
+      <div style={{ marginTop: '18px' }}>{tagList}</div>
     </div>
   )
 }
