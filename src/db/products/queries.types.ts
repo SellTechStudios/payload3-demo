@@ -8,7 +8,7 @@ export type SearchRequest = {
 }
 
 export type VectorSearchRequest = {
-  searchString: string
+  searchVector: number[]
 }
 
 export type ProductSearchResponse = {

@@ -185,7 +185,7 @@ const Products: CollectionConfig = {
               name: 'embedding',
               type: 'number',
               hasMany: true,
-              admin: { readOnly: true },
+              // admin: { readOnly: true },
             },
           ],
         },

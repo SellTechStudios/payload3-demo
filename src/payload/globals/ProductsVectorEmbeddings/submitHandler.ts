@@ -1,8 +1,8 @@
 'use server'
 
+import { Embed } from '@/services/ai'
 import config from '@payload-config'
 import { getPayload } from 'payload'
-import ollama from 'ollama'
 
 export async function submitData() {
   const payload = await getPayload({ config })
@@ -21,18 +21,12 @@ export async function submitData() {
       Cena: ${product.price},
     `
 
-    const resp = await ollama.embed({
-      model: 'nomic-embed-text',
-      input: text,
-    })
-
-    const embeddings = resp.embeddings
-
+    const embeddings = await Embed(text, 'search_document')
     await payload.update({
       collection: 'products',
       id: product.id,
       data: {
-        embedding: embeddings[0],
+        embedding: embeddings,
       },
     })
   }

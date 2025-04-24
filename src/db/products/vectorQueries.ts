@@ -3,21 +3,14 @@ import { ProductItem, VectorSearchRequest } from './queries.types'
 import { PipelineStage } from 'mongoose'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import ollama from 'ollama'
 
 const productsSemanticSearch = async (params: VectorSearchRequest) => {
   const payload = await getPayload({ config: configPromise })
 
-  const resp = await ollama.embed({
-    model: 'nomic-embed-text',
-    input: params.searchString,
-  })
-  const queryEmbedding = resp.embeddings
-
   const pipeline: PipelineStage[] = [
     {
       $vectorSearch: {
-        queryVector: queryEmbedding[0],
+        queryVector: params.searchVector,
         path: 'embedding',
         numCandidates: 5,
         index: 'vector-index',
@@ -44,8 +37,6 @@ const productsSemanticSearch = async (params: VectorSearchRequest) => {
 
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(pipeline)
-
-  console.log(aggregationResult)
 
   return aggregationResult as ProductItem[]
 }
