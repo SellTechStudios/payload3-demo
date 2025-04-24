@@ -1,9 +1,9 @@
-import { CollectionConfig } from 'payload'
 import { admins } from '@/payload/access/admins'
 import adminsAndUser from '@/payload/access/adminsAndUser'
 import { anyone } from '@/payload/access/anyone'
 import { checkRole } from '@/payload/access/checkRole'
-import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
+import { protectRoles } from '@/payload/hooks/protectRoles'
+import { CollectionConfig } from 'payload'
 import { resolveDuplicatePurchases } from './hooks/resolveDuplicatePurchases'
 
 export const Users: CollectionConfig = {
@@ -51,12 +51,7 @@ export const Users: CollectionConfig = {
         },
       ],
       hooks: {
-        beforeChange: [ensureFirstUserIsAdmin],
-      },
-      access: {
-        read: admins,
-        create: admins,
-        update: admins,
+        beforeChange: [protectRoles],
       },
     },
     {

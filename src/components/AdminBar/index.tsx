@@ -3,10 +3,9 @@
 import type { PayloadAdminBarProps } from 'payload-admin-bar'
 
 import { cn } from '@/payload/utilities/cn'
-import { useSelectedLayoutSegments } from 'next/navigation'
+import { useRouter, useSelectedLayoutSegments } from 'next/navigation'
 import { PayloadAdminBar } from 'payload-admin-bar'
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 import './index.scss'
 
@@ -41,7 +40,8 @@ export const AdminBar: React.FC<{
   const router = useRouter()
 
   const onAuthChange = React.useCallback((user) => {
-    setShow(user?.id)
+    const isAdmin = user?.roles?.includes('admin')
+    setShow(isAdmin)
   }, [])
 
   return (
