@@ -1,14 +1,14 @@
 'use client'
 
-import AddressesSection from './_components/AddressSection'
 import { Button } from '@/payload/blocks/Form/_ui/button'
+import { useAuth } from '@/providers/Auth'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import AddressesSection from './_components/AddressSection'
 import ChangeNameSection from './_components/ChangeNameSection'
 import ChangePasswordSection from './_components/ChangePasswordSection'
 import ChangePhoneNumberSection from './_components/ChangePhoneNumberSection'
 import OrderHistorySection from './_components/OrderHistorySection'
-import { useAuth } from '@/providers/Auth'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
 const AccountPage = () => {
   const { logout, user } = useAuth()
@@ -16,18 +16,24 @@ const AccountPage = () => {
   const [activeTab, setActiveTab] = useState<
     'profile' | 'password' | 'phone' | 'orders' | 'addresses' | 'name'
   >('profile')
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    try {
+      await logout()
+      router.push('/login')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
   return (
     <>
       <div className="mb-4">
-        <Button
-          variant="secondary"
-          onClick={() => {
-            logout()
-            router.push('/login')
-          }}
-        >
-          Logout
+        <Button variant="secondary" onClick={handleLogout} disabled={isLoggingOut}>
+          {isLoggingOut ? 'Wylogowywanie...' : 'Logout'}
         </Button>
       </div>
 

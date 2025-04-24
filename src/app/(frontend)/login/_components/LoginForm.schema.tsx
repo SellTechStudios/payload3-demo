@@ -1,11 +1,11 @@
-import * as yup from 'yup'
+import { z } from 'zod'
 
 export const initialValues = {
   email: '',
   password: '',
 }
 
-export const schema = yup.object().shape({
-  email: yup.string().required('Email is required').email('Invalid email'),
-  password: yup.string().required('Password is required'),
+export const schema = z.object({
+  email: z.string().email('Invalid email').nonempty('Email is required'),
+  password: z.string().nonempty('Password is required'),
 })

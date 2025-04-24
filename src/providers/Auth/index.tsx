@@ -1,9 +1,10 @@
 'use client'
 
-import { Product, User } from 'src/payload-types'
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Product, User } from 'src/payload-types'
 
 import { ProductItem } from '@/db/products/queries.types'
+import { extractErrorMessage } from './auth.utils'
 
 type ResetPassword = (args: {
   password: string
@@ -47,8 +48,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [status, setStatus] = useState<undefined | 'loggedOut' | 'loggedIn'>()
 
   const create = useCallback<Create>(async (args) => {
+    let res: Response | undefined
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/create`, {
+      res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/create`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -67,16 +69,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(data?.loginUser?.user)
         setStatus('loggedIn')
       } else {
-        throw new Error('Invalid login')
+        throw new Error(await extractErrorMessage(res))
       }
-    } catch {
-      throw new Error('An error occurred while attempting to login.')
+    } catch (err) {
+      throw new Error(
+        err?.message || (res ? await extractErrorMessage(res) : 'Something went wrong'),
+      )
     }
   }, [])
 
   const login = useCallback<Login>(async (args) => {
+    let res: Response | undefined
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/login`, {
+      res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -88,23 +93,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }),
       })
 
-      if (res.ok) {
-        const { user, errors } = await res.json()
-        if (errors) throw new Error(errors[0].message)
-        setUser(user)
-        setStatus('loggedIn')
-        return user
+      const json = await res.json()
+
+      if (!res.ok || json.errors?.length) {
+        throw new Error(json.errors?.[0]?.message || json.message || 'Invalid login')
       }
 
-      throw new Error('Invalid login')
-    } catch {
-      throw new Error('An error occurred while attempting to login.')
+      setUser(json.user)
+      setStatus('loggedIn')
+      return json.user
+    } catch (err) {
+      throw new Error(
+        err?.message || (res ? await extractErrorMessage(res) : 'Something went wrong'),
+      )
     }
   }, [])
 
   const logout = useCallback<Logout>(async () => {
+    let res: Response | undefined
+
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/logout`, {
+      res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -112,14 +121,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       })
 
-      if (res.ok) {
-        setUser(null)
-        setStatus('loggedOut')
-      } else {
-        throw new Error('An error occurred while attempting to logout.')
+      if (!res.ok) {
+        throw new Error(await extractErrorMessage(res))
       }
-    } catch {
-      throw new Error('An error occurred while attempting to logout.')
+
+      setUser(null)
+      setStatus('loggedOut')
+    } catch (err) {
+      throw new Error(err?.message || (res ? await extractErrorMessage(res) : 'Logout failed'))
     }
   }, [])
 

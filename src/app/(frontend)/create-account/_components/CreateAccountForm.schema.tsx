@@ -1,4 +1,4 @@
-import * as yup from 'yup'
+import { z, ZodType } from 'zod'
 
 export const initialValues = {
   email: '',
@@ -6,11 +6,18 @@ export const initialValues = {
   repeatPassword: '',
 }
 
-export const schema = yup.object().shape({
-  email: yup.string().required('Email is required').email('Invalid email'),
-  password: yup.string().required('Password is required'),
-  repeatPassword: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Passwords must match')
-    .required('Repeat Password is required'),
-})
+interface FormData {
+  email: string
+  password: string
+  repeatPassword: string
+}
+
+export const schema: ZodType<FormData> = z
+  .object({
+    email: z.string().email('Invalid email').nonempty('Email is required'),
+    password: z.string().nonempty('Password is required'),
+    repeatPassword: z.string().nonempty('Repeat Password is required'),
+  })
+  .refine((data) => data.password === data.repeatPassword, {
+    message: 'Passwords must match',
+  })

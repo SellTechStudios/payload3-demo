@@ -7,9 +7,11 @@ import { LoadingShimmer } from '@/components/LoadingShimmer'
 import { ProductCard } from '@/components/Product/Card/ProductCard'
 import { ProductItem } from '@/db/products/queries.types'
 import { SearchIcon } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { executeVectorSearch } from './actions'
 
 export default function Page() {
+  const t = useTranslations('AiSearch')
   const [isPending, startTransition] = useTransition()
   const [searchResults, setSearchResults] = React.useState<ProductItem[]>([])
 
@@ -29,19 +31,15 @@ export default function Page() {
   return (
     <Container>
       <div className="flex flex-row gap-8 mb-8">
-        <h1 className="text-3xl font-bold mb-4 whitespace-nowrap">AI Search</h1>
-        <p className="text-gray-600 mb-4">
-          Użyj wyszukiwania AI, aby znaleźć produkty w naszym sklepie. Wpisz zapytanie, a my
-          znajdziemy najlepsze dopasowania. Możesz użyć słów kluczowych, pytań lub opisów, aby
-          uzyskać najbardziej trafne wyniki.
-        </p>
+        <h1 className="text-3xl font-bold mb-4 whitespace-nowrap">{t('title')}</h1>
+        <p className="text-gray-600 mb-4">{t('description')}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="relative mb-8">
         <input
           name="query"
           type="text"
-          placeholder="Search…"
+          placeholder={t('placeholder')}
           required
           className="border w-full border-gray-300 rounded-full py-2 px-4 pr-10 text-sm focus:outline-none"
         />

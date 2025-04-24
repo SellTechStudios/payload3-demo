@@ -1,23 +1,25 @@
+import { getTranslations } from 'next-intl/server'
 import React, { Suspense } from 'react'
 
 import { Container } from '@/components/Container'
-import { Page } from 'src/payload-types'
+import { productQueries } from '@/db'
 import { ProductSearchResponse } from '@/db/products/queries.types'
+import { Page } from 'src/payload-types'
 import { ProductsSliderClient } from './Component.Client'
 import { ProductsSliderSkeleton } from './Component.Loading'
-import { productQueries } from '@/db'
 
 type Props = Extract<Page['layout'][0], { blockType: 'productsSlider' }>
 
 export const ProductsSliderBlock: React.FC<Props> = async (props) => {
   const { ProductsCount, ListType, Description } = props
+  const t = await getTranslations('ProductsSliderBlock')
 
   const getHeader = () => {
     switch (ListType) {
       case 'Bestsellers':
-        return 'Bestsellery'
+        return t('bestsellers')
       case 'Recent':
-        return 'Niedawno dodane'
+        return t('recent')
     }
   }
 

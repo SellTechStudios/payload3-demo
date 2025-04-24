@@ -1,6 +1,21 @@
 {
   "Header": {
-    "posts": "Posts"
+    "posts": "Posts",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "about": "About",
+    "account": "My Account",
+    "all": "All",
+    "new": "New",
+    "bestsellers": "Bestsellers",
+    "blog": "Blog",
+    "contact": "Contact",
+    "aiSearch": "AI Search"
   },
   "LocaleSwitcher": {
     "polish": "Polski",
@@ -11,5 +26,16 @@
     "heroTitleHighlight": "Empower",
     "heroTitleRest": "Your Business with Cutting-Edge Web Solutions",
     "heroDescription": "We specialize in custom web applications, e-commerce solutions, and software consulting to help your business thrive in the digital era."
+  },
+  "AiSearch": {
+    "title": "AI Search",
+    "description": "Use AI search to find products in our store. Enter a query, and we will find the best matches. You can use keywords, questions, or descriptions to get the most relevant results.",
+    "placeholder": "Search…"
+  },
+  "ProductsSliderBlock": {
+    "bestsellers": "Bestsellers",
+    "recent": "Recently Added",
+    "description": "{Description}",
+    "header": "{Header}"
   }
 }

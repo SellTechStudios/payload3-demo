@@ -4,29 +4,22 @@
 import { HeartIcon, UserIcon } from '@heroicons/react/24/outline'
 import React, { useEffect, useState } from 'react'
 
-import { CMSLink } from '@/components/Link'
 import { CartLink } from '@/components/Cart/CartLink'
 import { Container } from '@/components/Container'
+import { CMSLink } from '@/components/Link'
+import LocaleSwitcher from '@/components/LocaleSwicher'
 import type { Header } from '@/payload-types'
-import Link from 'next/link'
-import { SearchIcon } from 'lucide-react'
 import { cn } from '@/payload/utilities/cn'
 import { useAuth } from '@/providers/Auth'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
+import { SearchIcon } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 interface HeaderClientProps {
   data: Header
 }
-
-const mainNavItems = [
-  { label: 'Wszystkie', path: '/products/all' },
-  { label: 'Nowości', path: '/products/new' },
-  { label: 'Bestsellery', path: '/products/bestseller' },
-  { label: 'Blog', path: '/blog' },
-  { label: 'Kontakt', path: '/contact' },
-  { label: 'Wyszukaj AI', path: '/ai-search' },
-]
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const { user } = useAuth()
@@ -34,6 +27,16 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
   const navItems = data?.navItems || []
+  const t = useTranslations('Header')
+
+  const mainNavItems = [
+    { label: t('all'), path: '/products/all' },
+    { label: t('new'), path: '/products/new' },
+    { label: t('bestsellers'), path: '/products/bestseller' },
+    { label: t('blog'), path: '/blog' },
+    { label: t('contact'), path: '/contact' },
+    { label: t('aiSearch'), path: '/ai-search' },
+  ]
 
   useEffect(() => {
     setHeaderTheme(null)
@@ -52,7 +55,10 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           <img src="/logo.png" alt="Company Logo" width={200} height={100} />
         </Link>
 
-        <form action={'/products/quicksearch'} className="relative max-w-[300px] w-full">
+        <form
+          action={'/products/quicksearch'}
+          className="relative max-w-[300px] w-full hidden md:block"
+        >
           <input
             type="text"
             name="searchString"
@@ -64,7 +70,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           </button>
         </form>
 
-        <div className="flex flex-row gap-6 uppercase text-sm">
+        <div className="flex flex-row gap-6 uppercase text-sm items-center">
+          <LocaleSwitcher />
+
           {navItems.map(({ link }, i) => {
             return <CMSLink key={i} {...link} appearance="default" />
           })}
@@ -81,13 +89,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           {user && (
             <Link prefetch={false} href="/account" className="flex items-center gap-1">
               <UserIcon className="size-5" />
-              Moje konto
+              {t('account')}
             </Link>
           )}
 
           {!user && (
             <Link prefetch={false} href="/login" className="flex items-center gap-1">
-              Zaloguj
+              {t('login')}
             </Link>
           )}
         </div>

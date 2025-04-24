@@ -1,24 +1,31 @@
-//CreateAccountForm
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { initialValues, schema } from './CreateAccountForm.schema'
 
 import { Button } from '@/components/FormElements/button'
 import { Input } from '@/components/FormElements/input'
-import React from 'react'
-import { getRequiredFields } from '@/payload/utilities/yupUtils'
 import { useAuth } from '@/providers/Auth'
-import { useFormik } from 'formik'
 import { useRouter } from 'next/navigation'
+import React from 'react'
+import { useForm } from 'react-hook-form'
 
 export const CreateAccountForm: React.FC = () => {
   const { create, login } = useAuth()
   const router = useRouter()
 
-  const formik = useFormik({
-    initialValues: initialValues,
-    validationSchema: schema,
-    onSubmit: async (values) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm({
+    defaultValues: initialValues,
+    resolver: zodResolver(schema),
+  })
+
+  const onSubmit = async (values: typeof initialValues) => {
+    try {
       await create({
         email: values.email,
         password: values.password,
@@ -28,49 +35,46 @@ export const CreateAccountForm: React.FC = () => {
       await login({ email: values.email, password: values.password })
 
       router.push('/')
-    },
-  })
-
-  const requiredFields = getRequiredFields(schema)
-  const { errors, touched, values, handleChange, handleSubmit, isSubmitting } = formik
+    } catch (err) {
+      setError('root', {
+        message: err.message || 'Something went wrong. Please try again.',
+      })
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-start w-full gap-6 mt-8 mb-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col items-start w-full gap-6 mt-8 mb-4"
+    >
       <Input
-        name="email"
         type="email"
         label="Email"
-        required={requiredFields.includes('email')}
-        value={values.email}
-        error={errors.email}
-        touched={touched.email}
-        onChange={handleChange}
+        required
+        {...register('email')}
+        error={errors.email?.message}
       />
 
       <Input
-        name="password"
         type="password"
         label="Password"
-        required={requiredFields.includes('password')}
-        value={values.password}
-        error={errors.password}
-        touched={touched.password}
-        onChange={handleChange}
+        required
+        {...register('password')}
+        error={errors.password?.message}
       />
 
       <Input
-        name="passwordConfirm"
         type="password"
         label="Confirm Password"
-        required={requiredFields.includes('repeatPassword')}
-        value={values.repeatPassword}
-        error={errors.repeatPassword}
-        touched={touched.repeatPassword}
-        onChange={handleChange}
+        required
+        {...register('repeatPassword')}
+        error={errors.repeatPassword?.message}
       />
 
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Processing' : 'Create Account'}
+      {errors.root?.message && <div className="text-sm text-red-500">{errors.root.message}</div>}
+
+      <Button type="submit" disabled={isSubmitting} className="w-full">
+        {isSubmitting ? 'Processing...' : 'Create Account'}
       </Button>
     </form>
   )

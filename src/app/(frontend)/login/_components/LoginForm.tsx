@@ -6,10 +6,10 @@ import { initialValues, schema } from './LoginForm.schema'
 
 import { Button } from '@/components/FormElements/button'
 import { Input } from '@/components/FormElements/input'
-import { getRequiredFields } from '@/payload/utilities/yupUtils'
 import { useAuth } from '@/providers/Auth'
-import { useFormik } from 'formik'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
 
 const LoginForm: React.FC = () => {
   const searchParams = useSearchParams()
@@ -18,53 +18,58 @@ const LoginForm: React.FC = () => {
   const { login } = useAuth()
   const router = useRouter()
 
-  const formik = useFormik({
-    initialValues: initialValues,
-    validationSchema: schema,
-    onSubmit: async (values) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm({
+    defaultValues: initialValues,
+    resolver: zodResolver(schema),
+  })
+
+  const onSubmit = async (values: typeof initialValues) => {
+    try {
       await login({
         email: values.email,
         password: values.password,
       })
-      if (redirect?.current) router.push(redirect.current as string)
-      else router.push('/')
-    },
-  })
 
-  const requiredFields = getRequiredFields(schema)
-  const { errors, touched, values, handleChange, handleSubmit, isSubmitting } = formik
+      router.push(redirect.current || '/')
+    } catch (err) {
+      setError('root', { message: err.message || 'Coś poszło nie tak' })
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-start w-full gap-6 mt-8 mb-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col items-start w-full gap-6 mt-8 mb-4"
+    >
       <Input
-        name="email"
         type="email"
         label="Email"
-        required={requiredFields.includes('email')}
-        value={values.email}
-        error={errors.email}
-        touched={touched.email}
-        onChange={handleChange}
+        required
+        {...register('email')}
+        error={errors.email?.message}
       />
 
       <Input
-        name="password"
         type="password"
         label="Password"
-        required={requiredFields.includes('password')}
-        value={values.password}
-        error={errors.password}
-        touched={touched.password}
-        onChange={handleChange}
+        required
+        {...register('password')}
+        error={errors.password?.message}
       />
 
+      {errors.root?.message && <div className="text-sm text-red-500">{errors.root.message}</div>}
+
       <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? 'Processing' : 'Login'}
+        {isSubmitting ? 'Processing...' : 'Login'}
       </Button>
 
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full text-sm">
         <Link href="/create-account">Utwórz konto</Link>
-        <br />
         <Link href={`/recover-password${allParams}`}>Przywróć hasło</Link>
       </div>
     </form>
