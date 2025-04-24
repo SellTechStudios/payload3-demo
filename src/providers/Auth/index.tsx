@@ -12,6 +12,8 @@ type ResetPassword = (args: {
   token: string
 }) => Promise<void>
 
+type ChangePassword = (args: { password: string; passwordConfirm: string }) => Promise<void>
+
 type ForgotPassword = (args: { email: string }) => Promise<void>
 
 type Create = (args: { email: string; password: string; passwordConfirm: string }) => Promise<void>
@@ -30,6 +32,7 @@ type AuthContext = {
   login: Login
   create: Create
   resetPassword: ResetPassword
+  changePassword: ChangePassword
   forgotPassword: ForgotPassword
   updateUser: UpdateUser
   status: undefined | 'loggedOut' | 'loggedIn'
@@ -212,6 +215,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [])
 
+  const changePassword = useCallback(
+    async ({ password, passwordConfirm }: { password: string; passwordConfirm: string }) => {
+      if (!user) throw new Error('User not logged in')
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${user.id}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password, passwordConfirm }),
+      })
+
+      if (!res.ok) {
+        const message = await extractErrorMessage(res)
+        throw new Error(message)
+      }
+
+      const json = await res.json()
+      return json
+    },
+    [user],
+  )
+
   const updateUser = useCallback<UpdateUser>(
     async (updates) => {
       if (!user) return
@@ -304,6 +331,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       create,
       updateUser,
       resetPassword,
+      changePassword,
       forgotPassword,
       status,
       token,
@@ -317,6 +345,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       create,
       updateUser,
       resetPassword,
+      changePassword,
       forgotPassword,
       hasFavoriteProduct,
       toggleFavoriteProduct,
