@@ -4,15 +4,15 @@
 import { CircleCheckBig, Heart, ShoppingCart } from 'lucide-react'
 
 import { Button } from '@/components/FormElements/button'
-import { CartItem } from '@/providers/Cart/reducer'
-import { GetMainImageUrl } from '@/payload/utilities/productUtils'
-import { Product } from '@/payload-types'
 import { ProductItem } from '@/db/products/queries.types'
-import ReviewStars from '../ReviewStars/ReviewStars'
+import { Product } from '@/payload-types'
 import { cn } from '@/payload/utilities/cn'
-import { formatCurrency } from '@/utilities/formatPrice'
+import { GetMainImageUrl } from '@/payload/utilities/productUtils'
 import { useAuth } from '@/providers/Auth'
 import { useCart } from '@/providers/Cart'
+import { CartItem } from '@/providers/Cart/reducer'
+import { formatCurrency } from '@/utilities/formatPrice'
+import ReviewStars from '../ReviewStars/ReviewStars'
 
 type ProductProps = {
   product: ProductItem
@@ -70,14 +70,16 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
           <h5 className="text-lg line-clamp-2 tracking-tight">{product.title}</h5>
         </a>
         <div className="flex justify-between items-center mt-4 mb-5">
-          <p>
+          <div className="flex flex-wrap items-end gap-x-4 gap-y-1">
             <span className="font-bold text-slate-900 text-3xl">
               {formatCurrency(product.price)}
             </span>
-            <span className="ml-4 text-slate-900 text-sm line-through">
-              {formatCurrency(product.pricePrevious)}
-            </span>
-          </p>
+            {product.pricePrevious && (
+              <span className="text-slate-900 text-sm line-through">
+                {formatCurrency(product.pricePrevious)}
+              </span>
+            )}
+          </div>
         </div>
         <div className="mb-4">
           <ReviewStars rating={product.rating} />
