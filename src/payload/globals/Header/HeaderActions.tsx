@@ -18,7 +18,7 @@ const HeaderActions: React.FC<UserActionsProps> = ({ navItems }) => {
   const t = useTranslations('Header')
 
   return (
-    <Container className="flex items-center justify-between gap-4">
+    <Container className="flex items-center justify-between gap-4 py-4">
       <Link prefetch={false} href="/" className="relative w-32 md:w-48 h-12">
         <Image
           src="/logo.png"

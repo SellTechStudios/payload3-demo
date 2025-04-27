@@ -16,7 +16,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const navItems = data?.navItems || []
 
   return (
-    <header className="py-4">
+    <header>
       <HeaderActions navItems={navItems} />
       <HeaderNavigation />
     </header>

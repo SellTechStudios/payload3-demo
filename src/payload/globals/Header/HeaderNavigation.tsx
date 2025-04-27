@@ -50,7 +50,7 @@ const HeaderNavigation = () => {
   }, [updateScrollButtons])
 
   return (
-    <div className="relative flex items-center bg-gray-800 text-gray-100 mt-4">
+    <div className="relative flex items-center bg-gray-800 text-gray-100 ">
       {showLeftButton && (
         <button
           className="absolute left-0 top-0 z-10 p-2 bg-gray-700 text-white hover:bg-gray-600"

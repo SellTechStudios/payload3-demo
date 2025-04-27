@@ -1,11 +1,10 @@
-import { Container } from '@/components/Container'
-import { FacetNavigationClient } from '../_components/facet-navigation/FacetNavigation.Client'
 import { LoadingShimmer } from '@/components/LoadingShimmer'
-import { ProductsListClient } from '../_components/product-list/Component.Client'
-import { SearchRequest } from '@/db/products/queries.types'
-import { Suspense } from 'react'
-import { notFound } from 'next/navigation'
 import { productQueries } from '@/db'
+import { SearchRequest } from '@/db/products/queries.types'
+import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
+import { FacetNavigationClient } from '../_components/facet-navigation/FacetNavigation.Client'
+import { ProductsListClient } from '../_components/product-list/Component.Client'
 
 interface PageProps {
   params: Promise<{ filterType: 'all' | 'new' | 'bestseller' | 'quicksearch' }>
@@ -43,8 +42,8 @@ export default async function ProductList({ params, searchParams }: PageProps) {
   const facets = await productQueries.fetchFacets(searchRequest)
 
   return (
-    <Container className="grid grid-cols-12 gap-16">
-      <div className="col-span-12 md:col-span-3">
+    <div className="md:grid md:grid-cols-12 md:gap-16">
+      <div className="col-span-12 md:col-span-3 hidden md:block">
         <Suspense fallback={<LoadingShimmer />}>
           <FacetNavigationClient facets={facets} />
         </Suspense>
@@ -56,9 +55,10 @@ export default async function ProductList({ params, searchParams }: PageProps) {
             total={queryResponse.total}
             currentPage={page}
             pageSize={pageSize}
+            facets={facets}
           />
         </Suspense>
       </div>
-    </Container>
+    </div>
   )
 }
