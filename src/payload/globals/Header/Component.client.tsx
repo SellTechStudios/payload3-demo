@@ -2,7 +2,9 @@
 'use client'
 
 import { HeartIcon, UserIcon } from '@heroicons/react/24/outline'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 import { CartLink } from '@/components/Cart/CartLink'
 import { Container } from '@/components/Container'
@@ -11,7 +13,6 @@ import LocaleSwitcher from '@/components/LocaleSwicher'
 import type { Header } from '@/payload-types'
 import { cn } from '@/payload/utilities/cn'
 import { useAuth } from '@/providers/Auth'
-import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { SearchIcon } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -23,8 +24,6 @@ interface HeaderClientProps {
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const { user } = useAuth()
-  const [theme, setTheme] = useState<string | null>(null)
-  const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
   const navItems = data?.navItems || []
   const t = useTranslations('Header')
@@ -38,26 +37,47 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     { label: t('aiSearch'), path: '/ai-search' },
   ]
 
-  useEffect(() => {
-    setHeaderTheme(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
+  const [showLeftButton, setShowLeftButton] = useState(false)
+  const [showRightButton, setShowRightButton] = useState(false)
+  const navContentRef = useRef<HTMLDivElement>(null)
+
+  const updateScrollButtons = useCallback(() => {
+    if (navContentRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = navContentRef.current
+      setShowLeftButton(scrollLeft > 0)
+      setShowRightButton(scrollLeft < scrollWidth - clientWidth)
+    }
+  }, [])
+
+  const scrollLeft = () => {
+    navContentRef.current?.scrollBy({ left: -200, behavior: 'smooth' })
+  }
+
+  const scrollRight = () => {
+    navContentRef.current?.scrollBy({ left: 200, behavior: 'smooth' })
+  }
 
   useEffect(() => {
-    if (headerTheme && headerTheme !== theme) setTheme(headerTheme)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [headerTheme])
+    window.addEventListener('resize', updateScrollButtons)
+    navContentRef.current?.addEventListener('scroll', updateScrollButtons)
+    updateScrollButtons()
+
+    return () => {
+      window.removeEventListener('resize', updateScrollButtons)
+      navContentRef.current?.removeEventListener('scroll', updateScrollButtons)
+    }
+  }, [updateScrollButtons])
 
   return (
     <header className="py-4">
-      <Container className="flex flex-row items-center justify-between">
+      <Container className="flex flex-col md:flex-row items-center justify-between gap-4">
         <Link prefetch={false} href="/">
-          <img src="/logo.png" alt="Company Logo" width={200} height={100} />
+          <img src="/logo.png" alt="Company Logo" className="w-32 md:w-48" />
         </Link>
 
         <form
           action={'/products/quicksearch'}
-          className="relative max-w-[300px] w-full hidden md:block"
+          className="relative w-full max-w-[300px] hidden md:block"
         >
           <input
             type="text"
@@ -70,7 +90,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           </button>
         </form>
 
-        <div className="flex flex-row gap-6 uppercase text-sm items-center">
+        <div className="flex flex-row gap-4 md:gap-6 uppercase text-sm items-center">
           <LocaleSwitcher />
 
           {navItems.map(({ link }, i) => {
@@ -82,27 +102,38 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           {user && (
             <Link href="/favourites" className="flex items-center gap-1">
               <HeartIcon className="size-5" />
-              Ulubione ({user.favourites?.length})
+              <span className="hidden md:inline">Ulubione ({user.favourites?.length})</span>
             </Link>
           )}
 
           {user && (
             <Link prefetch={false} href="/account" className="flex items-center gap-1">
               <UserIcon className="size-5" />
-              {t('account')}
+              <span className="hidden md:inline">{t('account')}</span>
             </Link>
           )}
 
           {!user && (
             <Link prefetch={false} href="/login" className="flex items-center gap-1">
-              {t('login')}
+              <span className="hidden md:inline">{t('login')}</span>
             </Link>
           )}
         </div>
       </Container>
 
-      <div className="flex flex-row justify-center bg-gray-800 text-gray-100 mt-4 relative left-1/2 w-dvw max-w-none -translate-x-1/2">
-        <nav className="flex flex-row justify-center items-center uppercase h-full">
+      <div className="relative flex items-center bg-gray-800 text-gray-100 mt-4">
+        {showLeftButton && (
+          <button
+            className="absolute left-0 top-0 z-10 p-2 bg-gray-700 text-white hover:bg-gray-600"
+            onClick={scrollLeft}
+          >
+            ‹
+          </button>
+        )}
+        <Container
+          className="flex overflow-x-auto scrollbar-hide w-full md:justify-center"
+          ref={navContentRef}
+        >
           {mainNavItems.map((nav) => (
             <Link
               key={nav.path}
@@ -110,13 +141,21 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               prefetch={false}
               className={cn(
                 pathname === nav.path ? 'bg-gray-700' : '',
-                'px-6 py-4 hover:bg-gray-700',
+                'px-4 py-2 md:px-6 md:py-4 hover:bg-gray-700 text-center block whitespace-nowrap',
               )}
             >
               {nav.label}
             </Link>
           ))}
-        </nav>
+        </Container>
+        {showRightButton && (
+          <button
+            className="absolute top-0 right-0 z-10 p-2 bg-gray-700 text-white hover:bg-gray-600"
+            onClick={scrollRight}
+          >
+            ›
+          </button>
+        )}
       </div>
     </header>
   )

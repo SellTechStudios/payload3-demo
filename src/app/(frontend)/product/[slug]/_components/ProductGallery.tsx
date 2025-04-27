@@ -6,11 +6,11 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Swiper, SwiperSlide } from 'swiper/react'
 import { useEffect, useRef, useState } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { Navigation } from 'swiper/modules'
 import { Product } from '@/payload-types'
+import { Navigation } from 'swiper/modules'
 import { Swiper as SwiperType } from 'swiper/types'
 
 type ProductGalleryProps = {

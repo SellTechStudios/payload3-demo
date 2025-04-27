@@ -3,17 +3,17 @@
 import 'swiper/css'
 import 'swiper/css/navigation'
 
-import { Autoplay, FreeMode, Navigation } from 'swiper/modules'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { NavigationOptions, Swiper as SwiperType } from 'swiper/types'
-import { Swiper, SwiperSlide } from 'swiper/react'
 import { useEffect, useRef } from 'react'
+import { Autoplay, FreeMode, Navigation } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { NavigationOptions, Swiper as SwiperType } from 'swiper/types'
 
 import { ProductCard } from '@/components/Product/Card/ProductCard'
 import { ProductItem } from '@/db/products/queries.types'
 
 const breakpoints = {
-  640: {
+  0: {
     slidesPerView: 1,
     spaceBetween: 10,
   },
