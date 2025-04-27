@@ -29,7 +29,7 @@ export default function LocaleSwitcherSelect({ defaultValue, items, label }: Pro
         <Select.Trigger
           aria-label={label}
           className={cn(
-            'rounded-sm p-2 transition-colors hover:bg-slate-200 outline-none',
+            'rounded-sm flex items-center transition-colors hover:bg-slate-200 outline-none',
             isPending && 'pointer-events-none opacity-60',
           )}
         >

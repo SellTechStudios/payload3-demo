@@ -33,13 +33,9 @@ const HeaderActions: React.FC<UserActionsProps> = ({ navItems }) => {
       <HeaderSearch />
 
       <div className="flex flex-row gap-4 md:gap-6 uppercase text-sm items-center">
-        <LocaleSwitcher />
-
         {navItems.map(({ link }, i) => {
           return <CMSLink key={i} {...link} appearance="default" />
         })}
-
-        <CartLink />
 
         {user && (
           <Link href="/favourites" className="flex items-center gap-1">
@@ -57,9 +53,16 @@ const HeaderActions: React.FC<UserActionsProps> = ({ navItems }) => {
 
         {!user && (
           <Link prefetch={false} href="/login" className="flex items-center gap-1">
+            <UserIcon className="size-5 md:hidden" />
             <span className="hidden md:inline">{t('login')}</span>
           </Link>
         )}
+
+        <div className="md:pr-0 pr-2">
+          <CartLink />
+        </div>
+
+        <LocaleSwitcher />
       </div>
     </Container>
   )
