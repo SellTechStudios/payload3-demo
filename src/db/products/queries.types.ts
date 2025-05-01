@@ -8,6 +8,7 @@ export type SearchRequest = {
   category?: string[]
   price?: string[]
   manufacturer?: string[]
+  sort?: 'price-asc' | 'price-desc' | 'newest' | 'bestseller'
 }
 
 export type VectorSearchRequest = {

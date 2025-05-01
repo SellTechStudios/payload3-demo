@@ -10,9 +10,9 @@ const HeaderNavigation = () => {
   const t = useTranslations('Header')
 
   const mainNavItems = [
-    { label: t('all'), path: '/products/all' },
-    { label: t('new'), path: '/products/new' },
-    { label: t('bestsellers'), path: '/products/bestseller' },
+    { label: t('products'), path: '/products/all' },
+    // { label: t('new'), path: '/products/new' },
+    // { label: t('bestsellers'), path: '/products/bestseller' },
     { label: t('blog'), path: '/blog' },
     { label: t('contact'), path: '/contact' },
     { label: t('aiSearch'), path: '/ai-search' },

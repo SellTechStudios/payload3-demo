@@ -6,11 +6,16 @@ import { PipelineStage } from 'mongoose'
 import { getPayload } from 'payload'
 
 const getSortStage = (params: SearchRequest): PipelineStage.Sort => {
-  switch (params.type) {
-    case 'new':
-      return { $sort: { createdAt: 1 } }
+  switch (params.sort) {
+    case 'price-asc':
+      return { $sort: { price: 1 } }
+    case 'price-desc':
+      return { $sort: { price: -1 } }
+    case 'bestseller':
+      return { $sort: { bestseller: -1 } }
+    case 'newest':
     default:
-      return { $sort: { title: 1 } }
+      return { $sort: { createdAt: -1 } } // domyślnie najnowsze
   }
 }
 

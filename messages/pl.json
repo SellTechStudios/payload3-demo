@@ -15,7 +15,8 @@
     "bestsellers": "Bestsellery",
     "blog": "Blog",
     "contact": "Kontakt",
-    "aiSearch": "Wyszukaj AI"
+    "aiSearch": "Wyszukaj AI",
+    "products": "Produkty"
   },
   "LocaleSwitcher": {
     "polish": "Polski",
@@ -42,6 +43,12 @@
     "Filters": "Filtry",
     "Price": "Cena",
     "Manufacturer": "Producent",
-    "Category": "Kategoria"
+    "Category": "Kategoria",
+    "FoundProducts": "Znaleziono {count} produktów",
+    "Sort": "Sortuj",
+    "Newest": "Najnowsze",
+    "Bestsellers": "Bestsellery",
+    "PriceAscending": "Cena rosnąco",
+    "PriceDescending": "Cena malejąco"
   }
 }

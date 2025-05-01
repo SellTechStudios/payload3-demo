@@ -26,6 +26,7 @@ const searchParamsSchema = z.object({
   manufacturer: z.union([z.string(), z.array(z.string())]).optional(),
   price: z.union([z.string(), z.array(z.string())]).optional(),
   searchString: z.string().optional(),
+  sort: z.enum(['price-asc', 'price-desc', 'newest', 'bestseller']).optional().default('newest'),
 })
 
 const getArray = (val?: string | string[]): string[] | undefined => {
@@ -47,7 +48,7 @@ export default async function ProductList({ params, searchParams }: PageProps) {
     return notFound()
   }
 
-  const { page, pageSize, category, manufacturer, price, searchString } = parsed.data
+  const { page, pageSize, category, manufacturer, price, sort, searchString } = parsed.data
 
   const searchRequest: SearchRequest = {
     type: filterType,
@@ -56,6 +57,7 @@ export default async function ProductList({ params, searchParams }: PageProps) {
     category: getArray(category),
     manufacturer: getArray(manufacturer),
     price: getArray(price),
+    sort,
     searchString: filterType === 'quicksearch' ? searchString : undefined,
   }
 
