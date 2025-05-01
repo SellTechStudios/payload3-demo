@@ -3,16 +3,16 @@
 
 import React, { useState } from 'react'
 
-import Image from 'next/image'
-import Link from 'next/link'
 import { RemoveFromCartButton } from '@/components/Cart/RemoveFromCartButton'
 import { formatCurrency } from '@/utilities/formatPrice'
+import Image from 'next/image'
+import Link from 'next/link'
 
 const CartItem = ({ product, title, image, qty, addItemToCart }) => {
   const [quantity, setQuantity] = useState(qty)
 
   return (
-    <li className="grid grid-cols-[100px_3fr_1fr_1fr_1fr] py-6 gap-6 border-b border-gray-300">
+    <li className="sm:grid grid-cols-[100px_3fr_1fr_1fr_1fr] py-6 sm:gap-6 gap-3 border-b border-gray-300 flex flex-wrap items-center">
       <Link href={`/product/${product.slug}`} className="relative h-full">
         {!image && <span>Brak obrazka</span>}
         {image && typeof image == 'string' && (
@@ -34,7 +34,7 @@ const CartItem = ({ product, title, image, qty, addItemToCart }) => {
         product={product}
       />
 
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center font-bold">
         {formatCurrency(product.price * quantity)}
       </div>
       <div className="flex self-center justify-center">

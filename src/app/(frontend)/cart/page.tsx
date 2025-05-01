@@ -1,5 +1,5 @@
-import { CartPage } from './page.client'
 import { Container } from '@/components/Container'
+import { CartPage } from './page.client'
 
 // Force this page to be dynamic so that Next.js does not cache it
 // See the note in '../[slug]/page.tsx' about this

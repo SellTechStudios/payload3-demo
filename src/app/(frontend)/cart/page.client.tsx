@@ -1,10 +1,10 @@
 'use client'
 
-import { Button } from '@/payload/blocks/Form/_ui/button'
 import CartItemsList from '@/components/Cart/CartItemsList'
-import React from 'react'
+import { Button } from '@/payload/blocks/Form/_ui/button'
 import { useAuth } from '@/providers/Auth'
 import { useCart } from '@/providers/Cart'
+import React from 'react'
 
 export const CartPage: React.FC = () => {
   const { user } = useAuth()

@@ -1,6 +1,5 @@
 'use client'
 
-import { CartItem, cartReducer } from './reducer'
 import {
   createContext,
   useCallback,
@@ -10,9 +9,10 @@ import {
   useRef,
   useState,
 } from 'react'
+import { CartItem, cartReducer } from './reducer'
 
-import { User } from 'src/payload-types'
 import { formatCurrency } from '@/payload/utilities/formatPrice'
+import { User } from 'src/payload-types'
 import { useAuth } from '../Auth'
 
 export type CartContext = {

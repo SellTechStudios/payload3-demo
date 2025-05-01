@@ -1,23 +1,24 @@
 'use client'
 
-import CartItem from './CartItem'
-import EmptyCart from './CartEmpty'
-import { LoadingShimmer } from '@/components/LoadingShimmer'
-import React from 'react'
 import { useCart } from '@/providers/Cart'
+import EmptyCart from './CartEmpty'
+import CartItem from './CartItem'
+import { CartItemSkeleton } from './CartItemSkeleton'
 
 const CartItemsList = () => {
   const { hasInitializedCart, cart, cartIsEmpty, addItemToCart } = useCart()
 
   if (!hasInitializedCart) {
     return (
-      <div className="my-8">
-        <LoadingShimmer />
-      </div>
+      <ul className="border-t border-gray-300">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <CartItemSkeleton key={i} />
+        ))}
+      </ul>
     )
   }
 
-  if (cartIsEmpty) {
+  if (hasInitializedCart && cartIsEmpty) {
     return <EmptyCart />
   }
 
@@ -31,6 +32,7 @@ const CartItemsList = () => {
         <p className="text-center">Łącznie</p>
         <p className="text-center">Usuń</p>
       </div>
+
       {/* CART ITEM LIST */}
       <ul className="border-t border-gray-300">
         {cart?.items?.map((item) => {
