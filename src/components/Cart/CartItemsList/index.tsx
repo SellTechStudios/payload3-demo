@@ -8,7 +8,7 @@ import { CartItemSkeleton } from './CartItemSkeleton'
 const CartItemsList = () => {
   const { hasInitializedCart, cart, cartIsEmpty, addItemToCart } = useCart()
 
-  if (!hasInitializedCart) {
+  if (!hasInitializedCart || cart?.items === null) {
     return (
       <ul className="border-t border-gray-300">
         {Array.from({ length: 3 }).map((_, i) => (

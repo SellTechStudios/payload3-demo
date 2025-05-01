@@ -48,7 +48,7 @@ export const CartProvider = (props) => {
   const { user, status: authStatus } = useAuth()
 
   const [cart, dispatchCart] = useReducer(cartReducer, {
-    items: [],
+    items: null,
   })
 
   const [total, setTotal] = useState<{
