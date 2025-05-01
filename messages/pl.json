@@ -37,5 +37,11 @@
     "recent": "Niedawno dodane",
     "description": "{Description}",
     "header": "{Header}"
+  },
+  "ProductList": {
+    "Filters": "Filtry",
+    "Price": "Cena",
+    "Manufacturer": "Producent",
+    "Category": "Kategoria"
   }
 }

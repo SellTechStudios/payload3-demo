@@ -5,7 +5,7 @@ type Props = {
   bucket: FacetBucket | undefined
   selectedValues?: (string | number | boolean)[]
   onOptionClick?: (args: {
-    bucketCode: string
+    bucketCode?: string
     optionValue: string | number | boolean
     isChecked: boolean
   }) => void
@@ -20,7 +20,7 @@ const FacetBucketClient: React.FC<Props> = (props) => {
     <>
       <h3 className="mt-2">{bucket.label}</h3>
       <div className="ml-4">
-        {bucket.options.map((o) => (
+        {bucket?.options?.map((o) => (
           <label
             htmlFor={o.label}
             key={o.label}

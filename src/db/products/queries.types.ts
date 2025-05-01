@@ -31,10 +31,10 @@ export type FacetOption = {
 }
 
 export type FacetBucket = {
-  code: string
+  code?: string
   label: string
-  type: 'checkboxes'
-  options: FacetOption[]
+  type?: 'checkboxes'
+  options?: FacetOption[]
 }
 
 export type FacetedNavigation = {

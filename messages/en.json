@@ -37,5 +37,11 @@
     "recent": "Recently Added",
     "description": "{Description}",
     "header": "{Header}"
+  },
+  "ProductList": {
+    "Filters": "Filters",
+    "Price": "Price",
+    "Manufacturer": "Manufacturer",
+    "Category": "Category"
   }
 }
