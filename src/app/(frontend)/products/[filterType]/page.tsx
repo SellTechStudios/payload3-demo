@@ -3,54 +3,66 @@ import { productQueries } from '@/db'
 import { SearchRequest } from '@/db/products/queries.types'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
+import { z } from 'zod'
 import { FacetNavigationClient } from '../_components/facet-navigation/FacetNavigation.Client'
 import { ProductsListClient } from '../_components/product-list/Component.Client'
 export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{ filterType: 'all' | 'new' | 'bestseller' | 'quicksearch' }>
   searchParams: Promise<{ [key: string]: string | undefined }>
 }
 
-export default async function ProductList({ params, searchParams }: PageProps) {
-  const filterType = (await params).filterType
-  const searchString = (await searchParams).searchString
-  const pageSize = parseInt((await searchParams).pageSize || '9') || 9
-  const page = parseInt((await searchParams).page || '1') || 1
+const searchParamsSchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .transform((val) => parseInt(val || '1')),
+  pageSize: z
+    .string()
+    .optional()
+    .transform((val) => parseInt(val || '9')),
+  category: z.union([z.string(), z.array(z.string())]).optional(),
+  manufacturer: z.union([z.string(), z.array(z.string())]).optional(),
+  price: z.union([z.string(), z.array(z.string())]).optional(),
+  searchString: z.string().optional(),
+})
 
-  const category = (await searchParams).category
-  const manufacturer = (await searchParams).manufacturer
-  const price = (await searchParams).price
+const getArray = (val?: string | string[]): string[] | undefined => {
+  if (!val) return undefined
+  return Array.isArray(val) ? val : [val]
+}
+
+export default async function ProductList({ params, searchParams }: PageProps) {
+  const { filterType } = await params
+  const rawParams = await searchParams
+
+  if (!['all', 'new', 'bestseller', 'quicksearch'].includes(filterType)) {
+    return notFound()
+  }
+
+  const parsed = searchParamsSchema.safeParse(rawParams)
+  if (!parsed.success) {
+    console.error('Invalid search params:', parsed.error.format())
+    return notFound()
+  }
+
+  const { page, pageSize, category, manufacturer, price, searchString } = parsed.data
 
   const searchRequest: SearchRequest = {
     type: filterType,
-    pageSize,
     page,
-    category: category ? (Array.isArray(category) ? category : [category]) : undefined,
-    manufacturer: manufacturer
-      ? Array.isArray(manufacturer)
-        ? manufacturer
-        : [manufacturer]
-      : undefined,
-    price: price ? (Array.isArray(price) ? price : [price]) : undefined,
+    pageSize,
+    category: getArray(category),
+    manufacturer: getArray(manufacturer),
+    price: getArray(price),
+    searchString: filterType === 'quicksearch' ? searchString : undefined,
   }
 
-  // Validate and map the route parameters to our union type
-  switch (filterType) {
-    case 'all':
-    case 'new':
-    case 'bestseller':
-      break
-
-    case 'quicksearch':
-      searchRequest.searchString = searchString
-      break
-
-    default:
-      return notFound()
-  }
-
-  const queryResponse = await productQueries.fetchProducts(searchRequest)
-  const facets = await productQueries.fetchFacets(searchRequest)
+  const [queryResponse, facets] = await Promise.all([
+    productQueries.fetchProducts(searchRequest),
+    productQueries.fetchFacets(searchRequest),
+  ])
 
   return (
     <div className="md:grid md:grid-cols-12 md:gap-16">
