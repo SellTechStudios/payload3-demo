@@ -3,18 +3,15 @@
 import { CircleCheckBig, ShoppingCart } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
-import { Button } from '@/payload/blocks/Form/_ui/button'
+import { ProductItem } from '@/db/products/queries.types'
 import { Product } from '@/payload-types'
-import { cn } from '@/utilities/cn'
+import { Button } from '@/payload/blocks/Form/_ui/button'
 import { useCart } from '@/providers/Cart'
+import { CartItem } from '@/providers/Cart/reducer'
+import { cn } from '@/utilities/cn'
 
-export const AddToCartButton: React.FC<{
-  product: Product
-}> = (props) => {
-  const { product } = props
-
+export const AddToCartButton: React.FC<{ product: ProductItem }> = ({ product }) => {
   const { cart, addItemToCart, isProductInCart, hasInitializedCart } = useCart()
-
   const [isInCart, setIsInCart] = useState<boolean>()
 
   useEffect(() => {
@@ -30,15 +27,13 @@ export const AddToCartButton: React.FC<{
       )}
       onClick={
         !isInCart
-          ? () => {
-              addItemToCart(product)
-            }
+          ? () => addItemToCart({ product: product as unknown as Product, quantity: 1 } as CartItem)
           : undefined
       }
     >
       {!isInCart && <ShoppingCart className="mr-3" />}
       {isInCart && <CircleCheckBig className="mr-3" />}
-      {isInCart ? `Pokaż w koszyku` : `Dodaj do koszyka`}
+      {isInCart ? 'Pokaż w koszyku' : 'Dodaj do koszyka'}
     </Button>
   )
 }

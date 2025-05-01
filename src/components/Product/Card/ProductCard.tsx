@@ -1,16 +1,14 @@
 'use client'
 /* eslint-disable @next/next/no-img-element */
 
-import { CircleCheckBig, Heart, ShoppingCart } from 'lucide-react'
+import { Heart } from 'lucide-react'
 
-import { Button } from '@/components/FormElements/button'
+import { AddToCartButton } from '@/components/Cart/AddToCartButton'
 import { ProductItem } from '@/db/products/queries.types'
 import { Product } from '@/payload-types'
 import { cn } from '@/payload/utilities/cn'
 import { GetMainImageUrl } from '@/payload/utilities/productUtils'
 import { useAuth } from '@/providers/Auth'
-import { useCart } from '@/providers/Cart'
-import { CartItem } from '@/providers/Cart/reducer'
 import { formatCurrency } from '@/utilities/formatPrice'
 import ReviewStars from '../ReviewStars/ReviewStars'
 
@@ -19,10 +17,8 @@ type ProductProps = {
 }
 
 export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) => {
-  const { addItemToCart, isProductInCart } = useCart()
   const { hasFavoriteProduct, toggleFavoriteProduct } = useAuth()
 
-  const isInCart = isProductInCart(product.id)
   const imageUrl = GetMainImageUrl(product as unknown as Product)
   const percentageOff =
     product.pricePrevious && product.pricePrevious > product.price
@@ -84,22 +80,7 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
         <div className="mb-4">
           <ReviewStars rating={product.rating} />
         </div>
-        <Button
-          onClick={
-            !isInCart
-              ? () =>
-                  addItemToCart({ product: product as unknown as Product, quantity: 1 } as CartItem)
-              : undefined
-          }
-          href={isInCart ? '/cart' : undefined}
-          className="mt-2 w-full"
-        >
-          {!isInCart && <ShoppingCart className="sm:hidden block xl:block mr-3" />}
-          {isInCart && <CircleCheckBig className="sm:hidden block xl:block mr-3" />}
-          <span className="hidden sm:block ml-0 xl:ml-2">
-            {isInCart ? 'Pokaż w koszyku' : 'Dodaj do koszyka'}
-          </span>
-        </Button>
+        <AddToCartButton product={product} />
       </div>
     </div>
   )

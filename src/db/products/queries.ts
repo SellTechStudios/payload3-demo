@@ -134,6 +134,20 @@ const fetchProducts = async (params: SearchRequest) => {
   return response
 }
 
+export const fetchBySlug = async (slug: string) => {
+  const payload = await getPayload({ config: configPromise })
+  const product = await payload.find({
+    collection: 'products',
+    where: {
+      slug: {
+        equals: slug,
+      },
+    },
+    limit: 1,
+  })
+  return product.docs[0]
+}
+
 const fetchFacets = async (params: SearchRequest): Promise<FacetedNavigation> => {
   const payload = await getPayload({ config: configPromise })
 
@@ -295,4 +309,5 @@ export const productQueries = {
   fetchAllSlugs,
   fetchProducts,
   fetchFacets,
+  fetchBySlug,
 }

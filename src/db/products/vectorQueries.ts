@@ -1,7 +1,8 @@
-import { ProductItem, VectorSearchRequest } from './queries.types'
+import { VectorSearchRequest } from './queries.types'
 
-import { PipelineStage } from 'mongoose'
+import { Product } from '@/payload-types'
 import configPromise from '@payload-config'
+import { PipelineStage } from 'mongoose'
 import { getPayload } from 'payload'
 
 const productsSemanticSearch = async (params: VectorSearchRequest) => {
@@ -38,7 +39,7 @@ const productsSemanticSearch = async (params: VectorSearchRequest) => {
   const model = payload.db.collections['products']
   const aggregationResult = await model.aggregate(pipeline)
 
-  return aggregationResult as ProductItem[]
+  return aggregationResult as Product[]
 }
 
 export const vectorQueries = {

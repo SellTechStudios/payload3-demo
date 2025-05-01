@@ -1,16 +1,17 @@
-import { detailsQueries, productQueries } from '@/db'
+import { productQueries } from '@/db'
 
 import { AddToCartButton } from '@/components/Cart/AddToCartButton'
-import { CollectionMeta } from '@/payload/collections/eCom/_interfaces/collection-meta'
-import { Container } from '@/components/Container'
-import { Metadata } from 'next'
-import { Product } from '@/payload-types'
-import { ProductGallery } from './_components/ProductGallery'
-import { ProductQuantitySelector } from '@/components/Product/ProductQuantitySelector'
 import { RemoveFromCartButton } from '@/components/Cart/RemoveFromCartButton'
-import { formatCurrency } from '@/utilities/formatPrice'
+import { Container } from '@/components/Container'
+import { ProductQuantitySelector } from '@/components/Product/ProductQuantitySelector'
+import { fetchBySlug } from '@/db/products/queries'
+import { Product } from '@/payload-types'
+import { CollectionMeta } from '@/payload/collections/eCom/_interfaces/collection-meta'
 import { generateProductMeta } from '@/payload/utilities/generateProductMeta'
+import { formatCurrency } from '@/utilities/formatPrice'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { ProductGallery } from './_components/ProductGallery'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,7 +21,7 @@ export default async function ProductDetailsPage({
   params: Promise<{ slug: string }>
 }) {
   const slug = (await params).slug
-  const product = await detailsQueries.fetchBySlug(slug)
+  const product = await fetchBySlug(slug)
 
   if (!product) {
     notFound()
@@ -63,7 +64,7 @@ export async function generateMetadata({
   const slug = (await params).slug
   let product: Product | null = null
   try {
-    product = await detailsQueries.fetchBySlug(slug)
+    product = await productQueries.fetchBySlug(slug)
   } catch (error) {
     console.error('Error generating metadata:', error)
   }
