@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { FacetNavigationClient } from '../_components/facet-navigation/FacetNavigation.Client'
 import { ProductsListClient } from '../_components/product-list/Component.Client'
-
+export const dynamic = 'force-dynamic'
 interface PageProps {
   params: Promise<{ filterType: 'all' | 'new' | 'bestseller' | 'quicksearch' }>
   searchParams: Promise<{ [key: string]: string | undefined }>
@@ -17,10 +17,21 @@ export default async function ProductList({ params, searchParams }: PageProps) {
   const pageSize = parseInt((await searchParams).pageSize || '9') || 9
   const page = parseInt((await searchParams).page || '1') || 1
 
+  const category = (await searchParams).category
+  const manufacturer = (await searchParams).manufacturer
+  const price = (await searchParams).price
+
   const searchRequest: SearchRequest = {
     type: filterType,
     pageSize,
     page,
+    category: category ? (Array.isArray(category) ? category : [category]) : undefined,
+    manufacturer: manufacturer
+      ? Array.isArray(manufacturer)
+        ? manufacturer
+        : [manufacturer]
+      : undefined,
+    price: price ? (Array.isArray(price) ? price : [price]) : undefined,
   }
 
   // Validate and map the route parameters to our union type

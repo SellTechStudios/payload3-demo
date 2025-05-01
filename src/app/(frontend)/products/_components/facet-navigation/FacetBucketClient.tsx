@@ -3,6 +3,7 @@ import React from 'react'
 
 type Props = {
   bucket: FacetBucket | undefined
+  selectedValues?: (string | number | boolean)[]
   onOptionClick?: (args: {
     bucketCode: string
     optionValue: string | number | boolean
@@ -31,6 +32,7 @@ const FacetBucketClient: React.FC<Props> = (props) => {
               id={o.label}
               type="checkbox"
               className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              checked={props.selectedValues?.includes(o.value) || false}
               onChange={(e) =>
                 props.onOptionClick?.({
                   bucketCode: bucket.code,

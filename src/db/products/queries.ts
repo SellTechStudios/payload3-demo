@@ -1,7 +1,8 @@
 import { FacetedNavigation, ProductSearchResponse, SearchRequest } from './queries.types'
 
-import { PipelineStage } from 'mongoose'
 import configPromise from '@payload-config'
+import { Document, ObjectId } from 'mongodb'
+import { PipelineStage } from 'mongoose'
 import { getPayload } from 'payload'
 
 const getSortStage = (params: SearchRequest): PipelineStage.Sort => {
@@ -14,27 +15,55 @@ const getSortStage = (params: SearchRequest): PipelineStage.Sort => {
 }
 
 const getMatchStage = (params: SearchRequest): PipelineStage.Match => {
-  const { searchString } = params
+  const match: Document = {}
 
-  switch (params.type) {
-    case 'all':
-    case 'new':
-      return { $match: {} }
-    case 'bestseller':
-      return { $match: { bestseller: true } }
-    case 'quicksearch':
-      return searchString
-        ? {
-            $match: {
-              $or: [
-                { title: { $regex: searchString, $options: 'i' } },
-                { name: { $regex: searchString, $options: 'i' } },
-                { description: { $regex: searchString, $options: 'i' } },
-              ],
-            },
-          }
-        : { $match: {} }
+  // QUICKSEARCH
+  if (params.type === 'quicksearch' && params.searchString) {
+    match.$or = [
+      { title: { $regex: params.searchString, $options: 'i' } },
+      { name: { $regex: params.searchString, $options: 'i' } },
+      { description: { $regex: params.searchString, $options: 'i' } },
+    ]
   }
+
+  // CATEGORY FILTER
+  if (params.category?.length) {
+    match['Category'] = { $in: params.category.map((id) => new ObjectId(id)) }
+  }
+
+  // MANUFACTURER FILTER
+  if (params.manufacturer?.length) {
+    match['manufacturer'] = { $in: params.manufacturer.map((id) => new ObjectId(id)) }
+  }
+
+  // PRICE FILTER
+  if (params.price?.length) {
+    const priceConditions = params.price
+      .map((range) => {
+        const [minStr, maxStr] = range.split('-')
+        const min = parseFloat(minStr)
+
+        if (isNaN(min)) return undefined
+        if (maxStr === undefined) {
+          return { price: { $gte: min } }
+        }
+
+        const maxVal = parseFloat(maxStr)
+        return { price: { $gte: min, $lt: maxVal } }
+      })
+      .filter(Boolean)
+
+    if (priceConditions.length > 0) {
+      match.$and = match.$and || []
+      match.$and.push({ $or: priceConditions })
+    }
+  }
+
+  if (params.type === 'bestseller') {
+    match['bestseller'] = true
+  }
+
+  return { $match: match }
 }
 
 const fetchAllSlugs = async (): Promise<string[]> => {
@@ -53,13 +82,17 @@ const fetchAllSlugs = async (): Promise<string[]> => {
 const fetchProducts = async (params: SearchRequest) => {
   const payload = await getPayload({ config: configPromise })
 
+  const pageSize = params.pageSize || 9
+  const skip = ((params.page || 1) - 1) * pageSize
+
   const pipeline: PipelineStage[] = [
     getMatchStage(params),
     {
       $facet: {
         products: [
           getSortStage(params),
-          { $limit: params.pageSize || 9 },
+          { $skip: skip },
+          { $limit: pageSize },
           {
             $project: {
               _id: 0,

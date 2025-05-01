@@ -1,10 +1,13 @@
 import { Product } from '@/payload-types'
 
 export type SearchRequest = {
-  searchString?: string
   type: 'all' | 'new' | 'bestseller' | 'quicksearch'
-  pageSize: number
-  page: number
+  searchString?: string
+  page?: number
+  pageSize?: number
+  category?: string[]
+  price?: string[]
+  manufacturer?: string[]
 }
 
 export type VectorSearchRequest = {
