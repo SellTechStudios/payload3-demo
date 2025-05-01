@@ -23,7 +23,7 @@ export const ProductsListClient = (props: ProductListClientProps) => {
   const t = useTranslations('ProductList')
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <div className="text-lg font-semibold text-gray-800">
           {t('FoundProducts', { count: total })}
         </div>
