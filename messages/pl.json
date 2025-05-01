@@ -50,5 +50,16 @@
     "Bestsellers": "Bestsellery",
     "PriceAscending": "Cena rosnąco",
     "PriceDescending": "Cena malejąco"
+  },
+  "Cart": {
+    "PlaceOrder": "Złóż zamówienie",
+    "Total": "Razem",
+    "Summary": "Podsumowanie",
+    "Delivery": "Dostawa",
+    "GoToPayment": "Przejdź do płatności",
+    "LoginToContinue": "Zaloguj się, aby kontynuować",
+    "Product": "Produkt",
+    "Quantity": "Ilość",
+    "Remove": "Usuń"
   }
 }

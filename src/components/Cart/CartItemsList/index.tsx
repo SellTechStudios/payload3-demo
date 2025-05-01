@@ -1,12 +1,14 @@
 'use client'
 
 import { useCart } from '@/providers/Cart'
+import { useTranslations } from 'next-intl'
 import EmptyCart from './CartEmpty'
 import CartItem from './CartItem'
 import { CartItemSkeleton } from './CartItemSkeleton'
 
 const CartItemsList = () => {
   const { hasInitializedCart, cart, cartIsEmpty, addItemToCart } = useCart()
+  const t = useTranslations('Cart')
 
   if (!hasInitializedCart || cart?.items === null) {
     return (
@@ -26,11 +28,11 @@ const CartItemsList = () => {
     <div>
       {/* CART LIST HEADER */}
       <div className="hidden sm:grid sm:grid-cols-[100px_3fr_1fr_1fr_1fr] gap-6 mb-2">
-        <p>Produkt</p>
+        <p>{t('Product')}</p>
         <p></p>
-        <p className="text-center">Ilość</p>
-        <p className="text-center">Łącznie</p>
-        <p className="text-center">Usuń</p>
+        <p className="text-center">{t('Quantity')}</p>
+        <p className="text-center">{t('Total')}</p>
+        <p className="text-center">{t('Remove')}</p>
       </div>
 
       {/* CART ITEM LIST */}

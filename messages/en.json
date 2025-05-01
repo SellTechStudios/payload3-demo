@@ -50,5 +50,16 @@
     "Bestsellers": "Bestsellers",
     "PriceAscending": "Price Ascending",
     "PriceDescending": "Price Descending"
+  },
+  "Cart": {
+    "PlaceOrder": "Place Order",
+    "Total": "Total",
+    "Summary": "Summary",
+    "Delivery": "Delivery",
+    "GoToPayment": "Go to Payment",
+    "LoginToContinue": "Login to continue",
+    "Product": "Product",
+    "Quantity": "Quantity",
+    "Remove": "Remove"
   }
 }
