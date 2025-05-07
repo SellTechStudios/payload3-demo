@@ -9,7 +9,7 @@ import React from 'react'
 
 export const CartPage: React.FC = () => {
   const { user } = useAuth()
-  const { cartTotal } = useCart()
+  const { cartTotal, cartIsEmpty } = useCart()
   const t = useTranslations('Cart')
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[65%_1fr] gap-16 my-8">
@@ -30,9 +30,11 @@ export const CartPage: React.FC = () => {
           <p className="text-lg font-semibold">{cartTotal.formatted}</p>
         </div>
 
-        <Button href={user ? '/checkout' : '/login?redirect=%2Fcheckout'} className="w-full">
-          {user ? t('GoToPayment') : t('LoginToContinue')}
-        </Button>
+        {!cartIsEmpty && (
+          <Button href={user ? '/checkout' : '/login?redirect=%2Fcheckout'} className="w-full">
+            {user ? t('GoToPayment') : t('LoginToContinue')}
+          </Button>
+        )}
       </div>
     </div>
   )
