@@ -6,9 +6,10 @@ import { useEffect, useState } from 'react'
 
 type PaymentMethod = Omit<P24PaymentMethod, 'status'>
 
-interface PaymentSectionProps {
+type PaymentSectionProps = {
   onSelectPaymentMethodAction: (methodId: number) => void
   selectedPaymentMethod: number | null
+  onInitPaymentAction: (methodId: number) => void
 }
 
 export const PaymentSection: React.FC<PaymentSectionProps> = ({
@@ -18,34 +19,36 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
   const [methods, setMethods] = useState<PaymentMethod[]>([])
 
   useEffect(() => {
-    const fetchPaymentMethods = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payment-methods/p24`)
-      const methods = await response.json()
-      setMethods(methods as PaymentMethod[])
+    const fetchMethods = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payment-methods/p24`,
+        )
+        const data = await response.json()
+        setMethods(data as PaymentMethod[])
+      } catch (error) {
+        console.error('Error fetching payment methods:', error)
+      }
     }
-
-    fetchPaymentMethods()
+    fetchMethods()
   }, [])
 
   return (
-    <section className="py-8">
-      <h4 className="text-2xl font-bold mb-6">Płatność</h4>
+    <section className="py-8 bg-gray-100 px-6 rounded-lg shadow-sm">
+      <h4 className="text-xl font-bold mb-4">Metoda płatności</h4>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-        {methods.map((m) => (
+        {methods?.map((m) => (
           <div
             key={m.id}
             onClick={() => onSelectPaymentMethodAction(m.id)}
-            className={`cursor-pointer p-4 rounded-lg border transition-all duration-200 
-              ${
-                selectedPaymentMethod === m.id
-                  ? 'bg-gray-200 border-transparent shadow-lg'
-                  : 'bg-white hover:shadow-md'
-              }`}
+            className={`cursor-pointer p-4 rounded-lg border transition-all duration-200 flex flex-col items-center text-center ${
+              selectedPaymentMethod === m.id
+                ? 'bg-white border-blue-500 shadow-lg'
+                : 'bg-white hover:shadow-md'
+            }`}
           >
-            <div className="flex justify-center items-center h-16">
-              <Image src={m.imgUrl} width={64} height={64} alt={m.name} />
-            </div>
-            <p className="text-center mt-3 text-sm font-medium">{m.name}</p>
+            <Image src={m.imgUrl} width={64} height={64} alt={m.name} />
+            <p className="mt-2 text-sm font-medium">{m.name}</p>
           </div>
         ))}
       </div>

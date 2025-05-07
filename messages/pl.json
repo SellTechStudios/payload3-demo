@@ -60,6 +60,8 @@
     "LoginToContinue": "Zaloguj się, aby kontynuować",
     "Product": "Produkt",
     "Quantity": "Ilość",
-    "Remove": "Usuń"
+    "Remove": "Usuń",
+    "Cart": "Koszyk",
+    "GrandTotal": "Łączna kwota"
   }
 }

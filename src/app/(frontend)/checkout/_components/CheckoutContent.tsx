@@ -1,66 +1,52 @@
-// CheckoutContent.tsx
 'use client'
 
+import { useAuth } from '@/providers/Auth'
+import { useCart } from '@/providers/Cart'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+import { useInitPayment } from '../_hooks/useInitPayment'
 import { CartSummary } from './CartSummary'
 import { PaymentSection } from './PaymentSection'
 import { ShipmentSection } from './ShipmentSection'
 import { UserDataSection } from './UserDataSection'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
 export const CheckoutContent = () => {
   const router = useRouter()
+  const { user } = useAuth()
+  const { cartIsEmpty } = useCart()
+  const { initPayment } = useInitPayment()
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number | null>(null)
-  const [paymentToken, setPaymentToken] = useState<string | null>(null)
 
-  const onSelectPaymentMethodAction = (methodId: number) => {
+  const handleSelectPayment = (methodId: number) => {
     setSelectedPaymentMethod(methodId)
   }
 
-  const onPlaceOrderAction = async () => {
-    if (!selectedPaymentMethod) return
-
-    const initPaymentResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/init-payment`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ method: selectedPaymentMethod }),
-      },
-    )
-    const initPaymentResult = await initPaymentResponse.json()
-    const token = initPaymentResult.data.token
-    setPaymentToken(token)
-
-    if (selectedPaymentMethod === 150) {
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/submit-blik`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          paymentToken,
-          blikCode: '777123',
-        }),
-      })
-    } else {
-      router.push(`https://sandbox.przelewy24.pl/trnRequest/${paymentToken}`)
+  const handlePlaceOrder = async () => {
+    if (selectedPaymentMethod) {
+      await initPayment(selectedPaymentMethod)
     }
   }
 
-  return (
-    <div className="flex flex-row gap-8">
-      <div className="flex flex-col flex-1 gap-6">
-        <div>
-          <UserDataSection />
-          <ShipmentSection />
-        </div>
+  useEffect(() => {
+    if (user !== null && cartIsEmpty) {
+      router.push('/cart')
+    }
+  }, [user, cartIsEmpty, router])
 
+  return (
+    <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col flex-1 gap-6">
+        <UserDataSection />
+        <ShipmentSection />
         <PaymentSection
-          onSelectPaymentMethodAction={onSelectPaymentMethodAction}
+          onSelectPaymentMethodAction={handleSelectPayment}
           selectedPaymentMethod={selectedPaymentMethod}
+          onInitPaymentAction={initPayment}
         />
       </div>
-      <CartSummary onPlaceOrderAction={onPlaceOrderAction} />
+      <CartSummary onPlaceOrderAction={handlePlaceOrder} />
     </div>
   )
 }

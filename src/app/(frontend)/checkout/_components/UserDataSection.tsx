@@ -9,7 +9,7 @@ export const UserDataSection: React.FC = () => {
   if (!user) return null
 
   return (
-    <section className="p-4 border border-gray-300 rounded-lg mb-6">
+    <section className="p-4 border border-gray-300 rounded-lg">
       <h4 className="text-lg font-semibold mb-2">Twoje Dane</h4>
       <div className="space-y-2">
         <div>

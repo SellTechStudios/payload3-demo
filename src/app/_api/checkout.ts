@@ -1,5 +1,5 @@
-import { type PayloadHandler } from 'payload'
 import crypto from 'crypto'
+import { type PayloadHandler } from 'payload'
 import {
   P24PaymentMethodsResponse,
   RegisterPaymentRequest,
@@ -9,9 +9,9 @@ import {
 } from './checkout.types'
 
 // Configuration
-const merchantID = 317031
-const crcKey = '4ef7e930847ee038'
-const apiKey = '9dacdc356b13109fcae9d383df66228a'
+const merchantID = Number(process.env.P24_MERCHANT_ID)
+const crcKey = process.env.P24_CRC_KEY || ''
+const apiKey = process.env.P24_API_KEY || ''
 
 const paymnetMethodsHandler: PayloadHandler = async (req): Promise<Response> => {
   const { payload } = req
@@ -172,8 +172,8 @@ async function submitBlikCode(token: string, blikCode: number) {
 const buildApiKey = () => btoa(`${merchantID}:${apiKey}`)
 
 export {
-  paymnetMethodsHandler,
   initTransactionHandler,
-  submitBlikCodeHandler,
   p24NotificationHandler,
+  paymnetMethodsHandler,
+  submitBlikCodeHandler,
 }

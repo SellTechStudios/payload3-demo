@@ -87,6 +87,7 @@ export interface Config {
     products: Product;
     'product-category': ProductCategory;
     manufacturer: Manufacturer;
+    'payment-methods': PaymentMethod;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-locked-documents': PayloadLockedDocument;
@@ -104,6 +105,7 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     'product-category': ProductCategorySelect<false> | ProductCategorySelect<true>;
     manufacturer: ManufacturerSelect<false> | ManufacturerSelect<true>;
+    'payment-methods': PaymentMethodsSelect<false> | PaymentMethodsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -735,6 +737,16 @@ export interface Order {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payment-methods".
+ */
+export interface PaymentMethod {
+  name: string;
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -792,6 +804,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'manufacturer';
         value: string | Manufacturer;
+      } | null)
+    | ({
+        relationTo: 'payment-methods';
+        value: number | PaymentMethod;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1195,6 +1211,16 @@ export interface ProductCategorySelect<T extends boolean = true> {
 export interface ManufacturerSelect<T extends boolean = true> {
   name?: T;
   code?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payment-methods_select".
+ */
+export interface PaymentMethodsSelect<T extends boolean = true> {
+  name?: T;
+  id?: T;
   updatedAt?: T;
   createdAt?: T;
 }

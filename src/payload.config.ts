@@ -8,6 +8,7 @@ import sharp from 'sharp' // sharp-import
 import { fileURLToPath } from 'url'
 import Manufacturer from './payload/collections/eCom/Manufacturer'
 import { Orders } from './payload/collections/eCom/Orders'
+import { PaymentMethods } from './payload/collections/eCom/PaymentMethods'
 import ProductCategory from './payload/collections/eCom/ProductCategory'
 import Products from './payload/collections/eCom/Products'
 import { Media } from './payload/collections/Media'
@@ -83,6 +84,7 @@ export default buildConfig({
     Products,
     ProductCategory,
     Manufacturer,
+    PaymentMethods,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, Settings, ProductImportsAdmin, EmbeddingsAdmin],

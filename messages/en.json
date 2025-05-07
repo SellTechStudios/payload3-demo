@@ -60,6 +60,8 @@
     "LoginToContinue": "Login to continue",
     "Product": "Product",
     "Quantity": "Quantity",
-    "Remove": "Remove"
+    "Remove": "Remove",
+    "Cart": "Cart",
+    "GrandTotal": "Grand Total"
   }
 }
