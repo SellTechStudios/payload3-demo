@@ -1,10 +1,10 @@
 import { admins } from '@/payload/access/admins'
-import adminsAndUser from '@/payload/access/adminsAndUser'
-import { anyone } from '@/payload/access/anyone'
 import { checkRole } from '@/payload/access/checkRole'
 import { protectRoles } from '@/payload/hooks/protectRoles'
 import { CollectionConfig } from 'payload'
 import { resolveDuplicatePurchases } from './hooks/resolveDuplicatePurchases'
+import { authenticated } from '@/payload/access/authenticated'
+import adminsAndUser from '@/payload/access/adminsAndUser'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -14,10 +14,10 @@ export const Users: CollectionConfig = {
   },
   access: {
     read: adminsAndUser,
-    create: anyone,
+    create: authenticated,
     update: adminsAndUser,
     delete: admins,
-    admin: ({ req: { user } }) => checkRole(['admin'], user!),
+    admin: ({ req: { user } }) => checkRole(['admin', 'conten-editor', 'pim-manager'], user!),
   },
   auth: true,
   fields: [
@@ -44,6 +44,14 @@ export const Users: CollectionConfig = {
         {
           label: 'admin',
           value: 'admin',
+        },
+        {
+          label: 'content-editor',
+          value: 'conten-editor',
+        },
+        {
+          label: 'pim-manager',
+          value: 'pim-manager',
         },
         {
           label: 'customer',

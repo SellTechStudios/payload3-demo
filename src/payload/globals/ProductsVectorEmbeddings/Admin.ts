@@ -1,3 +1,4 @@
+import { admins } from '@/payload/access/admins'
 import { GlobalConfig } from 'payload'
 
 export const EmbeddingsAdmin: GlobalConfig = {
@@ -5,6 +6,9 @@ export const EmbeddingsAdmin: GlobalConfig = {
   versions: false,
   label: {
     en: 'Vector Embeddings',
+  },
+  access: {
+    read: admins,
   },
   admin: {
     group: 'AI',

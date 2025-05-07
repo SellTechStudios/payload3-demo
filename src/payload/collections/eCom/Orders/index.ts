@@ -22,7 +22,7 @@ export const Orders: CollectionConfig = {
     afterChange: [updateUserPurchases, clearUserCart],
   },
   access: {
-    read: adminsOrOrderedBy,
+    read: admins,
     update: admins,
     create: admins,
     delete: admins,

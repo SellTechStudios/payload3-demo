@@ -1,3 +1,4 @@
+import { admins } from '@/payload/access/admins'
 import { GlobalConfig } from 'payload'
 
 export const Settings: GlobalConfig = {
@@ -9,7 +10,7 @@ export const Settings: GlobalConfig = {
     name: 'Settings',
   },
   access: {
-    read: () => true,
+    read: admins,
   },
   fields: [
     {

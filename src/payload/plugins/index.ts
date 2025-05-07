@@ -7,6 +7,7 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { getServerSideURL } from '@/payload/utilities/getURL'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { admins } from '../access/admins'
 
 // import { beforeSyncWithSearch } from '@/search/beforeSync'
 
@@ -79,6 +80,14 @@ export const plugins: Plugin[] = [
           }
           return field
         })
+      },
+      access: {
+        read: admins,
+      },
+    },
+    formSubmissionOverrides: {
+      access: {
+        read: admins,
       },
     },
   }),

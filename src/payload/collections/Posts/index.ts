@@ -24,19 +24,18 @@ import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
 import { Code } from '../../blocks/Code/config'
 import type { CollectionConfig } from 'payload'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { anyone } from '@/payload/access/anyone'
-import { authenticated } from '@/payload/access/authenticated'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { slugField } from '@/payload/fields/slug'
+import { checkRole } from '@/payload/access/checkRole'
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: anyone,
-    update: authenticated,
+    read: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
+    create: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
+    update: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
+    delete: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
   },
   // This config controls what's populated by default when a post is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property

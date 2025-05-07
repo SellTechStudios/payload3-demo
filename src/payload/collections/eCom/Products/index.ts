@@ -1,8 +1,9 @@
 import { CollectionConfig } from 'payload'
-import { admins } from '../../../access/admins'
 import { deleteProductFromCarts } from './hooks/deleteProductFromCarts'
 import { revalidateProduct } from './hooks/revalidateProduct'
 import { slugField } from '../../../fields/slug'
+import { checkRole } from '@/payload/access/checkRole'
+import { noone } from '@/payload/access/noone'
 
 const Products: CollectionConfig = {
   slug: 'products',
@@ -19,14 +20,12 @@ const Products: CollectionConfig = {
     afterChange: [revalidateProduct],
     afterDelete: [deleteProductFromCarts],
   },
-  // versions: {
-  //   drafts: false,
-  // },
+
   access: {
-    read: () => true,
-    create: admins,
-    update: admins,
-    delete: admins,
+    read: ({ req: { user } }) => checkRole(['admin', 'pim-manager'], user),
+    create: noone,
+    delete: noone,
+    update: ({ req: { user } }) => checkRole(['admin', 'pim-manager'], user),
   },
   fields: [
     {
@@ -43,6 +42,7 @@ const Products: CollectionConfig = {
             {
               name: 'erpId',
               type: 'text',
+              access: {},
             },
             {
               name: 'url',
@@ -148,6 +148,9 @@ const Products: CollectionConfig = {
               type: 'relationship',
               relationTo: 'products',
               hasMany: true,
+              access: {
+                update: () => true,
+              },
               filterOptions: ({ id }) => {
                 return {
                   id: {

@@ -1,5 +1,6 @@
 import { CollectionConfig } from 'payload'
-import { admins } from '@/payload/access/admins'
+import { noone } from '@/payload/access/noone'
+import { checkRole } from '@/payload/access/checkRole'
 
 const ProductCategory: CollectionConfig = {
   slug: 'product-category',
@@ -7,10 +8,10 @@ const ProductCategory: CollectionConfig = {
     useAsTitle: 'name',
   },
   access: {
-    read: () => true,
-    create: admins,
-    update: admins,
-    delete: admins,
+    read: ({ req: { user } }) => checkRole(['admin', 'pim-manager'], user),
+    create: noone,
+    update: noone,
+    delete: noone,
   },
   fields: [
     {

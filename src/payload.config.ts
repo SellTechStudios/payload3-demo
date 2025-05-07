@@ -75,16 +75,18 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   collections: [
-    Pages,
-    Posts,
-    Media,
-    PostCategories,
     Users,
     Orders,
     Products,
     ProductCategory,
     Manufacturer,
     PaymentMethods,
+
+    Pages,
+    Posts,
+    PostCategories,
+
+    Media,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, Settings, ProductImportsAdmin, EmbeddingsAdmin],
