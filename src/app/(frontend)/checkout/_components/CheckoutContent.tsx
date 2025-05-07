@@ -43,7 +43,6 @@ export const CheckoutContent = () => {
         <PaymentSection
           onSelectPaymentMethodAction={handleSelectPayment}
           selectedPaymentMethod={selectedPaymentMethod}
-          onInitPaymentAction={initPayment}
         />
       </div>
       <CartSummary onPlaceOrderAction={handlePlaceOrder} />
