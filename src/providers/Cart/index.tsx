@@ -168,8 +168,8 @@ export const CartProvider = (props) => {
             },
           })
 
-          if (req.ok) {
-            localStorage.setItem('cart', '[]')
+          if (req.ok && flattenedCart.items.length > 0) {
+            localStorage.removeItem('cart')
           }
         }
 
