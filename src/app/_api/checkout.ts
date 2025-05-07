@@ -1,7 +1,6 @@
 import crypto from 'crypto'
 import { type PayloadHandler } from 'payload'
 import {
-  P24PaymentMethodsResponse,
   RegisterPaymentRequest,
   RegisterPaymentResponse,
   SubmitBlikTransactionRequest,
@@ -85,10 +84,19 @@ async function getP24PaymentMethods() {
     },
   )
 
-  const typedResponse = (await response.json()) as P24PaymentMethodsResponse
-  return typedResponse.data.filter((m) => m.status === true)
-}
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Failed to fetch payment methods: ${response.status} ${errorText}`)
+  }
 
+  const json = await response.json()
+
+  if (!json?.data || !Array.isArray(json.data)) {
+    throw new Error(`Invalid response from P24: ${JSON.stringify(json)}`)
+  }
+
+  return json.data.filter((m) => m.status === true)
+}
 async function initTransaction(
   paymentMethod: number,
   amount: number,
