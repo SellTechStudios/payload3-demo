@@ -1,23 +1,22 @@
+import { draftMode } from 'next/headers'
+import { getPayload } from 'payload'
 import React, { cache } from 'react'
-
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import type { Metadata } from 'next'
+import { RenderBlocks } from '@/payload/blocks/RenderBlocks'
+import { generateMeta } from '@/payload/utilities/generateMeta'
+import configPromise from '@payload-config'
 import NotFound from '../not-found'
 import PageClient from './page.client'
-import type { Page as PageType } from '@/payload-types'
-import { RenderBlocks } from '@/payload/blocks/RenderBlocks'
-import configPromise from '@payload-config'
-import { draftMode } from 'next/headers'
-import { generateMeta } from '@/payload/utilities/generateMeta'
-import { getPayload } from 'payload'
 
+import type { Metadata } from 'next'
+import type { Page as PageType } from '@/payload-types'
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const pages = await payload.find({
     collection: 'pages',
     draft: false,
     limit: 1000,
-    overrideAccess: false,
+    overrideAccess: true,
     pagination: false,
     select: {
       slug: true,
@@ -82,7 +81,7 @@ const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
     draft,
     limit: 1,
     pagination: false,
-    overrideAccess: draft,
+    overrideAccess: true,
     where: {
       slug: {
         equals: slug,

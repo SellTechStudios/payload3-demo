@@ -1,25 +1,25 @@
+import { draftMode } from 'next/headers'
 import Image from 'next/image'
+import { getPayload } from 'payload'
+import { cache } from 'react'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { Locale } from '@/i18n/config'
-import type { Metadata } from 'next'
-import NotFound from '../../not-found'
-import { RelatedPosts } from '../_components/RelatedPosts'
 import RichText from '@/components/RichText'
 import Section from '@/components/Section/Section'
-import { cache } from 'react'
-import configPromise from '@payload-config'
-import { draftMode } from 'next/headers'
-import { generateMeta } from '@/utilities/generateMeta'
-import { getPayload } from 'payload'
+import { Locale } from '@/i18n/config'
 import { getUserLocale } from '@/services/locale'
+import { generateMeta } from '@/utilities/generateMeta'
+import configPromise from '@payload-config'
+import NotFound from '../../not-found'
+import { RelatedPosts } from '../_components/RelatedPosts'
 
+import type { Metadata } from 'next'
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const posts = await payload.find({
     collection: 'posts',
     draft: false,
     limit: 1000,
-    overrideAccess: false,
+    overrideAccess: true,
     pagination: false,
     select: {
       slug: true,
@@ -57,7 +57,7 @@ export default async function Post(props: Args) {
       {draft && <LivePreviewListener />}
 
       {imgUrl && (
-        <div className="relative w-full h-[300px] sm:h-[400px] md:h-[600px] mb-8">
+        <div className="relative mb-8 w-full h-[300px] sm:h-[400px] md:h-[600px]">
           <Image src={imgUrl} alt={post.title} className="object-cover" fill sizes="100vw" />
         </div>
       )}
@@ -68,7 +68,7 @@ export default async function Post(props: Args) {
         {post.relatedPosts && post.relatedPosts.length > 0 && (
           <Section className="mt-16">
             <Section.Header>
-              <h5 className="text-header5 ">Related posts</h5>
+              <h5 className="text-header5">Related posts</h5>
             </Section.Header>
             <Section.Content>
               <RelatedPosts
@@ -100,7 +100,7 @@ const queryPostBySlug = cache(async ({ slug, locale }: { slug: string; locale: L
     collection: 'posts',
     draft,
     limit: 1,
-    overrideAccess: draft,
+    overrideAccess: true,
     pagination: false,
     locale: locale,
     where: {
