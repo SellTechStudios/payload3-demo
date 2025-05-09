@@ -1,8 +1,8 @@
 'use server'
 
-import { Embed } from '@/services/ai'
-import config from '@payload-config'
 import { getPayload } from 'payload'
+import { GetProductVector } from '@/services/ai'
+import config from '@payload-config'
 
 export async function submitData() {
   const payload = await getPayload({ config })
@@ -13,15 +13,7 @@ export async function submitData() {
   })
 
   for (const product of products.docs) {
-    const text = `
-      Nazwa: ${product.title},
-      Opis: ${product.description},
-      Kolor: ${product.color},
-      Materiał: ${product.material},
-      Cena: ${product.price},
-    `
-
-    const embeddings = await Embed(text, 'search_document')
+    const embeddings = await GetProductVector(product)
     await payload.update({
       collection: 'products',
       id: product.id,
