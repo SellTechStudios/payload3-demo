@@ -1,9 +1,9 @@
-import { CollectionConfig } from 'payload'
-import { deleteProductFromCarts } from './hooks/deleteProductFromCarts'
-import { revalidateProduct } from './hooks/revalidateProduct'
-import { slugField } from '../../../fields/slug'
 import { checkRole } from '@/payload/access/checkRole'
 import { noone } from '@/payload/access/noone'
+import { CollectionConfig } from 'payload'
+import { slugField } from '../../../fields/slug'
+import { deleteProductFromCarts } from './hooks/deleteProductFromCarts'
+import { revalidateProduct } from './hooks/revalidateProduct'
 
 const Products: CollectionConfig = {
   slug: 'products',
@@ -22,7 +22,14 @@ const Products: CollectionConfig = {
   },
 
   access: {
-    read: ({ req: { user } }) => checkRole(['admin', 'pim-manager'], user),
+    read: ({ req }) => {
+      const referer = req.headers?.get('referer') as string
+
+      if (req?.user && referer?.includes('/admin')) {
+        return checkRole(['admin', 'pim-manager'], req.user)
+      }
+      return true
+    },
     create: noone,
     delete: noone,
     update: ({ req: { user } }) => checkRole(['admin', 'pim-manager'], user),
