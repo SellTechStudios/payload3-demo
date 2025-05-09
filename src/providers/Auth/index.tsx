@@ -2,7 +2,6 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Product, User } from 'src/payload-types'
-
 import { ProductItem } from '@/db/products/queries.types'
 import { extractErrorMessage } from './auth.utils'
 
@@ -275,7 +274,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [user],
   )
 
-  const pathchFavorites = async (userId: string, newFavorites: (string | Product)[]) => {
+  const patchFavorites = async (userId: string, newFavorites: (string | Product)[]) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${userId}`, {
         method: 'PATCH',
@@ -309,6 +308,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ? user.favourites?.filter((p: Product) => p.id !== product.id) || []
         : [...(user.favourites || []), product as Product]
 
+      await patchFavorites(user.id, newFavorites)
+
       setUser((prevUser) => {
         if (!prevUser) return null
         return {
@@ -316,8 +317,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           favourites: newFavorites,
         }
       })
-
-      await pathchFavorites(user.id, newFavorites)
     },
     [user, hasFavoriteProduct],
   )

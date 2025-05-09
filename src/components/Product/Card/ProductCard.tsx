@@ -2,7 +2,8 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { Heart } from 'lucide-react'
-
+import { useState } from 'react'
+import { FaSpinner } from 'react-icons/fa6'
 import { AddToCartButton } from '@/components/Cart/AddToCartButton'
 import { ProductItem } from '@/db/products/queries.types'
 import { Product } from '@/payload-types'
@@ -17,7 +18,8 @@ type ProductProps = {
 }
 
 export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) => {
-  const { hasFavoriteProduct, toggleFavoriteProduct } = useAuth()
+  const { hasFavoriteProduct, toggleFavoriteProduct, status } = useAuth()
+  const [isTogglingFavourite, setIsTogglingFavourite] = useState(false)
 
   const imageUrl = GetMainImageUrl(product as unknown as Product)
   const percentageOff =
@@ -28,7 +30,9 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
   const isFavorite = hasFavoriteProduct(product.id)
 
   const onFavoriteClick = async () => {
+    setIsTogglingFavourite(true)
     await toggleFavoriteProduct(product)
+    setIsTogglingFavourite(false)
   }
 
   return (
@@ -50,18 +54,25 @@ export const ProductCard: React.FC<ProductProps> = ({ product }: ProductProps) =
         )}
       </a>
       <div className="mt-8 px-5 pb-5">
-        <div
-          onClick={onFavoriteClick}
-          className="absolute top-2 right-2 p-2 rounded-full  bg-white cursor-pointer hover:bg-slate-200"
-        >
-          <Heart
-            className={cn(
-              isFavorite ? 'fill-gray-800' : 'fill-white',
-              'hover:scale-110 text-slate-900 transition-transform duration-100 ease-linea',
-            )}
-            size={20}
-          />
-        </div>
+        {status == 'loggedIn' && (
+          <div
+            onClick={onFavoriteClick}
+            className="top-2 right-2 absolute bg-white hover:bg-slate-200 p-2 rounded-full cursor-pointer"
+          >
+            <Heart
+              className={cn(
+                isFavorite ? 'fill-gray-800' : 'fill-white',
+                isTogglingFavourite ? 'hidden' : 'block',
+                'hover:scale-110 text-slate-900 transition-transform duration-100 ease-linea',
+              )}
+              size={20}
+            />
+            <FaSpinner
+              size={20}
+              className={cn(isTogglingFavourite ? 'block animate-spin' : 'hidden')}
+            />
+          </div>
+        )}
         <a href={`/product/${product.slug}`} className="flex items-start h-16 overflow-hidden">
           <h5 className="text-lg line-clamp-2 tracking-tight">{product.title}</h5>
         </a>
