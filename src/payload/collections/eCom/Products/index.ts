@@ -23,12 +23,14 @@ const Products: CollectionConfig = {
 
   access: {
     read: ({ req }) => {
-      const referer = req.headers?.get('referer') as string
+      const isAdmin = checkRole(['admin', 'pim-manager'], req.user)
+      const isContentEditor = checkRole(['content-editor'], req.user)
 
-      if (req?.user && referer?.includes('/admin')) {
-        return checkRole(['admin', 'pim-manager'], req.user)
+      if (req?.user && req.url?.includes('/admin')) {
+        return isAdmin
       }
-      return true
+
+      return isAdmin || isContentEditor || true
     },
     create: noone,
     delete: noone,
