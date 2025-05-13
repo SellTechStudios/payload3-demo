@@ -7,23 +7,23 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 
+import { checkRole } from '@/payload/access/checkRole'
+import { ProductsSliderBlock } from '@/payload/blocks/ProductsSliderBlock/config'
+import { slugField } from '@/payload/fields/slug'
 import type { CollectionConfig } from 'payload'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { ProductsSliderBlock } from '@/payload/blocks/ProductsSliderBlock/config'
-import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
-import { slugField } from '@/payload/fields/slug'
-import { checkRole } from '@/payload/access/checkRole'
+import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
   access: {
-    read: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
-    create: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
-    update: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
-    delete: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
+    read: ({ req: { user } }) => checkRole(['admin', 'content-editor'], user),
+    create: ({ req: { user } }) => checkRole(['admin', 'content-editor'], user),
+    update: ({ req: { user } }) => checkRole(['admin', 'content-editor'], user),
+    delete: ({ req: { user } }) => checkRole(['admin', 'content-editor'], user),
   },
   // This config controls what's populated by default when a page is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property

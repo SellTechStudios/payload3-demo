@@ -1,4 +1,11 @@
 import {
+  MetaDescriptionField,
+  MetaImageField,
+  MetaTitleField,
+  OverviewField,
+  PreviewField,
+} from '@payloadcms/plugin-seo/fields'
+import {
   AlignFeature,
   BlockquoteFeature,
   BlocksFeature,
@@ -12,30 +19,23 @@ import {
   SuperscriptFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import {
-  MetaDescriptionField,
-  MetaImageField,
-  MetaTitleField,
-  OverviewField,
-  PreviewField,
-} from '@payloadcms/plugin-seo/fields'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
 
-import { Code } from '../../blocks/Code/config'
-import type { CollectionConfig } from 'payload'
-import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { generatePreviewPath } from '@/utilities/generatePreviewPath'
-import { populateAuthors } from './hooks/populateAuthors'
-import { slugField } from '@/payload/fields/slug'
 import { checkRole } from '@/payload/access/checkRole'
+import { slugField } from '@/payload/fields/slug'
+import { generatePreviewPath } from '@/utilities/generatePreviewPath'
+import type { CollectionConfig } from 'payload'
+import { Code } from '../../blocks/Code/config'
+import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { populateAuthors } from './hooks/populateAuthors'
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
   access: {
-    read: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
-    create: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
-    update: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
-    delete: ({ req: { user } }) => checkRole(['admin', 'conten-editor'], user),
+    read: ({ req: { user } }) => checkRole(['admin', 'content-editor'], user),
+    create: ({ req: { user } }) => checkRole(['admin', 'content-editor'], user),
+    update: ({ req: { user } }) => checkRole(['admin', 'content-editor'], user),
+    delete: ({ req: { user } }) => checkRole(['admin', 'content-editor'], user),
   },
   // This config controls what's populated by default when a post is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property

@@ -165,7 +165,7 @@ export interface User {
   name?: string | null;
   surname?: string | null;
   phoneNumber?: string | null;
-  roles?: ('admin' | 'conten-editor' | 'pim-manager' | 'customer')[] | null;
+  roles?: ('admin' | 'content-editor' | 'pim-manager' | 'customer')[] | null;
   purchases?: (string | Product)[] | null;
   favourites?: (string | Product)[] | null;
   cart?: {
