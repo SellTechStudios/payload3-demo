@@ -81,11 +81,9 @@ export default buildConfig({
     ProductCategory,
     Manufacturer,
     PaymentMethods,
-
     Pages,
     Posts,
     PostCategories,
-
     Media,
   ],
   cors: [getServerSideURL()].filter(Boolean),

@@ -5,11 +5,12 @@ import type { PayloadAdminBarProps } from 'payload-admin-bar'
 import { cn } from '@/payload/utilities/cn'
 import { useRouter, useSelectedLayoutSegments } from 'next/navigation'
 import { PayloadAdminBar } from 'payload-admin-bar'
-import React, { useState } from 'react'
+import React from 'react'
 
 import './index.scss'
 
 import { getClientSideURL } from '@/payload/utilities/getURL'
+import { useAuth } from '@/providers/Auth'
 
 const baseClass = 'admin-bar'
 
@@ -35,22 +36,17 @@ export const AdminBar: React.FC<{
 }> = (props) => {
   const { adminBarProps } = props || {}
   const segments = useSelectedLayoutSegments()
-  const [show, setShow] = useState(false)
-  const collection = collectionLabels?.[segments?.[1]] ? segments?.[1] : 'pages'
-  const router = useRouter()
 
-  const onAuthChange = React.useCallback((user) => {
-    const isAdmin = user?.roles?.includes('admin')
-    setShow(isAdmin)
-  }, [])
+  const router = useRouter()
+  const { user } = useAuth()
+  const allowedRoles = ['admin', 'pim-manager', 'content-editor']
+  const show = !!user?.roles?.some((role) => allowedRoles.includes(role))
+  const collection = collectionLabels?.[segments?.[1]] ? segments?.[1] : 'pages'
+
+  if (!show) return null
 
   return (
-    <div
-      className={cn(baseClass, 'py-2 bg-black text-white', {
-        block: show,
-        hidden: !show,
-      })}
-    >
+    <div className={cn(baseClass, 'py-2 bg-black text-white')}>
       <div className="container">
         <PayloadAdminBar
           {...adminBarProps}
@@ -67,7 +63,6 @@ export const AdminBar: React.FC<{
             singular: collectionLabels[collection]?.singular || 'Page',
           }}
           logo={<Title />}
-          onAuthChange={onAuthChange}
           onPreviewExit={() => {
             fetch('/next/exit-preview').then(() => {
               router.push('/')
