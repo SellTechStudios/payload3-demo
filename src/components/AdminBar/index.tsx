@@ -39,7 +39,7 @@ export const AdminBar: React.FC<{
 
   const router = useRouter()
   const { user } = useAuth()
-  console.log(user)
+
   const allowedRoles = ['admin', 'pim-manager', 'content-editor']
   const show = !!user?.roles?.some((role) => allowedRoles.includes(role))
   const collection = collectionLabels?.[segments?.[1]] ? segments?.[1] : 'pages'
