@@ -168,7 +168,7 @@ export const CartProvider = (props) => {
             },
           })
 
-          if (req.ok && flattenedCart.items.length > 0) {
+          if (req.ok && Array.isArray(flattenedCart.items) && flattenedCart.items.length > 0) {
             localStorage.removeItem('cart')
           }
         }
